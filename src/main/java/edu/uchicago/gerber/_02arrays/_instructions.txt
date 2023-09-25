@@ -1,0 +1,55 @@
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+proArrays : Arrays, ArrayLists, Exceptions, and File i/o. Note that this project
+has 101 total points offered out of a possible 100.  If you score 101/100, you get
+1 point extra credit.
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Review Exercises: 3 points each. Place your answers in ReviewExercises.txt located in the root of this project.
+Each of your solutions requires a Driver class. A Driver class is the one with the
+public static void main(String[] args) method, and it's where your execution starts.
+
+R5.6 Parameters and return values
+R5.8 Pseudocode
+R5.10 Variable scope
+R5.14 Pass by value versus pass by reference
+R6.3 Considering loops
+R6.10 Enhanced for-loop
+R6.23 Computing runs
+R6.29 Multi-dimensional arrays
+R6.34 Understanding arrays
+R7.1 Exceptions
+R7.6 Throwing and catching
+R7.7 Checked versus unchecked
+R7.8 Exceptions philosophy in Java
+R7.11 What is an exception object
+R7.15 Scanner exceptions. Explain why these are either checked or unchecked.
+
+
+
+
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Programming Exercises: 7 points each. Create a Java class file for each of the following Programming Exercises from the
+textbook, Big Java. Name your source files according to its Programming Exercise identifier, except replace the period with an
+underscore.  For example, if the Programming Exercise identifier is P1.15, or E6.1 then name your java source file P1_15.java or E6_1.java
+
+
+
+P5.8 Leap year
+P5.24 Roman numerals
+E6.1 Array initialization
+E6.9 Check for equality of elements
+E6.12 random values and sort
+E6.16 Histogram
+E7.4 Marry had a little lamb
+P7.5 CSV file
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+

@@ -1,0 +1,48 @@
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+proObjects : Objects and Classes. Note that there are 101 points offered. If you
+score 101, you get 1 point extra-credit.
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Review Exercises: 3 points each. Starting on page 405 of textbook Big Java. Place your answers in
+ReviewExercises.txt located in the root of this project.
+Each of your solutions requires an appropriately named package and Driver class. A Driver class is the one with the
+public static void main(String[] args) method, and it's where your execution starts. See P0_2 package for example.
+
+
+R8.1 Encapsulation
+R8.4 Public interface
+R8.7 Instance versus static
+R8.8 Mutator and accessor
+R8.9 Implicit parameter
+R8.10 Implicit parameter
+R8.12 Constructors
+R8.16 Instance variables
+R8.19 The 'this' reference
+R8.20 Zero, null, false, empty String
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+Programming Exercises: Name your packages according to the Programming Exercise identifier, except
+replace the period with underscore. You will want a Driver class (with a static main() method) to drive your program.
+See package P0_2 for an example.
+
+7 points each
+P8.1 microwave control panel
+P8.5 SodaCan
+P8.6 Car
+P8.7 ComboLock
+P8.8 VotingMachine
+
+
+12 points each
+P8.14 Country
+P8.16 Email
+P8.19 Canonball
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+
