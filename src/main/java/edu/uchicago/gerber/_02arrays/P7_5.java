@@ -95,6 +95,8 @@ public class P7_5 {
         Scanner scan = new Scanner(System.in);
         System.out.println("Type the input scv file to parse: ");
         String inputFileName = scan.nextLine();
+        // !! Note to provide the absolute path of input and output file !!
+        // testCsv.csv is a sample txt can be used to test.
 
         CSVReader csvReader = new CSVReader(inputFileName);
         System.out.println(String.format("CSV file has %d rows: ", csvReader.numberOfRows()));

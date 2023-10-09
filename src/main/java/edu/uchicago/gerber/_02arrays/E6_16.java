@@ -6,6 +6,8 @@ import java.util.Scanner;
 public class E6_16 {
 
     public static void main(String[] args) {
+        System.out.println("Enter space-separated integers, use one space to separate them: ");
+
         Scanner scan = new Scanner(System.in);
         ArrayList<Integer> intValues = new ArrayList<>();
         String[] intStrings = scan.nextLine().split(" ");

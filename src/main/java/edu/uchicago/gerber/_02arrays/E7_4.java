@@ -15,6 +15,7 @@ public class E7_4 {
         System.out.println("Type the output file name to write:");
         String outputFileName = scan.nextLine();
         // !! Note to provide the absolute path of input and output file !!
+        // lamb.txt is a sample txt can be used to test.
 
 
         ArrayList<String> stringArray = new ArrayList<>();

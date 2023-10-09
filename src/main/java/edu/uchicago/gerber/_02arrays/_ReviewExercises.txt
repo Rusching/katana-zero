@@ -78,44 +78,165 @@ h: -1
 
 R6.10 Enhanced for-loop
 
+a.
+for (int value: values) {
+    total += value;
+}
 
+b.
+int counter = 0;
+for (int value: values) {
+    if (count++ == 0) continue;
+    total += value;
+}
+
+c.
+int counter = 0
+for (int value: values) {
+    if (value == target) {
+        return counter;
+    }
+    counter++;
+}
 
 ====================================================================================
 
 
 R6.23 Computing runs
 
+assume given array is named a
+
+if the length of array a == 0 return 0
+
+initialize res = 1, tmpRes = 1, preValue = a[0]
+
+for (i = 1 to a.size() - 1):
+    if (a[i] == preValue) {
+        tmpRes increases by 1
+    } else {
+        res = the max value between res and tmpRes
+        set tmpRes = 1
+        set preValue = a[i]
+    }
+
+return res
+
 ====================================================================================
 
 R6.29 Multi-dimensional arrays
 
+1. Fill all entries with 0.
+for (int i = 0; i < ROWS; i++) {
+    for (int j = 0; j < COLUMNS; j++) {
+        values[i][j] = 0;
+    }
+}
+
+2. Fill elements alternately with 0s and 1s in a checkerboard pattern.
+int currentValue = 0;
+for (int i = 0; i < ROWS; i++) {
+    for (int j = 0; j < COLUMNS; j++) {
+        values[i][j] = 0;
+        currentValue = 1 - currentValue;
+    }
+}
+
+3. Fill only the elements at the top and bottom row with zeroes.
+
+for (int j = 0; j < COLUMNS; j++) {
+    values[0][j] = 0;
+    values[ROWS - 1][j] = 0;
+}
+
+4. Compute the sum of all elements.
+
+int sum = 0;
+for (int i = 0; i < ROWS; i++) {
+    for (int j = 0; j < COLUMNS; j++) {
+        sum += values[i][j];
+    }
+}
+
+5. Print the array in tabular form.
+
+for (int i = 0; i < ROWS; i++) {
+    for (int j = 0; j < COLUMNS; j++) {
+        System.out.print(values[i][j]);
+    }
+    System.out.println();
+}
+
 ====================================================================================
 
 R6.34 Understanding arrays
+Assume we have 2 ArrayLists, list1 and list2
+
+1. Use the equals() method to determine, e.g. (list1.equals(list2) == true).
+2. Use the construct method, e.g. ArrayList<T> list2 = new ArrayList<T>(list1);
+3. Use loops. e.g.
+    for (int i = 0; i < list1.size(); i++) {
+        list1.set(i, 0);
+    }
+4. Use clear() method. e.g. list1.clear();
 
 ====================================================================================
 
 R7.1 Exceptions
 
+1. A FileNotFoundException will be thrown.
+2. In general the file will be created and written. But in some cases like permission
+issues, the file cannot be created, then a IOException will be thrown.
+
 ====================================================================================
 
 R7.6 Throwing and catching
+
+Throwing an exception is to send a signal or raise an abnormal event;
+Catching is the cation that really handles or deals with that event.
 
 ====================================================================================
 
 R7.7 Checked versus unchecked
 
+1. Checked exceptions are the exceptions that are checked at compile time. They should
+be declared using throw, or handled in try-catch block.
+e.g.:
+    public void readFile(String filename) throws IOException {
+        // ... code to read file
+    }
+
+2. Unchecked exceptions are the exceptions that are not checked at compile time, and do not
+require to catch them or declare them in throw. They are typically logical errors.
+e.g.:
+    public void displayLength(String s) {
+        int length = s.length();  // If s is null, a NullPointerException is thrown here
+    }
+3. Checked exceptions.
+
 ====================================================================================
 
 R7.8 Exceptions philosophy in Java
+
+IndexOutOfBoundsException typically are logical errors that we try to access invalid
+index in an array. We should check carefully that about the boundaries before accessing
+the arrays. This should be prevented when we program. And declaring such exceptions
+would not bring many benefits to us; it might be thrown many places and make the codes clutter.
 
 ====================================================================================
 
 R7.11 What is an exception object
 
+We can print the stack trace; get the exception message; make some logs; wrap it and re-throw;
+handle it; determine whether to continue the program or terminate it.
+
 ====================================================================================
 
 R7.15 Scanner exceptions. Explain why these are either checked or unchecked.
 
+NoSuchElementException; InputMismatchException; IllegalStateException.
+
+Unchecked exceptions. As they extend RuntimeException. And they are thrown during runtime, for
+one program the results can be different with several tries as the input file may vary. Maybe
+sometimes our input file satisfies our program's logic while others are not.
 
 
