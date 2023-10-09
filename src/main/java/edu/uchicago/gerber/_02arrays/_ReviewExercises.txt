@@ -14,7 +14,108 @@ Since Java5, you can even specify a variable number of arguments aka varargs whi
 Notice that the varargs parameter "String... strNickNames" must be listed last.  Calling this method would look something like this:
  String[] strReturnValues = someMethod(99, "Jim", "Jamie", "James", "Jamey", "Jimmy", "Jimbo");
 
+====================================================================================
 
+R5.8 Pseudocode
+
+translatePhoneNumber (argument: inputNumber) {
+    define a hashmap 'letterToNumber' that contains mapping from String to numbers,
+    such as:
+        'A' -> 2,
+        'B' -> 2,
+        ...
+        'y' -> 9
+
+    initialize a string builder S.
+
+    iterate each letter c in inputNumber:
+        if c is a letter:
+            append a corresponding number from letterToNumber using key c.
+        else:
+            append c directly to S.
+
+    return S.toString().
+}
+
+====================================================================================
+
+R5.10 Variable scope
+
+variable i at line 5: local variable at main method.
+variable b at line 6: local variable at main method.
+variable i at line 10: local variable at f method.
+variable n at line 12: local variable at f method.
+variable a at line 5: local variable at g method.
+variable b at line 5: local variable at g method.
+variable n at line 5: local variable at g method's loop.
+variable i at line 5: local variable at g method's loop.
+
+18.
+
+====================================================================================
+
+
+R5.14 Pass by value versus pass by reference
+
+Because in the method falseSwap, it operates 2 local variables but does not affect
+the value of variables in main method.
+
+====================================================================================
+
+
+R6.3 Considering loops
+
+a: 25
+b: 13
+c: 12
+d: out of bound as it tries to access a[10], but a has only 10 elements
+e: 11
+f: 25
+g: 12
+h: -1
+
+====================================================================================
+
+R6.10 Enhanced for-loop
+
+
+
+====================================================================================
+
+
+R6.23 Computing runs
+
+====================================================================================
+
+R6.29 Multi-dimensional arrays
+
+====================================================================================
+
+R6.34 Understanding arrays
+
+====================================================================================
+
+R7.1 Exceptions
+
+====================================================================================
+
+R7.6 Throwing and catching
+
+====================================================================================
+
+R7.7 Checked versus unchecked
+
+====================================================================================
+
+R7.8 Exceptions philosophy in Java
+
+====================================================================================
+
+R7.11 What is an exception object
+
+====================================================================================
+
+R7.15 Scanner exceptions. Explain why these are either checked or unchecked.
 
 
 
