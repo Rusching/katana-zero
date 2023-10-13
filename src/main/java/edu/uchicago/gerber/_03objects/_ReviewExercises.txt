@@ -4,44 +4,109 @@
 
 R8.1 Encapsulation
 
+Encapsulation is one of the four fundamental object-oriented programming principles
+ (the other three are inheritance, polymorphism, abstraction). Encapsulation allows to
+ bundle data and methods into one single unit called "class", and restrict direct access
+ to some of the object's components.
 
+ It can prevent unintended interfaces and misuse of data. And it can help modularity, that's
+ to say it defines distinct components of a software. It gives programmer a way to access
+ data inside a class. It groups methods with related functions together so it can reduce
+ complexity.
 
 ====================================================================================
 
 R8.4 Public interface
 
+Public interfaces of a class refer to a set of methods, attributes and other members that
+are exposed for other class to access. It allows external classes and methods to see and
+interact with it without knowing how it is implemented in detail.
+
+Implementation is the internal works and details in a class to actually carry out the work
+promised in interfaces. It should be hidden from external classes.
+
 ====================================================================================
 
 R8.7 Instance versus static
+
+Instance methods are methods associated with instances. They can operate specific
+instance variables and static variables. They cannot be 'static' keyword in declaration.
+They have to be invoked having an instance of the class.
+
+Static methods are methods associated with the class itself. They can operate static
+variables but cannot directly operate instance variables unless passing the instance
+variables to it. They must be decorated by 'static' keyword. They can be invoked without
+having an instance.
 
 ====================================================================================
 
 R8.8 Mutator and accessor
 
+Mutator method is also well known as setter method. It allows to set or modify the private
+value of an instance variable.
+
+Accessor method is also well known as getter method. It allows to get the value of the
+private instance variable.
+
+Through these two kinds of methods it allows users to indirectly access and modify private instance variables
+in encapsulated classes, which can better control the programs.
+
 ====================================================================================
 
 R8.9 Implicit parameter
+
+Implicit parameter is the objects itself when a method is invoked. Outside the method
+the implicit parameter is the object itself, and inside the method the object can be
+referred by 'this' keyword.
+
+Difference with explicit parameter:
+1. Implicit parameter is the object that invokes the method, while explicit parameters are
+the list of parameters passed into the method.
+2. Implicit parameter is only one (zero for static methods), but explicit parameters can be 0 or many.
+3. Implicit parameter can be referred by 'this' keyword inside the method.
 
 ====================================================================================
 
 R8.10 Implicit parameter
 
+1. one.
+2. zero.
+3. zero to many, but due to JVM limitation, explicitly passed parameters can be up to 255,
+so for instance methods the maximum number is 254 (1 slot occupied by implicit parameter)
+
 ====================================================================================
 
 R8.12 Constructors
+
+1. Many. constructor with different parameter sets can be overloaded.
+2. Yes, but there will be a default constructor with no arguments and
+initialize all instance variables.
+3. It's determined by the parameter list passed into the method. The method
+with the exactly same parameter list will be called.
 
 ====================================================================================
 
 R8.16 Instance variables
 
+The private keyword for instance variables means it restricts the access
+from other members outside the class.
+
 ====================================================================================
 
 R8.19 The 'this' reference
+
+'this' refers to the current instance of the class. The class instance itself that
+invokes the instance method, can be referred by the 'this' keyword. It's called
+the implicit parameter.
 
 ====================================================================================
 
 R8.20 Zero, null, false, empty String
 
-
+They have different types.
+zero: maybe int, float, double, short, long, byte.
+null: reference type
+false: boolean
+empty String: String
 
 

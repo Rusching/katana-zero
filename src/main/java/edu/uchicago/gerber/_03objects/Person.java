@@ -12,6 +12,10 @@ class SwapTest {
     }
 }
 
+class TTT {
+    public int a;
+    public TTT() {}
+}
 
 public class Person {
     public String name;
@@ -32,8 +36,11 @@ public class Person {
 
         SwapTest.swap(a, b);
 
-        System.out.println(a);
-        System.out.println(b);
+//        System.out.println(a);
+//        System.out.println(b);
+
+        TTT t = new TTT();
+        System.out.println(t.a);
 
     }
 }
