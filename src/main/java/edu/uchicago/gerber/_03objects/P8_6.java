@@ -41,6 +41,8 @@ class Car {
 }
 public class P8_6 {
     public static void main(String[] args) {
+//        Here is the testing data:
+
         Car car = new Car(20);
         car.addGas(100);
         System.out.println(String.format("Remaining fuel level %.2f gallons", car.getGasLevel()));

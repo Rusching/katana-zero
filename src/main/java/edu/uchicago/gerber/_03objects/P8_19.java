@@ -2,6 +2,10 @@ package edu.uchicago.gerber._03objects;
 
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
 @Getter
 class Cannonball {
     private double xPos;
@@ -59,8 +63,20 @@ class Cannonball {
 }
 public class P8_19 {
     public static void main(String[] args) {
-        Cannonball cannonball1 = new Cannonball(0);
-        cannonball1.shoot(45, 5);
+//        testing data
+
+//        Cannonball cannonball1 = new Cannonball(0);
+//        cannonball1.shoot(45, 5);
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the starting angle:");
+        double angle = scanner.nextDouble();
+        scanner.nextLine();
+        System.out.println("Enter the starting angle:");
+        double velocity = scanner.nextDouble();
+
+        Cannonball cannonball2 = new Cannonball(0);
+        cannonball2.shoot(angle, velocity);
     }
 
 }

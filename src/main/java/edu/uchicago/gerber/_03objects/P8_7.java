@@ -2,6 +2,7 @@ package edu.uchicago.gerber._03objects;
 
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 class ComboLock {
     private final int secret1;
@@ -60,16 +61,57 @@ class ComboLock {
 }
 public class P8_7 {
     public static void main(String[] args) {
-        ComboLock lock = new ComboLock(3, 32, 17);
-        lock.turnLeft(40);
-        lock.turnLeft(5);
-        lock.turnRight(18);
-        lock.open();
-        lock.reset();
-        lock.turnRight(3);
-        lock.turnLeft(11);
-        lock.turnRight(25);
-        lock.open();
+//        Here are some data for testing purpose:
+
+//        ComboLock lock = new ComboLock(3, 32, 17);
+//        lock.turnLeft(40);
+//        lock.turnLeft(5);
+//        lock.turnRight(18);
+//        lock.open();
+//        lock.reset();
+//        lock.turnRight(3);
+//        lock.turnLeft(11);
+//        lock.turnRight(25);
+//        lock.open();
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Set your combination lock (three numbers between 0 and 39):");
+
+        System.out.print("First number: ");
+        int secret1 = scanner.nextInt();
+
+        System.out.print("Second number: ");
+        int secret2 = scanner.nextInt();
+
+        System.out.print("Third number: ");
+        int secret3 = scanner.nextInt();
+
+        ComboLock lock2 = new ComboLock(secret1, secret2, secret3);
+
+        boolean continueTry = true;
+        while (continueTry) {
+            System.out.println("\nTry to open the lock:");
+
+            System.out.print("First turn right to: ");
+            lock2.turnRight(scanner.nextInt());
+
+            System.out.print("Then turn left to: ");
+            lock2.turnLeft(scanner.nextInt());
+
+            System.out.print("Finally, turn right to: ");
+            lock2.turnRight(scanner.nextInt());
+
+            if (lock2.open()) {
+                continueTry = false;
+            } else {
+                System.out.print("Open failed, would like to reset and re-try? enter 0 to quit, others to continue.");
+                int flagValue = scanner.nextInt();
+                if (flagValue == 0) {
+                    continueTry = false;
+                }
+            }
+        }
     }
 
 }
