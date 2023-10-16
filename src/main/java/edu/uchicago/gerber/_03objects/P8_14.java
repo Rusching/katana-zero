@@ -64,20 +64,21 @@ class Country {
 public class P8_14 {
     public static void main(String[] args) {
 
-//        Here are some example data for testing purpose.
+        System.out.println("Here is my testing data:");
 
-//        Country c1 = new Country("Lirendor", 15245000, 500321);
-//        Country c2 = new Country("Arquelia", 4863210, 230405);
-//        Country c3 = new Country("Marnolia", 21043572, 180132);
-//        Country c4 = new Country("Venstria", 7894215, 340675);
-//        Country c5 = new Country("Jelvanya", 95328, 420);
-//        Country c6 = new Country("Quoritania", 12231482, 781);
-//        Country c7 = new Country("Derlandia", 3548912, 215675);
-//
-//        System.out.println(String.format("The country with the largest area %.2f km2 is %s", Country.getLargestArea(), Country.getLargestAreaCountry()));
-//        System.out.println(String.format("The country with the largest population %.2f people is %s", Country.getLargestPopulation(), Country.getLargestPopulationCountry()));
-//        System.out.println(String.format("The country with the largest population density %.2f people per km2 is %s", Country.getLargestPopulationDensity(), Country.getLargestPopulationDensityCountry()));
+        Country c1 = new Country("Lirendor", 15245000, 500321);
+        Country c2 = new Country("Arquelia", 4863210, 230405);
+        Country c3 = new Country("Marnolia", 21043572, 180132);
+        Country c4 = new Country("Venstria", 7894215, 340675);
+        Country c5 = new Country("Jelvanya", 95328, 420);
+        Country c6 = new Country("Quoritania", 12231482, 781);
+        Country c7 = new Country("Derlandia", 3548912, 215675);
 
+        System.out.println(String.format("The country with the largest area %.2f km2 is %s", Country.getLargestArea(), Country.getLargestAreaCountry()));
+        System.out.println(String.format("The country with the largest population %.2f people is %s", Country.getLargestPopulation(), Country.getLargestPopulationCountry()));
+        System.out.println(String.format("The country with the largest population density %.2f people per km2 is %s", Country.getLargestPopulationDensity(), Country.getLargestPopulationDensityCountry()));
+
+        System.out.println();
 
         Scanner scanner = new Scanner(System.in);
 

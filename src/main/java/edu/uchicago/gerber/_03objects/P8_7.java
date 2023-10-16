@@ -61,18 +61,21 @@ class ComboLock {
 }
 public class P8_7 {
     public static void main(String[] args) {
-//        Here are some data for testing purpose:
 
-//        ComboLock lock = new ComboLock(3, 32, 17);
-//        lock.turnLeft(40);
-//        lock.turnLeft(5);
-//        lock.turnRight(18);
-//        lock.open();
-//        lock.reset();
-//        lock.turnRight(3);
-//        lock.turnLeft(11);
-//        lock.turnRight(25);
-//        lock.open();
+        System.out.println("Here is my testing data:");
+
+        ComboLock lock = new ComboLock(3, 32, 17);
+        lock.turnLeft(40);
+        lock.turnLeft(5);
+        lock.turnRight(18);
+        lock.open();
+        lock.reset();
+        lock.turnRight(3);
+        lock.turnLeft(11);
+        lock.turnRight(25);
+        lock.open();
+
+        System.out.println();
 
         Scanner scanner = new Scanner(System.in);
 

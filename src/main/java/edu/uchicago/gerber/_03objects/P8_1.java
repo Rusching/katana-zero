@@ -36,7 +36,7 @@ class MicrowaveControlPanel {
 
 public class P8_1 {
     public static void main(String[] args) {
-        System.out.println("Here are my testing data:");
+        System.out.println("Here is my testing data:");
         System.out.println();
         MicrowaveControlPanel microwave = new MicrowaveControlPanel();
         microwave.increaseButton();

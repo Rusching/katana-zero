@@ -27,7 +27,7 @@ class SodaCan {
 
 public class P8_5 {
     public static void main(String[] args) {
-//        Here are some testing data:
+        System.out.println("Here is my testing data:");
 
         SodaCan sodaCan1 = new SodaCan(2, 10);
         SodaCan sodaCan2 = new SodaCan(5, 5);
@@ -35,6 +35,8 @@ public class P8_5 {
         System.out.println(String.format("SodaCan1 height %d, radius %d, surface area %.5f, volumn %.5f", sodaCan1.getHeight(), sodaCan1.getRadius(), sodaCan1.getSurfaceArea(), sodaCan1.getVolumn()));
         System.out.println(String.format("SodaCan2 height %d, radius %d, surface area %.5f, volumn %.5f", sodaCan2.getHeight(), sodaCan2.getRadius(), sodaCan2.getSurfaceArea(), sodaCan2.getVolumn()));
         System.out.println(String.format("SodaCan3 height %d, radius %d, surface area %.5f, volumn %.5f", sodaCan3.getHeight(), sodaCan3.getRadius(), sodaCan3.getSurfaceArea(), sodaCan3.getVolumn()));
+
+        System.out.println();
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please input SodaCan height:");

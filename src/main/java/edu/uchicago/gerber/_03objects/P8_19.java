@@ -63,10 +63,11 @@ class Cannonball {
 }
 public class P8_19 {
     public static void main(String[] args) {
-//        testing data
 
-//        Cannonball cannonball1 = new Cannonball(0);
-//        cannonball1.shoot(45, 5);
+        System.out.println("Here is my testing data:");
+
+        Cannonball cannonball1 = new Cannonball(0);
+        cannonball1.shoot(45, 5);
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the starting angle:");
