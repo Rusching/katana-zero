@@ -1,0 +1,28 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class Object {
+    }
+
+    class Person {
+    }
+
+    class Instructor {
+    }
+
+    class Employee {
+    }
+
+    class Classroom {
+    }
+
+    class Student {
+    }
+
+    Object <|-- Person
+    Person <|-- Instructor
+    Person <|-- Employee
+    Object <|-- Classroom
+    Person <|-- Student
+
+@enduml

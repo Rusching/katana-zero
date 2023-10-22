@@ -2,8 +2,133 @@
 # Use this file to answer Review Exercises from the Big Java textbook
 #########################################################################
 
+R9.1 Superclass and subclass
+a.
+superclass: Employee
+subclass: Manager
 
+b.
+superclass: Student
+subclass: GraduateStudent
 
+c.
+superclass: Person
+subclass: Student
 
+d.
+superclass: Employee
+subclass: Professor
 
+e.
+superclass: BankAccount
+subclass: CheckingAccount
 
+f.
+superclass: Vehicle
+subclass: Car
+
+g.
+superclass: Vehicle
+subclass: Minivan
+
+h.
+superclass: Car
+subclass: Minivan
+
+i.
+superclass: Vehicle
+subclass: Truck
+
+====================================================================================
+
+R9.2 superclass and subclass
+
+For the subclasses,
+1. They have many common attributes like productID, quality, price
+   and so on. It's not necessary to abstract to more specific classes.
+
+2. They do not have many unique behaviors to implement in subclasses.
+   Looks like the small appliances do not have significantly different
+   behaviors to implement.
+
+3. Not easy to add new product; we have to modify the codes to add a
+   new subclass to do this.
+
+4. Leads to additional overhead.
+
+====================================================================================
+
+R9.4 SavingsAccount
+
+For SavingAccount,
+the methods inherited are:   deposit(). getBalance()
+the methods overridden are:  monthEnd(), withdraw()
+the methods added are:       setInterestedRate()
+====================================================================================
+
+R9.6 Sandwich
+
+a, d
+
+====================================================================================
+
+R9.7 Inheritance -use the UML diagram tool in IntelliJ and indicate to the grader where uml file is located
+
+The UML diagram generated is put in file "R9_7.puml". As I'm using community version of
+Intellij, I cannot use the default UML generator but PlantUML.
+
+====================================================================================
+
+R9.8 Inheritance -use the UML diagram tool in IntelliJ and indicate to the grader where uml file is located
+
+The UML diagram generated is put in file "R9_8.puml". As I'm using community version of
+Intellij, I cannot use the default UML generator but PlantUML.
+
+====================================================================================
+
+R9.9 Inheritance -use the UML diagram tool in IntelliJ and indicate to the grader where uml file is located
+
+The UML diagram generated is put in file "R9_9.puml". As I'm using community version of
+Intellij, I cannot use the default UML generator but PlantUML.
+
+One thing to note is that both "Student" and "Employee" can be "SeminarSpeaker", but due to Java
+single inheritance one class cannot inherit from multiple classes, and the question said it is a
+class so that I cannot define it as an interface. So I put "SeminarSpeaker" under "Person" to make
+it an individual subclass.
+
+====================================================================================
+
+R9.10 Casting
+
+(BankAccount) x is a casting of reference type.
+
+It is used to tell the compiler to treat x as a BankAccount type reference. It does
+not actually modify the object in memory.
+
+(int) x is a casting of primitive.
+
+It is used to convert between different primitive types. The original value is not modified,
+and a new converted value is produced. Sometimes there would be information loss.
+
+====================================================================================
+
+R9.11 instanceof operator
+
+a. true. System.out is PrintStream
+b. true. System.out is PrintStream, and OutputStream <|-- FilterOutputStream <|-- PrintStream
+c. false. No inheritance relation.
+d. true. Every Java class inherits from Object.
+e. true. System.out is PrintStream, and Closeable <|-- OutputStream <|-- FilterOutputStream <|-- PrintStream
+f. false. No inheritance relation.
+====================================================================================
+
+R9.14 Edible interface
+
+a. legal.
+b. not legal.
+c. legal.
+d. not legal.
+e. not legal.
+f. not legal.
+g. not legal.
+h. not legal.
