@@ -74,21 +74,21 @@ a, d
 
 R9.7 Inheritance -use the UML diagram tool in IntelliJ and indicate to the grader where uml file is located
 
-The UML diagram generated is put in file "R9_7.puml". As I'm using community version of
+The UML diagram generated is put in file "R9_7.puml" in the same directory with "_ReviewExercises.txt". As I'm using community version of
 Intellij, I cannot use the default UML generator but PlantUML.
 
 ====================================================================================
 
 R9.8 Inheritance -use the UML diagram tool in IntelliJ and indicate to the grader where uml file is located
 
-The UML diagram generated is put in file "R9_8.puml". As I'm using community version of
+The UML diagram generated is put in file "R9_8.puml" in the same directory with "_ReviewExercises.txt". As I'm using community version of
 Intellij, I cannot use the default UML generator but PlantUML.
 
 ====================================================================================
 
 R9.9 Inheritance -use the UML diagram tool in IntelliJ and indicate to the grader where uml file is located
 
-The UML diagram generated is put in file "R9_9.puml". As I'm using community version of
+The UML diagram generated is put in file "R9_9.puml" in the same directory with "_ReviewExercises.txt". As I'm using community version of
 Intellij, I cannot use the default UML generator but PlantUML.
 
 One thing to note is that both "Student" and "Employee" can be "SeminarSpeaker", but due to Java
