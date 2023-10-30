@@ -2,6 +2,123 @@
 # Use this file to answer Review Exercises from the Big Java textbook
 #########################################################################
 
+R10.5 Events
+
+Event object is an instance of an event class that represents a specific
+event, it's an encapsulation of events details including source, type, created
+time and so on.
+
+Event source is the object that generate an event, e.g. a button can be
+the event source of a click event.
+
+Event listener is an interface that defines one or more methods to handle
+specific types of events.
+
+========================================================================
+R10.6 actionPerformed
+
+1. actionPerformed is called by the Java AWT or Swing event dispatching system.
+
+2. The actionPerformed is called after and event object is generated and the
+event has been processed by the event dispatching system.
+
+========================================================================
+R10.11 Inner class and event-listeners
+
+1. Advantages of using inner classes:
+    1.1 It's close to where it is needed, without cluttering up the reminder
+        of the project.
+    1.2 It can access to the instance variables and methods of the surrounding
+        class.
+
+2. Yes, we can still implement the listener classes just without the corresponding
+    advantages.
+
+3. Using separate external classes.
+========================================================================
+R10.14 Object hierarchies
+
+1. public void setTabSize(int size); public int getTabSize();
+
+2. setText(String t)
+
+3. getPreferredSize()
+========================================================================
+R10.22 Graphic methods
+
+To change the color of flags, we can either pass the colors of the left
+and right flags as parameters, or introduce the random package to generate
+random colors.
+
+In the first option, we pass leftColor and rightColor into this method and
+modify the calls of g.setColor to:
+    g.setColor(leftColor);
+    g.setColor(rightColor);
+
+In the second option, we can import the random package 'java.util.random'":
+    Random rand = new Random();
+    Color randomColor() {
+        return new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
+    }
+    g.setColor(randomColor());
+    g.setColor(randomColor());
+========================================================================
+R11.2 Layout managers
+
+1. It's platform independent while some explicit setting might look good on
+    certain platforms while might look bad on others.
+2. When the container's size changes, the size would automatically change using
+    layout managers.
+3. It's easy to maintain as we would not need to recalculate many extra
+    positions.
+
+========================================================================
+R11.11 ButtonGroup
+
+When we want to have a radio button, we want user to select exact one option and
+in the meantime deselects the others. Button group has such property that it's
+exclusive: if one is selected the others automatically deselected.
+
+But the checkboxes don't have such property as they are designed to record the
+independent actions. They are not inherently exclusive so do not satisfy our demand.
+========================================================================
+R11.19 Types of Events
+
+They are both subclasses of AWTEvent, but they are different:
+
+1. ActionEvent: it's more high-level, represents more semantic event such as
+    button pressing, menu activating. It can be triggered by JButton, JMenuItem
+    and other action-oriented objects.
+
+2. MouseEvent: it's more low-level, mouth-related actions, including mouse clicks,
+    movements and so on. Itt can be triggered by almost all AWT components.
+========================================================================
+R11.20 Events
+
+ActionEvent:
+    source of the event; id; command string; modifiers;
+MouseEvent:
+    x and y coordinates; click count; popup trigger; button; related target;
+========================================================================
+R11.21 ActionListener versus MouseListener
+
+ActionListener is designed to handle simple action event, like events generated
+by buttons, text fields. The actions they generated are single and straightforward
+so they only need one method.
+
+But,
+
+MouseListener is designed to handle various mouse-related events. They are much
+more diverse in nature. Different components and different user interactions can
+natural yield different mouse event types.
+
+(The five methods are:
+    1. mouseClicked(MouseEvent e)
+    2. mousePressed(MouseEvent e)
+    3. mouseReleased(MouseEvent e)
+    4. mouseEntered(MouseEvent e)
+    5. mouseExited(MouseEvent e)
+)
 
 
 
