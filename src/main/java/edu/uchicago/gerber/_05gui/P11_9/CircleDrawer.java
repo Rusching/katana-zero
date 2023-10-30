@@ -11,7 +11,7 @@ public class CircleDrawer extends JFrame {
 
     public CircleDrawer() {
         setTitle("Circle Drawer");
-        setSize(400, 400);
+        setSize(600, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         addMouseListener(new MouseAdapter() {
@@ -44,9 +44,7 @@ public class CircleDrawer extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            CircleDrawer circleDrawer = new CircleDrawer();
-            circleDrawer.setVisible(true);
-        });
+        CircleDrawer circleDrawer = new CircleDrawer();
+        circleDrawer.setVisible(true);
     }
 }
