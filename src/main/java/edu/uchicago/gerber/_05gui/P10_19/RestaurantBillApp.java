@@ -65,8 +65,8 @@ class RestaurantBillFrame extends JFrame {
         addItemButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                addItem(itemNameField.getText(), Double.parseDouble(priceField.getText()));
                 notPopularDishes.add(new Dish(itemNameField.getText(), Double.parseDouble(priceField.getText())));
+                addItem(itemNameField.getText(), Double.parseDouble(priceField.getText()));
                 itemNameField.setText("");
                 priceField.setText("");
             }
@@ -114,7 +114,6 @@ class RestaurantBillFrame extends JFrame {
             Integer count = popularDishCountMap.get(key);
             billArea.append(key + " - " + count + " - " + df.format(popularDishPriceMap.get(key) * count) + "\n");
         }
-//        billArea.append(itemName + " - $" + df.format(price) + "\n");
         for (Dish dish: notPopularDishes) {
             billArea.append(dish.getDishName() + " - " + 1 + " - " + df.format(dish.getDishPrice()) + "\n");
         }
