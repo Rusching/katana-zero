@@ -1,0 +1,19 @@
+@startuml
+
+class Customer {
+}
+
+class Address {
+}
+
+class Invoice {
+}
+
+class Product {
+}
+
+Customer o-- Invoice : has >
+Invoice  ..>  Product : depents on >
+Customer  *--  Address : has >
+
+@enduml

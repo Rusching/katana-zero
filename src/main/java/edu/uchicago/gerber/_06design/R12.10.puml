@@ -1,0 +1,15 @@
+@startuml
+
+class Quiz {
+}
+
+class Question {
+}
+
+class ChoiceQuestion {
+}
+
+Quiz  o--  Question : aggregation >
+Question <|-- ChoiceQuestion : extends
+
+@enduml
