@@ -2,8 +2,163 @@
 # Use this file to answer Review Exercises from the Big Java textbook
 #########################################################################
 
+R13.1 Terms
 
+a. Recursion
 
+    Recursion is programming technique that a function calls itself directly or indirectly
+    to solve a problem. Everytime it divides the problem into smaller ones until it
+    reaches the base case that can be processed directly without calling itself.
 
+b. Iteration
 
+    Iteration is a process repeating a block of codes multiple times, usually under
+    "for", "while", "do-while" clauses in Java. Each repetition is called an iteration.
 
+c. Infinite recursion
+
+    Infinite recursion is a case of recursion. It happens when a recursion never reaches the
+    base case. This usually leads to stack overflow.
+d. Recursion Helper Method
+
+    Recursion helper method is a kind of method used to handle recursive calls. It
+    may have extra parameters to keep track of the state during the recursion. It's
+    often used to provide a cleaner interface for the callers by hiding complex recursive
+    logic inside a helper method.
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+R13.2 Smallest value
+
+    We can use a recursion to find the minimum number in an array.
+
+    Base case:
+        when there is only one element in the array, return it directly.
+    Otherwise:
+        when there are at least 2 elements in the array,
+        1. find the smallest number of the sub-array that starts from the
+            second element;
+        2. compare the first element in current array with the smallest
+            number in the sub-array, and return the smaller one.
+
+    So in the recursion, it would recursively separate the array by continually
+    finding the smallest number in sub-arrays and find the smallest number in
+    the whole array step by step.
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+R13.4 Sort array of numbers
+
+    We can use a recursion to sort an array.
+
+    Base case:
+        when there is only one element in the array it's sorted already.
+
+    Otherwise:
+        when there are at least 2 elements in the array:
+        1. find the smallest the element in the array, and swap it with the
+            first element. Now the array's smallest element is at the first
+            location.
+        2. call the recursion method to sort the sub-array that starts from
+            the second element.
+
+    This is true because in every recursion, it moves the smallest element in
+    the front of the sub-array, which would derive an ordered array in the end.
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+R13.6 Exponents recursively
+
+    The recursion method of computing x^n:
+
+    public double power(double x, int n) {
+        if (n == 1) {
+            return x;
+        } else {
+            return x * power(x, n - 1);
+        }
+    }
+
+    power(x, n) is the method to compute x^n. The key point is that it can be
+    defined as this:
+        if n == 1: power(x, n) = x
+        if n != 1: power(x, n) = x * power(x, n - 1)
+    So we can use a recursion method to calculate this.
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+R13.8 Factorial recursively
+
+    The recursion method of computing n!:
+
+        public int factorial(int n) {
+            if (n == 1) {
+                return n;
+            } else {
+                return n * factorial(n - 1);
+            }
+        }
+
+        factorial(n) is the method to compute n!. The key point is that it can be
+        defined as this:
+            if n == 1: factorial(x, n) = x
+            if n != 1: factorial(x, n) = n * factorial(n - 1)
+        So we can use a recursion method to calculate this.
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+R19.1 operations on Stream<String>
+
+Suppose the steam name is stringStream.
+
+1. int count = stringStream.filter(w -> w.startsWith("a"))
+                           .count();
+
+2. int count = stringStream.filter(w -> w.startsWith("a"))
+                           .filter(w -> w.length() > 10)
+                           .count();
+
+3. boolean flag = stringStream.filter(w -> w.startsWith("a"))
+                              .filter(w -> w.length() > 10)
+                              .limit(100)
+                              .count() == 100;
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+R19.3 How to read Java8
+
+The orders of constrain the word length to more than 10 and limit the
+word number are different, and this can lead a huge difference.
+
+the first expression firstly limits the word length to more than 10,
+then limit the number to 100. So it may be output more than 100 outputs,
+or less than or equal to 100 outputs.
+
+the second expression firstly limits the word number to 100, and then
+constrain the length of word to more than 10. the latter step is performed
+based on the result of the former step so the result number is must less
+than or equal to 100. It must not exceed 100.
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+R19.6 Transforming values
+
+suppose the original double stream is numbers.
+
+1. Stream<String> strings = numbers.map(n -> n.toString());
+
+2. Stream<Double> numbers = strings.map(s -> Double.parseDouble(s));
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+R19.11 Terminal operations
+
+1. forEach, toArray, collect, max, min, count, allMatch, anyMatch, noneMatch, findFirst, findAny
+
+2. forEach, toArray, collect, sum, average, max, min, count, allMatch, anyMatch, noneMatch, findFirst, findAny
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+R19.12 Collectors
+
+groupingBy(), maxBy(), summingLong(), counting(), toSet(),
