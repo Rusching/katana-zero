@@ -18,7 +18,7 @@ public class P13_3 {
         phonePad.put('8', "TUV");
         phonePad.put('9', "XYZ");
     }
-    private static final String wordsPath = "Y:\\Research\\Java\\projava-Rusching\\src\\main\\java\\edu\\uchicago\\gerber\\_07streams\\words";
+    private static final String wordsPath = ".\\src\\main\\java\\edu\\uchicago\\gerber\\_07streams\\words";
     public static HashSet<String> wordsDict;
 
     public static HashMap<String, ArrayList<String>> number2word;
