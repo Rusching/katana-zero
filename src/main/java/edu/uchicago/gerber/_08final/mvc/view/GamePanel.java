@@ -195,8 +195,6 @@ public class GamePanel extends Panel {
 
         //playing and not paused!
         else {
-
-
             moveDrawMovables(grpOff,
                     CommandCenter.getInstance().getMovDebris(),
                     CommandCenter.getInstance().getMovFloaters(),

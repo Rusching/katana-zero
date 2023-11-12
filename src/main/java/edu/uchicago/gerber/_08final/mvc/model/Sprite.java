@@ -5,10 +5,8 @@ import edu.uchicago.gerber._08final.mvc.controller.Game;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 
 import edu.uchicago.gerber._08final.mvc.controller.GameOp;
@@ -59,6 +57,9 @@ public abstract class Sprite implements Movable {
     //Keys in this map can be any object (?) you want. See Falcon and WhiteCloudDebris for example implementations.
     private Map<?, BufferedImage> rasterMap;
 
+    // If the sprite has many different states, and each state has many frames to display, use
+    // this map to store the animation.
+    private Map<?, ArrayList<BufferedImage>> rasterMaps;
 
     //constructor
     public Sprite() {

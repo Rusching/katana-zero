@@ -17,15 +17,26 @@ public class WhiteCloudDebris extends Sprite{
 
         Map<Integer, BufferedImage> rasterMap = new HashMap<>();
         //see readme.txt file in the resources/imgs/exp directory for how I created these assets
-        rasterMap.put(0, loadGraphic("/imgs/exp/row-1-column-1.png") );
-        rasterMap.put(1, loadGraphic("/imgs/exp/row-1-column-2.png") );
-        rasterMap.put(2, loadGraphic("/imgs/exp/row-1-column-3.png") );
-        rasterMap.put(3, loadGraphic("/imgs/exp/row-2-column-1.png") );
-        rasterMap.put(4, loadGraphic("/imgs/exp/row-2-column-2.png") );
-        rasterMap.put(5, loadGraphic("/imgs/exp/row-2-column-3.png") );
-        rasterMap.put(6, loadGraphic("/imgs/exp/row-3-column-1.png") );
-        rasterMap.put(7, loadGraphic("/imgs/exp/row-3-column-2.png") );
-        rasterMap.put(8, loadGraphic("/imgs/exp/row-3-column-3.png") );
+//        rasterMap.put(0, loadGraphic("/imgs/exp/row-1-column-1.png") );
+//        rasterMap.put(1, loadGraphic("/imgs/exp/row-1-column-2.png") );
+//        rasterMap.put(2, loadGraphic("/imgs/exp/row-1-column-3.png") );
+//        rasterMap.put(3, loadGraphic("/imgs/exp/row-2-column-1.png") );
+//        rasterMap.put(4, loadGraphic("/imgs/exp/row-2-column-2.png") );
+//        rasterMap.put(5, loadGraphic("/imgs/exp/row-2-column-3.png") );
+//        rasterMap.put(6, loadGraphic("/imgs/exp/row-3-column-1.png") );
+//        rasterMap.put(7, loadGraphic("/imgs/exp/row-3-column-2.png") );
+//        rasterMap.put(8, loadGraphic("/imgs/exp/row-3-column-3.png") );
+        rasterMap.put(0, loadGraphic("/imgs/ZeroSprites/idle/spr_casual_idle_0.png") );
+        rasterMap.put(1, loadGraphic("/imgs/ZeroSprites/idle/spr_casual_idle_1.png") );
+        rasterMap.put(2, loadGraphic("/imgs/ZeroSprites/idle/spr_casual_idle_2.png") );
+        rasterMap.put(3, loadGraphic("/imgs/ZeroSprites/idle/spr_casual_idle_3.png") );
+        rasterMap.put(4, loadGraphic("/imgs/ZeroSprites/idle/spr_casual_idle_4.png") );
+        rasterMap.put(5, loadGraphic("/imgs/ZeroSprites/idle/spr_casual_idle_5.png") );
+        rasterMap.put(6, loadGraphic("/imgs/ZeroSprites/idle/spr_casual_idle_6.png") );
+        rasterMap.put(7, loadGraphic("/imgs/ZeroSprites/idle/spr_casual_idle_7.png") );
+        rasterMap.put(8, loadGraphic("/imgs/ZeroSprites/idle/spr_casual_idle_8.png") );
+        rasterMap.put(9, loadGraphic("/imgs/ZeroSprites/idle/spr_casual_idle_9.png") );
+        rasterMap.put(10, loadGraphic("/imgs/ZeroSprites/idle/spr_casual_idle_10.png") );
 
         setRasterMap(rasterMap);
 

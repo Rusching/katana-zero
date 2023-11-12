@@ -29,7 +29,7 @@ public class CommandCenter {
 	//separate reference. Use final to ensure that the falcon ref always points to the single falcon object on heap.
 	//Lombok will not provide setter methods on final members
 	private final Falcon falcon  = new Falcon();
-
+	private final Zero zero = new Zero();
 	//lists containing our movables subdivided by team
 	private final List<Movable> movDebris = new LinkedList<>();
 	private final List<Movable> movFriends = new LinkedList<>();
@@ -67,6 +67,7 @@ public class CommandCenter {
 		initFalconAndDecrementFalconNum();
 		//add the falcon to the movFriends list
 		opsQueue.enqueue(falcon, GameOp.Action.ADD);
+		opsQueue.enqueue(zero, GameOp.Action.ADD);
 
 
 
@@ -92,6 +93,7 @@ public class CommandCenter {
 		falcon.setInvisible(Falcon.INITIAL_SPAWN_TIME/4);
 		//put falcon in the middle of the game-space
 		falcon.setCenter(new Point(Game.DIM.width / 2, Game.DIM.height / 2));
+		zero.setCenter(new Point(Game.DIM.width / 2 + 10, Game.DIM.height / 2));
 		//random number between 0-360 in steps of TURN_STEP
 		falcon.setOrientation(Game.R.nextInt(360 / Falcon.TURN_STEP) * Falcon.TURN_STEP);
 		falcon.setDeltaX(0);
