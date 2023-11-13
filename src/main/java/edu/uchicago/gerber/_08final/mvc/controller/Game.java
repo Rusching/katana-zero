@@ -1,6 +1,7 @@
 package edu.uchicago.gerber._08final.mvc.controller;
 
 import edu.uchicago.gerber._08final.mvc.model.*;
+import edu.uchicago.gerber._08final.mvc.model.Character;
 import edu.uchicago.gerber._08final.mvc.model.Zero;
 import edu.uchicago.gerber._08final.mvc.view.GamePanel;
 
@@ -107,6 +108,7 @@ public class Game implements Runnable, KeyListener {
 
             checkCollisions();
             checkNewLevel();
+            checkWallCollisions();
 //            checkFloaters();
 
             //keep track of the frame for development purposes
@@ -136,23 +138,55 @@ public class Game implements Runnable, KeyListener {
     }
 
 
+//    private void checkWallCollisions() {
+//        for (Character movCharacter: CommandCenter.getInstance().getMovCharacters()) {
+//            for (Movable movFloor: CommandCenter.getInstance().getMovFloors()) {
+//                Rectangle charRect = movCharacter.getBoundingBox();
+//                Rectangle blockRect = movFloor.getBoundingBox();
+//                if (charRect.x + charRect.width >= blockRect.x && charRect.x <= blockRect.x + blockRect.width) {
+//                    // vertical collision
+//                    if (charRect.y <= blockRect.y + blockRect.height || charRect.y + charRect.height >= blockRect.y) {
+//                        movCharacter.setY_velocity(0);
+//                    }
+//                }
+//                if (charRect.y + charRect.height >= blockRect.y && charRect.y <= blockRect.y + blockRect.height) {
+//                    // horizontal collision
+//                    if (charRect.x <= blockRect.x + blockRect.width || charRect.x + charRect.width >= blockRect.x) {
+//                        movCharacter.setX_velocity(0);
+//                    }
+//                }
+//            }
+//        }
+//    }
     private void checkWallCollisions() {
-        for (Movable movCharacter: CommandCenter.getInstance().getMovFriends()) {
-            for (Movable movFloor: CommandCenter.getInstance().getMovFloors()) {
+        for (Character movCharacter : CommandCenter.getInstance().getMovCharacters()) {
+            for (Movable movFloor : CommandCenter.getInstance().getMovFloors()) {
                 Rectangle charRect = movCharacter.getBoundingBox();
                 Rectangle blockRect = movFloor.getBoundingBox();
-//                Point charCenter = movCharacter.getCenter();
-//                Point blockCenter = movFloor.getCenter();
-                if (charRect.x + charRect.width >= blockRect.x && charRect.x <= blockRect.x + blockRect.width) {
-                    // vertical collision
-                    if (charRect.y <= blockRect.y + blockRect.height || charRect.y + charRect.height >= blockRect.height) {
-                            
+
+                if (charRect.intersects(blockRect)) {
+                    // There's a collision
+                    // Now determine the side of the collision
+                    float charBottom = charRect.y + charRect.height;
+                    float blockTop = blockRect.y;
+                    float charRight = charRect.x + charRect.width;
+                    float blockLeft = blockRect.x;
+
+                    // Vertical collision (e.g., landing on top of a block)
+                    if (charBottom > blockTop && movCharacter.getY_velocity() > 0) {
+                        // Adjust character position to be on top of the block
+                        movCharacter.setCenter(new Point(movCharacter.getCenter().x, (int) (blockTop - charRect.height + 19)));
+                        movCharacter.setY_velocity(0);
                     }
+
+                    // Horizontal collision (e.g., running into a wall)
+                    // Adjust similar to vertical collision
+                    // You may need to further check which side the character hit the block
                 }
             }
         }
-
     }
+
     private void checkCollisions() {
 
         Point pntFriendCenter, pntFoeCenter;

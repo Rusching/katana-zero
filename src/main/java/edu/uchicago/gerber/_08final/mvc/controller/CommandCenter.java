@@ -3,6 +3,7 @@ package edu.uchicago.gerber._08final.mvc.controller;
 
 
 import edu.uchicago.gerber._08final.mvc.model.*;
+import edu.uchicago.gerber._08final.mvc.model.Character;
 import edu.uchicago.gerber._08final.mvc.model.Zero;
 import lombok.Data;
 
@@ -37,6 +38,10 @@ public class CommandCenter {
 	private final List<Movable> movFoes = new LinkedList<>();
 	private final List<Movable> movFloaters = new LinkedList<>();
 	private final List<Movable> movFloors = new LinkedList<>();
+	private List<Character> movCharacters = new LinkedList<>();
+	{
+		movCharacters.add(zero);
+	}
 	private final GameOpsQueue opsQueue = new GameOpsQueue();
 
 	//for sound playing. Limit the number of threads to 5 at a time.

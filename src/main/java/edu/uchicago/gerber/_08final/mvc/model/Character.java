@@ -12,7 +12,7 @@ import java.util.Map;
 import static java.lang.Math.abs;
 
 @Data
-public class Zero extends Character{
+public class Character extends Sprite{
 
     // states
     private boolean isIdle = true;
@@ -82,8 +82,8 @@ public class Zero extends Character{
         WALK
     }
 
-    public Zero() {
-        setTeam(Team.FRIEND);
+    public Character() {
+        setTeam(Team.CHARACTER);
         setRadius(MIN_RADIUS);
         setBoundingType(BoundingType.RECTANGLE);
         setBoundingBox(new Rectangle(getCenter().x - 18, getCenter().y - 18, BLOCK_SIZE, BLOCK_SIZE));
