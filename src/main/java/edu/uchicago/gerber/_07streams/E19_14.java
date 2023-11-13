@@ -14,7 +14,7 @@ public class E19_14 {
 
         try (Stream<String> lines = Files.lines(Paths.get(filePath))) {
             ArrayList<String> words = lines.collect(Collectors.toCollection(ArrayList::new));
-
+            
             Optional<String> palindrome = words.parallelStream()
                     .filter(word -> word.length() > 5)
                     .filter(word -> new StringBuilder(word).reverse().toString().equals(word))

@@ -370,7 +370,7 @@ public class Game implements Runnable, KeyListener {
             level = level + 1;
             CommandCenter.getInstance().setLevel(level);
             //spawn some big new asteroids
-            spawnBigAsteroids(level);
+//            spawnBigAsteroids(level);
             //make falcon invincible momentarily in case new asteroids spawn on top of him, and give player
             //time to adjust to new asteroids in game space.
             CommandCenter.getInstance().getFalcon().setShield(Falcon.INITIAL_SPAWN_TIME);
@@ -397,6 +397,11 @@ public class Game implements Runnable, KeyListener {
 
         if (keyCode == START && CommandCenter.getInstance().isGameOver()) {
             CommandCenter.getInstance().initGame();
+            CommandCenter.getInstance().getOpsQueue().enqueue(
+                    new Floor(new Point(20, 20), new Point(30, 30)),
+                    GameOp.Action.ADD);
+//            buildWall();
+            System.out.println("Attempted to create floor");
             return;
         }
 

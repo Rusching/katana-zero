@@ -70,7 +70,6 @@ public class CommandCenter {
 		opsQueue.enqueue(zero, GameOp.Action.ADD);
 
 
-
 	}
 
 	private void generateStarField(){

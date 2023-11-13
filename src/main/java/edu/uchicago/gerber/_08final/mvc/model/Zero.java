@@ -19,7 +19,7 @@ public class Zero extends Sprite{
     private boolean isRolling = false;
     private boolean isRunning = false;
     public static final int MIN_RADIUS = 28;
-
+    private static String zeroImgPathPrefix = "ZeroSprites/";
     enum Actions {
         ATTACK,
         BIG_SLASH,
@@ -46,19 +46,20 @@ public class Zero extends Sprite{
         WALK
     }
 
-    private static String imgPathPrefix = "/imgs/ZeroSprites/";
     public Zero() {
         setTeam(Team.FRIEND);
         setRadius(MIN_RADIUS);
+        setBoundingType(BoundingType.RECTANGLE);
+
 
         Map<Actions, ArrayList<BufferedImage>> rasterMaps = new HashMap<>();
 
         ArrayList<BufferedImage> rasterMapIdle = new ArrayList<>();
-        for (int i = 0; i < 11; i++) {rasterMapIdle.add(loadGraphic(imgPathPrefix + String.format("stand/spr_idle_%d.png", i)));}
+        for (int i = 0; i < 11; i++) {rasterMapIdle.add(loadGraphic(imgPathPrefix + zeroImgPathPrefix + String.format("stand/spr_idle_%d.png", i)));}
         rasterMaps.put(Actions.STAND, rasterMapIdle);
 
         ArrayList<BufferedImage> rasterMapRun = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {rasterMapRun.add(loadGraphic(imgPathPrefix + String.format("run/spr_run_%d.png", i)));}
+        for (int i = 0; i < 10; i++) {rasterMapRun.add(loadGraphic(imgPathPrefix + zeroImgPathPrefix + String.format("run/spr_run_%d.png", i)));}
         rasterMaps.put(Actions.RUN, rasterMapRun);
 
         setRasterMaps(rasterMaps);

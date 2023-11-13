@@ -36,6 +36,11 @@ public abstract class Sprite implements Movable {
     //the radius of circumscribing/inscribing circle
     private int radius;
 
+    enum BoundingType {CIRCLE, RECTANGLE};
+
+    private BoundingType boundingType;
+
+    private Rectangle boundingBox;
     //orientation from 0-359
     private int orientation;
     //natural mortality (short-lived sprites only)
@@ -43,6 +48,7 @@ public abstract class Sprite implements Movable {
 
     //some sprites spin, such as floaters and asteroids
     private int spin;
+    public static String imgPathPrefix = "/imgs/";
 
 
     //these are Cartesian points used to draw the polygon in vector mode.
