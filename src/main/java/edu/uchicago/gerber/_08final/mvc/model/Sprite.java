@@ -31,6 +31,7 @@ public abstract class Sprite implements Movable {
     //this causes movement; change-in-x and change-in-y
     private double deltaX, deltaY;
 
+    public final int BLOCK_SIZE = 36;
     //every sprite has a team: friend, foe, floater, or debris.
     private Team team;
     //the radius of circumscribing/inscribing circle
@@ -40,7 +41,7 @@ public abstract class Sprite implements Movable {
 
     private BoundingType boundingType;
 
-    private Rectangle boundingBox;
+    private Rectangle boundingBox = null;
     //orientation from 0-359
     private int orientation;
     //natural mortality (short-lived sprites only)
@@ -112,6 +113,10 @@ public abstract class Sprite implements Movable {
         //the default value of spin is zero, therefore non-spinning objects will not call this block.
         if (spin != 0) orientation += spin;
 
+        if (boundingBox != null) {
+            boundingBox.x = center.x - 18;
+            boundingBox.y = center.y - 18;
+        }
 
     }
 
@@ -178,6 +183,41 @@ public abstract class Sprite implements Movable {
                 affineTransform.translate( centerX, centerY );
             }
             affineTransform.scale( scaleX, scaleY );
+            if ( angleRadians != 0 ) {
+                affineTransform.rotate( angleRadians );
+            }
+            affineTransform.translate( -bufferedImage.getWidth() / 2.0, -bufferedImage.getHeight() / 2.0 );
+
+            g2d.setTransform( affineTransform );
+
+            g2d.drawImage( bufferedImage, 0, 0, bufferedImage.getWidth(), bufferedImage.getHeight(), null );
+        } finally {
+            g2d.setTransform( oldTransform );
+
+        }
+    }
+
+
+    protected void renderRasterFlip(Graphics2D g2d, BufferedImage bufferedImage) {
+
+        if (bufferedImage ==  null) return;
+
+        int centerX = getCenter().x;
+        int centerY = getCenter().y;
+        int width = getRadius() * 2;
+        int height = getRadius() * 2;
+        double angleRadians = Math.toRadians(getOrientation());
+
+        AffineTransform oldTransform = g2d.getTransform();
+        try {
+            double scaleX = width * 1.0 / bufferedImage.getWidth();
+            double scaleY = height * 1.0 / bufferedImage.getHeight();
+
+            AffineTransform affineTransform = new AffineTransform( oldTransform );
+            if ( centerX != 0 || centerY != 0 ) {
+                affineTransform.translate( centerX, centerY );
+            }
+            affineTransform.scale( -scaleX, scaleY );
             if ( angleRadians != 0 ) {
                 affineTransform.rotate( angleRadians );
             }

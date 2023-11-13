@@ -1,6 +1,7 @@
 package edu.uchicago.gerber._08final.mvc.controller;
 
 import edu.uchicago.gerber._08final.mvc.model.*;
+import edu.uchicago.gerber._08final.mvc.model.Zero;
 import edu.uchicago.gerber._08final.mvc.view.GamePanel;
 
 
@@ -38,9 +39,10 @@ public class Game implements Runnable, KeyListener {
     private static final int
             PAUSE = 80, // p key
             QUIT = 81, // q key
-            LEFT = 37, // rotate left; left arrow
-            RIGHT = 39, // rotate right; right arrow
-            UP = 38, // thrust; up arrow
+            LEFT = 65, //  A
+            RIGHT = 68, // D
+            UP = 87, //  W
+            DOWN = 83,
             START = 83, // s key
             FIRE = 32, // space key
             MUTE = 77, // m-key mute
@@ -105,7 +107,7 @@ public class Game implements Runnable, KeyListener {
 
             checkCollisions();
             checkNewLevel();
-            checkFloaters();
+//            checkFloaters();
 
             //keep track of the frame for development purposes
             CommandCenter.getInstance().incrementFrame();
@@ -134,6 +136,23 @@ public class Game implements Runnable, KeyListener {
     }
 
 
+    private void checkWallCollisions() {
+        for (Movable movCharacter: CommandCenter.getInstance().getMovFriends()) {
+            for (Movable movFloor: CommandCenter.getInstance().getMovFloors()) {
+                Rectangle charRect = movCharacter.getBoundingBox();
+                Rectangle blockRect = movFloor.getBoundingBox();
+//                Point charCenter = movCharacter.getCenter();
+//                Point blockCenter = movFloor.getCenter();
+                if (charRect.x + charRect.width >= blockRect.x && charRect.x <= blockRect.x + blockRect.width) {
+                    // vertical collision
+                    if (charRect.y <= blockRect.y + blockRect.height || charRect.y + charRect.height >= blockRect.height) {
+                            
+                    }
+                }
+            }
+        }
+
+    }
     private void checkCollisions() {
 
         Point pntFriendCenter, pntFoeCenter;
@@ -233,6 +252,13 @@ public class Game implements Runnable, KeyListener {
                         if (mov instanceof Asteroid) spawnSmallerAsteroidsOrDebris((Asteroid) mov);
                     }
 
+                    break;
+                case FLOOR:
+                    if (action == GameOp.Action.ADD) {
+                        CommandCenter.getInstance().getMovFloors().add(mov);
+                    } else {
+                        CommandCenter.getInstance().getMovFloors().remove(mov);
+                    }
                     break;
                 case FRIEND:
                     if (action == GameOp.Action.ADD) {
@@ -392,16 +418,14 @@ public class Game implements Runnable, KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        Falcon falcon = CommandCenter.getInstance().getFalcon();
+//        Falcon falcon = CommandCenter.getInstance().getFalcon();
+        Zero zero = CommandCenter.getInstance().getZero();
         int keyCode = e.getKeyCode();
 
         if (keyCode == START && CommandCenter.getInstance().isGameOver()) {
             CommandCenter.getInstance().initGame();
-            CommandCenter.getInstance().getOpsQueue().enqueue(
-                    new Floor(new Point(20, 20), new Point(30, 30)),
-                    GameOp.Action.ADD);
-//            buildWall();
             System.out.println("Attempted to create floor");
+
             return;
         }
 
@@ -415,14 +439,25 @@ public class Game implements Runnable, KeyListener {
                 System.exit(0);
                 break;
             case UP:
-                falcon.setThrusting(true);
-                soundThrust.loop(Clip.LOOP_CONTINUOUSLY);
+                zero.setY_velocity(zero.getInitial_y_velocity());
+                zero.setJumping(true);
+                zero.setFalling(false);
+                //                falcon.setThrusting(true);
+//                soundThrust.loop(Clip.LOOP_CONTINUOUSLY);
                 break;
             case LEFT:
-                falcon.setTurnState(Falcon.TurnState.LEFT);
+//                falcon.setTurnState(Falcon.TurnState.LEFT);
+                zero.setFacingLeft(true);
+//                zero.setX_velocity(-3);
+                zero.setRunning(true);
+                zero.setIdle(false);
                 break;
             case RIGHT:
-                falcon.setTurnState(Falcon.TurnState.RIGHT);
+//                falcon.setTurnState(Falcon.TurnState.RIGHT);
+                zero.setFacingLeft(false);
+//                zero.setX_velocity(3);
+                zero.setRunning(true);
+                zero.setIdle(false);
                 break;
 
 
@@ -444,35 +479,40 @@ public class Game implements Runnable, KeyListener {
     // animation-thread, we synchronize on the same intrinsic lock. processGameOpsQueue() is also synchronized.
     @Override
     public void keyReleased(KeyEvent e) {
-        Falcon falcon = CommandCenter.getInstance().getFalcon();
+//        Falcon falcon = CommandCenter.getInstance().getFalcon();
+        Zero zero = CommandCenter.getInstance().getZero();
         int keyCode = e.getKeyCode();
         //show the key-code in the console
         System.out.println(keyCode);
 
         switch (keyCode) {
             case FIRE:
-                synchronized (this){
-                    CommandCenter.getInstance().getOpsQueue().enqueue(new Bullet(falcon), GameOp.Action.ADD);
-                }
-                Sound.playSound("thump.wav");
+//                synchronized (this){
+//                    CommandCenter.getInstance().getOpsQueue().enqueue(new Bullet(falcon), GameOp.Action.ADD);
+//                }
+//                Sound.playSound("thump.wav");
                 break;
             case NUKE:
-                if (CommandCenter.getInstance().getFalcon().getNukeMeter() > 0){
-                    synchronized (this) {
-                        CommandCenter.getInstance().getOpsQueue().enqueue(new Nuke(falcon), GameOp.Action.ADD);
-                    }
-                    Sound.playSound("nuke.wav");
-                    CommandCenter.getInstance().getFalcon().setNukeMeter(0);
-                }
+//                if (CommandCenter.getInstance().getFalcon().getNukeMeter() > 0){
+//                    synchronized (this) {
+//                        CommandCenter.getInstance().getOpsQueue().enqueue(new Nuke(falcon), GameOp.Action.ADD);
+//                    }
+//                    Sound.playSound("nuke.wav");
+//                    CommandCenter.getInstance().getFalcon().setNukeMeter(0);
+//                }
                 break;
             //releasing either the LEFT or RIGHT arrow key will set the TurnState to IDLE
             case LEFT:
             case RIGHT:
-                falcon.setTurnState(Falcon.TurnState.IDLE);
+//                falcon.setTurnState(Falcon.TurnState.IDLE);
+                zero.setRunning(false);
+                zero.setIdle(true);
+                zero.setRun2IdleFlag(4);
                 break;
             case UP:
-                falcon.setThrusting(false);
+//                falcon.setThrusting(false);
                 soundThrust.stop();
+//                zero.setJumping(false);
                 break;
 
             case MUTE:

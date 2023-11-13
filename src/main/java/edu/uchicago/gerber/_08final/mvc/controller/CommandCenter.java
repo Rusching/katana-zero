@@ -3,6 +3,7 @@ package edu.uchicago.gerber._08final.mvc.controller;
 
 
 import edu.uchicago.gerber._08final.mvc.model.*;
+import edu.uchicago.gerber._08final.mvc.model.Zero;
 import lombok.Data;
 
 import java.awt.*;
@@ -35,7 +36,7 @@ public class CommandCenter {
 	private final List<Movable> movFriends = new LinkedList<>();
 	private final List<Movable> movFoes = new LinkedList<>();
 	private final List<Movable> movFloaters = new LinkedList<>();
-
+	private final List<Movable> movFloors = new LinkedList<>();
 	private final GameOpsQueue opsQueue = new GameOpsQueue();
 
 	//for sound playing. Limit the number of threads to 5 at a time.
@@ -58,7 +59,6 @@ public class CommandCenter {
 
 	public void initGame(){
 		clearAll();
-		generateStarField();
 		setLevel(0);
 		setScore(0);
 		setPaused(false);
@@ -66,23 +66,12 @@ public class CommandCenter {
 		setNumFalcons(4);
 		initFalconAndDecrementFalconNum();
 		//add the falcon to the movFriends list
-		opsQueue.enqueue(falcon, GameOp.Action.ADD);
+//		opsQueue.enqueue(falcon, GameOp.Action.ADD);
 		opsQueue.enqueue(zero, GameOp.Action.ADD);
-
-
-	}
-
-	private void generateStarField(){
-
-		int count = 100;
-		while (count-- > 0){
-			opsQueue.enqueue(new Star(), GameOp.Action.ADD);
-		}
+		Floor f = new Floor();
+		f.buildFloors();
 
 	}
-
-
-
 
 	public void initFalconAndDecrementFalconNum(){
 		numFalcons--;
@@ -112,6 +101,7 @@ public class CommandCenter {
 		movFriends.clear();
 		movFoes.clear();
 		movFloaters.clear();
+		movFloors.clear();
 	}
 
 	public boolean isGameOver() {		//if the number of falcons is zero, then game over

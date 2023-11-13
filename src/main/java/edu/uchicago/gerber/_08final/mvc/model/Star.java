@@ -53,5 +53,9 @@ public class Star implements Movable{
     public void move() {
         //do nothing
     }
+    @Override
+    public Rectangle getBoundingBox() {
+        return null;
+    }
 
 }

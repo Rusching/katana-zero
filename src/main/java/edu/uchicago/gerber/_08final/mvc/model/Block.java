@@ -1,26 +1,26 @@
 package edu.uchicago.gerber._08final.mvc.model;
 
-import lombok.Data;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
-import java.awt.Point;
 
-public class Brick extends Sprite {
+public class Block extends Sprite {
 
-	private final int BRICK_IMAGE = 0;
+	private final int BLOCK_SIZE = 36;
 
 	//The size of this brick is always square!
 	//we use upperLeftCorner because that is the origin when drawing graphics in Java
-	public Brick(Point upperLeftCorner, int size) {
+	public Block(Point upperLeftCorner, int size) {
 
 		//you can shoot to destroy the wall which yields big points
-		setTeam(Team.FOE);
+		setTeam(Team.FLOOR);
 
 		setCenter(new Point(upperLeftCorner.x + size/2, upperLeftCorner.y + size/2));
 
+		setBoundingType(BoundingType.RECTANGLE);
+		setBoundingBox(new Rectangle(upperLeftCorner.x, upperLeftCorner.y, size, size));
+		// why must set a radius?
 		setRadius(size/2);
 
 		//As this sprite does not animate or change state, we could just store a BufferedImage as a member, but
@@ -28,7 +28,7 @@ public class Brick extends Sprite {
 		// and use it.
     	Map<Integer, BufferedImage> rasterMap = new HashMap<>();
 		//brick from Mario Bros
-		rasterMap.put(BRICK_IMAGE, loadGraphic("/imgs/brick/Brick_Block100.png") );
+		rasterMap.put(0, loadGraphic("/imgs/Bricks/floor/102.png") );
 
 		setRasterMap(rasterMap);
 
@@ -37,10 +37,10 @@ public class Brick extends Sprite {
 
 	@Override
 	public void draw(Graphics g) {
-		renderRaster((Graphics2D) g, getRasterMap().get(BRICK_IMAGE));
+		renderRaster((Graphics2D) g, getRasterMap().get(0));
 		//if you uncomment these, you can see how collision works. Feel free to remove these two lines.
-		g.setColor(Color.LIGHT_GRAY);
-		g.drawOval(getCenter().x - getRadius(), getCenter().y - getRadius(), getRadius() *2, getRadius() *2);
+//		g.setColor(Color.LIGHT_GRAY);
+//		g.drawOval(getCenter().x - getRadius(), getCenter().y - getRadius(), getRadius() *2, getRadius() *2);
 	}
 
 	//the reason we override the move method is to skip the logic contained in super-class Sprite move() method
