@@ -15,8 +15,7 @@ public class Character extends Sprite{
     // states
     protected boolean isIdle = true;
 
-    // indicated if the up key is pressed
-    protected boolean isJumping = false;
+    protected boolean isInAir = false;
 
     // jump is divided into 'up' and 'down' procedures. It is
     // distinguished by the 'isFalling' flag: true is up and false is down.
@@ -44,11 +43,22 @@ public class Character extends Sprite{
 
     protected double y_velocity = 0;
     protected double max_x_velocity = 9;
-    protected double max_y_velocity = 9;
+    protected double max_y_velocity = 15;
 
-    protected  final double initial_y_velocity = -7;
-    public final double gravityG = -0.6;
+    protected  final double initial_y_velocity = -12;
+    public final double gravityG = -0.8;
 
+
+    public boolean isOnPlatform() {
+        setCenterY(center.y += 5);
+        Block block = findCollisionWall();
+        setCenterY(center.y -= 5);
+        if (block != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     @Override
     public void draw(Graphics g) {
 
@@ -89,8 +99,10 @@ public class Character extends Sprite{
             if (blockCollision != null) {
                 if (getDeltaY() > 0) {
                     setCenterY(blockCollision.boundingBox.y - 18);
+                    setY_velocity(0);
                 } else if (getDeltaY() < 0) {
                     setCenterY(blockCollision.boundingBox.y + blockCollision.boundingBox.height + 18);
+                    setY_velocity(0);
                 }
                 setDeltaY(0);
             }
@@ -101,8 +113,10 @@ public class Character extends Sprite{
             if (blockCollision != null) {
                 if (getDeltaX() > 0) {
                     setCenterX(blockCollision.boundingBox.x - 18);
+                    setX_velocity(0);
                 } else if (getDeltaX() < 0) {
                     setCenterX(blockCollision.boundingBox.x + blockCollision.boundingBox.width + 18);
+                    setX_velocity(0);
                 }
                 setDeltaX(0);
             }
@@ -112,10 +126,5 @@ public class Character extends Sprite{
             }
 //            setCenter(new Point((int) newXPos, (int) newYPos));
         }
-
-
-
-
-
     }
 }

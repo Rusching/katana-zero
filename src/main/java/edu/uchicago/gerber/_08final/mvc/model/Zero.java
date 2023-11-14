@@ -65,25 +65,39 @@ public class Zero extends Character{
         for (int i = 0; i < 5; i++) {rasterMapRun2Idle.add(loadGraphic(imgPathPrefix + zeroImgPathPrefix + String.format("run/spr_run_to_idle_%d.png", i)));}
         rasterMaps.put(Actions.RUN2IDLE, rasterMapRun2Idle);
 
+        ArrayList<BufferedImage> rasterMapJump = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {rasterMapJump.add(loadGraphic(imgPathPrefix + zeroImgPathPrefix + String.format("jump/spr_jump_%d.png", i)));}
+        rasterMaps.put(Actions.JUMP, rasterMapJump);
+
+        ArrayList<BufferedImage> rasterMapFall = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {rasterMapFall.add(loadGraphic(imgPathPrefix + zeroImgPathPrefix + String.format("fall/spr_fall_%d.png", i)));}
+        rasterMaps.put(Actions.FALL, rasterMapFall);
+
         setRasterMaps(rasterMaps);
     }
 
     @Override
     public void draw(Graphics g) {
         ArrayList<BufferedImage> pics;
-        if (isOnGround && !isRunning) {
-            // idle
-        //            if (run2IdleFlag > 0) {
-        //                pics = getRasterMaps().get(Actions.RUN2IDLE);
-        //            } else {
+        if (isOnPlatform()) {
+            if (isRunning) {
+                // run
+                pics = getRasterMaps().get(Actions.RUN);
+            } else {
+                // stand
                 pics = getRasterMaps().get(Actions.STAND);
-//            }
+            }
         } else {
-            // run
-            pics = getRasterMaps().get(Actions.RUN);
+            // in air
+            if (getDeltaY() <= 0) {
+                // up
+                pics = getRasterMaps().get(Actions.JUMP);
+            } else {
+                // down
+                pics = getRasterMaps().get(Actions.FALL);
+            }
         }
 
-//        if (CommandCenter.getInstance().getFrame() % 2 == 0) {run2IdleFlag -= 1;}
         int currentPicIdx = (int) ((CommandCenter.getInstance().getFrame() / 2) % pics.size());
         if (isFacingLeft) {
             renderRasterFlipFromRect((Graphics2D) g, pics.get(currentPicIdx));
@@ -115,13 +129,17 @@ public class Zero extends Character{
             setDeltaX(x_velocity);
         }
 
-        if (isJumping) {
-
             setDeltaY(y_velocity);
+        if (!isOnPlatform()) {
             if (abs(y_velocity) < max_y_velocity) {
                 y_velocity -= gravityG;
             }
         }
-
+//        if (!isOnPlatform()) {
+//            setDeltaY(y_velocity);
+//            if (abs(y_velocity) < max_y_velocity) {
+//                y_velocity -= gravityG;
+//            }
+//        }
     }
 }

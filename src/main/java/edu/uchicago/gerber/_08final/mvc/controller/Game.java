@@ -1,7 +1,6 @@
 package edu.uchicago.gerber._08final.mvc.controller;
 
 import edu.uchicago.gerber._08final.mvc.model.*;
-import edu.uchicago.gerber._08final.mvc.model.Character;
 import edu.uchicago.gerber._08final.mvc.model.Zero;
 import edu.uchicago.gerber._08final.mvc.view.GamePanel;
 
@@ -24,7 +23,7 @@ public class Game implements Runnable, KeyListener {
     // FIELDS
     // ===============================================
 
-    public static final Dimension DIM = new Dimension(1100, 900); //the dimension of the game.
+    public static final Dimension DIM = new Dimension(1100, 700); //the dimension of the game.
     private final GamePanel gamePanel;
     //this is used throughout many classes.
     public static final Random R = new Random();
@@ -108,9 +107,6 @@ public class Game implements Runnable, KeyListener {
 
             checkCollisions();
             checkNewLevel();
-//            checkWallCollisions();
-//            checkFloaters();
-
             //keep track of the frame for development purposes
             CommandCenter.getInstance().incrementFrame();
 
@@ -135,96 +131,6 @@ public class Game implements Runnable, KeyListener {
         spawnNewWallFloater();
         spawnShieldFloater();
         spawnNukeFloater();
-    }
-
-
-//    private void checkWallCollisions() {
-//        for (Character movCharacter: CommandCenter.getInstance().getMovCharacters()) {
-//            for (Movable movFloor: CommandCenter.getInstance().getMovFloors()) {
-//                Rectangle charRect = movCharacter.getBoundingBox();
-//                Rectangle blockRect = movFloor.getBoundingBox();
-//                if (charRect.x + charRect.width >= blockRect.x && charRect.x <= blockRect.x + blockRect.width) {
-//                    // vertical collision
-//                    if (charRect.y <= blockRect.y + blockRect.height || charRect.y + charRect.height >= blockRect.y) {
-//                        movCharacter.setY_velocity(0);
-//                    }
-//                }
-//                if (charRect.y + charRect.height >= blockRect.y && charRect.y <= blockRect.y + blockRect.height) {
-//                    // horizontal collision
-//                    if (charRect.x <= blockRect.x + blockRect.width || charRect.x + charRect.width >= blockRect.x) {
-//                        movCharacter.setX_velocity(0);
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-
-
-    private void checkWallCollisions() {
-        for (Character movCharacter : CommandCenter.getInstance().getMovCharacters()) {
-            for (Movable movFloor : CommandCenter.getInstance().getMovFloors()) {
-                Rectangle charRect = movCharacter.getBoundingBox();
-                Rectangle blockRect = movFloor.getBoundingBox();
-
-                if (charRect.intersects(blockRect)) {
-                    // There's a collision
-                    // Now determine the side of the collision
-                    int charTop = charRect.y;
-                    int charBottom = charRect.y + charRect.height;
-                    int charLeft = charRect.x;
-                    int charRight = charRect.x + charRect.width;
-                    int blockTop = blockRect.y;
-                    int blockBottom = blockRect.y + blockRect.height;
-                    int blockLeft = blockRect.x;
-                    int blockRight = blockRect.x + blockRect.width;
-
-                    // Vertical collision
-
-
-
-
-                    // from top to bottom
-                    if (charBottom > blockTop && movCharacter.getDeltaY() > 0) {
-                        movCharacter.setCenterY(blockTop - 18);
-                        movCharacter.setJumping(false);
-                        movCharacter.setOnGround(true);
-                        movCharacter.setY_velocity(0);
-                        movCharacter.setDeltaY(0);
-                        System.out.println("Up 2 bottom");
-                    }
-                    // from bottom to top
-                    if (charTop < blockBottom && movCharacter.getDeltaY() < 0) {
-                        movCharacter.setCenterY(blockBottom + 18);
-                        movCharacter.setJumping(true);
-                        movCharacter.setFalling(true);
-                        movCharacter.setOnGround(false);
-                        movCharacter.setY_velocity(0);
-                        movCharacter.setDeltaY(0);
-                        System.out.println("Botton 2 up");
-                    }
-
-                    // from right to left
-                    if (charLeft < blockRight && movCharacter.getDeltaX() < 0) {
-                        movCharacter.setCenterX(blockRight + 18);
-//                        movCharacter.setRunning(false);
-//                        movCharacter.setX_velocity(0);
-//                        movCharacter.setDeltaX(0);
-                        System.out.println("Right 2 left");
-                    }
-
-                    // from left to right
-                    if (charRight > blockLeft && movCharacter.getDeltaX() > 0) {
-                        System.out.println("Left 2 right");
-                        movCharacter.setCenterX(blockLeft - 18);
-//                        movCharacter.setRunning(false);
-//                        movCharacter.setX_velocity(0);
-//                        movCharacter.setDeltaX(0);
-                    }
-                    break;
-                }
-            }
-        }
     }
 
     private void checkCollisions() {
@@ -513,11 +419,11 @@ public class Game implements Runnable, KeyListener {
                 System.exit(0);
                 break;
             case UP:
-                zero.setY_velocity(zero.getInitial_y_velocity());
-                zero.setJumping(true);
-                zero.setFalling(false);
-                //                falcon.setThrusting(true);
-//                soundThrust.loop(Clip.LOOP_CONTINUOUSLY);
+                if (zero.isOnPlatform()) {
+                    zero.setY_velocity(zero.getInitial_y_velocity());
+                    zero.setInAir(true);
+                    zero.setFalling(false);
+                }
                 break;
             case LEFT:
 //                falcon.setTurnState(Falcon.TurnState.LEFT);
