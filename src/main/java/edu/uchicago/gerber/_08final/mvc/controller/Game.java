@@ -55,8 +55,8 @@ public class Game implements Runnable, KeyListener {
     //ALIEN = 65;                // A key
     // SPECIAL = 70; 					// fire special weapon;  F key
 
-    private final Clip soundThrust;
-    private final Clip soundBackground;
+//    private final Clip soundThrust;
+//    private final Clip soundBackground;
 
 
 
@@ -68,8 +68,8 @@ public class Game implements Runnable, KeyListener {
 
         gamePanel = new GamePanel(DIM);
         gamePanel.addKeyListener(this); //Game object implements KeyListener
-        soundThrust = Sound.clipForLoopFactory("whitenoise.wav");
-        soundBackground = Sound.clipForLoopFactory("music-background.wav");
+//        soundThrust = Sound.clipForLoopFactory("whitenoise.wav");
+//        soundBackground = Sound.clipForLoopFactory("music-background.wav");
 
         //fire up the animation thread
         animationThread = new Thread(this); // pass the animation thread a runnable object, the Game object
@@ -108,7 +108,7 @@ public class Game implements Runnable, KeyListener {
 
             checkCollisions();
             checkNewLevel();
-            checkWallCollisions();
+//            checkWallCollisions();
 //            checkFloaters();
 
             //keep track of the frame for development purposes
@@ -158,6 +158,9 @@ public class Game implements Runnable, KeyListener {
 //            }
 //        }
 //    }
+
+
+
     private void checkWallCollisions() {
         for (Character movCharacter : CommandCenter.getInstance().getMovCharacters()) {
             for (Movable movFloor : CommandCenter.getInstance().getMovFloors()) {
@@ -167,21 +170,58 @@ public class Game implements Runnable, KeyListener {
                 if (charRect.intersects(blockRect)) {
                     // There's a collision
                     // Now determine the side of the collision
-                    float charBottom = charRect.y + charRect.height;
-                    float blockTop = blockRect.y;
-                    float charRight = charRect.x + charRect.width;
-                    float blockLeft = blockRect.x;
+                    int charTop = charRect.y;
+                    int charBottom = charRect.y + charRect.height;
+                    int charLeft = charRect.x;
+                    int charRight = charRect.x + charRect.width;
+                    int blockTop = blockRect.y;
+                    int blockBottom = blockRect.y + blockRect.height;
+                    int blockLeft = blockRect.x;
+                    int blockRight = blockRect.x + blockRect.width;
 
-                    // Vertical collision (e.g., landing on top of a block)
-                    if (charBottom > blockTop && movCharacter.getY_velocity() > 0) {
-                        // Adjust character position to be on top of the block
-                        movCharacter.setCenter(new Point(movCharacter.getCenter().x, (int) (blockTop - charRect.height + 19)));
+                    // Vertical collision
+
+
+
+
+                    // from top to bottom
+                    if (charBottom > blockTop && movCharacter.getDeltaY() > 0) {
+                        movCharacter.setCenterY(blockTop - 18);
+                        movCharacter.setJumping(false);
+                        movCharacter.setOnGround(true);
                         movCharacter.setY_velocity(0);
+                        movCharacter.setDeltaY(0);
+                        System.out.println("Up 2 bottom");
+                    }
+                    // from bottom to top
+                    if (charTop < blockBottom && movCharacter.getDeltaY() < 0) {
+                        movCharacter.setCenterY(blockBottom + 18);
+                        movCharacter.setJumping(true);
+                        movCharacter.setFalling(true);
+                        movCharacter.setOnGround(false);
+                        movCharacter.setY_velocity(0);
+                        movCharacter.setDeltaY(0);
+                        System.out.println("Botton 2 up");
                     }
 
-                    // Horizontal collision (e.g., running into a wall)
-                    // Adjust similar to vertical collision
-                    // You may need to further check which side the character hit the block
+                    // from right to left
+                    if (charLeft < blockRight && movCharacter.getDeltaX() < 0) {
+                        movCharacter.setCenterX(blockRight + 18);
+//                        movCharacter.setRunning(false);
+//                        movCharacter.setX_velocity(0);
+//                        movCharacter.setDeltaX(0);
+                        System.out.println("Right 2 left");
+                    }
+
+                    // from left to right
+                    if (charRight > blockLeft && movCharacter.getDeltaX() > 0) {
+                        System.out.println("Left 2 right");
+                        movCharacter.setCenterX(blockLeft - 18);
+//                        movCharacter.setRunning(false);
+//                        movCharacter.setX_velocity(0);
+//                        movCharacter.setDeltaX(0);
+                    }
+                    break;
                 }
             }
         }
@@ -466,8 +506,8 @@ public class Game implements Runnable, KeyListener {
 
         switch (keyCode) {
             case PAUSE:
-                CommandCenter.getInstance().setPaused(!CommandCenter.getInstance().isPaused());
-                if (CommandCenter.getInstance().isPaused()) stopLoopingSounds(soundBackground, soundThrust);
+//                CommandCenter.getInstance().setPaused(!CommandCenter.getInstance().isPaused());
+//                if (CommandCenter.getInstance().isPaused()) stopLoopingSounds(soundBackground, soundThrust);
                 break;
             case QUIT:
                 System.exit(0);
@@ -545,18 +585,18 @@ public class Game implements Runnable, KeyListener {
                 break;
             case UP:
 //                falcon.setThrusting(false);
-                soundThrust.stop();
+//                soundThrust.stop();
 //                zero.setJumping(false);
                 break;
 
             case MUTE:
                 CommandCenter.getInstance().setMuted(!CommandCenter.getInstance().isMuted());
 
-                if (!CommandCenter.getInstance().isMuted()) {
-                    stopLoopingSounds(soundBackground);
-                } else {
-                    soundBackground.loop(Clip.LOOP_CONTINUOUSLY);
-                }
+//                if (!CommandCenter.getInstance().isMuted()) {
+//                    stopLoopingSounds(soundBackground);
+//                } else {
+//                    soundBackground.loop(Clip.LOOP_CONTINUOUSLY);
+//                }
                 break;
 
             default:

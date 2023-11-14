@@ -8,6 +8,7 @@ import edu.uchicago.gerber._08final.mvc.model.Zero;
 import lombok.Data;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -42,6 +43,8 @@ public class CommandCenter {
 	{
 		movCharacters.add(zero);
 	}
+//	protected List<Block> movBlocks = new ArrayList<>();
+
 	private final GameOpsQueue opsQueue = new GameOpsQueue();
 
 	//for sound playing. Limit the number of threads to 5 at a time.
@@ -81,12 +84,12 @@ public class CommandCenter {
 	public void initFalconAndDecrementFalconNum(){
 		numFalcons--;
 		if (isGameOver()) return;
-		Sound.playSound("shipspawn.wav");
+//		Sound.playSound("shipspawn.wav");
 		falcon.setShield(Falcon.INITIAL_SPAWN_TIME);
 		falcon.setInvisible(Falcon.INITIAL_SPAWN_TIME/4);
 		//put falcon in the middle of the game-space
 		falcon.setCenter(new Point(Game.DIM.width / 2, Game.DIM.height / 2));
-		zero.setCenter(new Point(Game.DIM.width / 2 + 10, Game.DIM.height / 2));
+		zero.setCenter(new Point(656, 390));
 		//random number between 0-360 in steps of TURN_STEP
 		falcon.setOrientation(Game.R.nextInt(360 / Falcon.TURN_STEP) * Falcon.TURN_STEP);
 		falcon.setDeltaX(0);

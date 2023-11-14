@@ -19,17 +19,20 @@ public class Floor {
 
 
     public void buildFloors() {
-        final int ROWS = 2, COLS = 20, X_OFFSET = BLOCK_SIZE * 5, Y_OFFSET = 500;
+        final int ROWS = 5, COLS = 20, X_OFFSET = BLOCK_SIZE * 5, Y_OFFSET = 300;
 
         for (int nCol = 0; nCol < COLS; nCol++) {
             for (int nRow = 0; nRow < ROWS; nRow++) {
-                CommandCenter.getInstance().getOpsQueue().enqueue(
-                        new Block(
-                                new Point(nCol * BLOCK_SIZE + X_OFFSET, nRow * BLOCK_SIZE + Y_OFFSET),
-                                BLOCK_SIZE),
-                        GameOp.Action.ADD);
+                if (!(nRow == 0 && nCol != 0 && nCol != COLS - 1 && nCol != 10 && nCol != 11 && nCol != 12 && nCol != 13 && nCol != 14 && nCol != 15) && !(nRow == 1) && !(nRow == 2 && nCol != 0 && nCol != COLS - 1)) {
 
+                    CommandCenter.getInstance().getOpsQueue().enqueue(
+                            new Block(new Point(nCol * BLOCK_SIZE + X_OFFSET, nRow * BLOCK_SIZE + Y_OFFSET), BLOCK_SIZE),
+                            GameOp.Action.ADD);
+                }
             }
         }
+
+
+
     }
 }

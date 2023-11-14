@@ -14,43 +14,6 @@ import static java.lang.Math.abs;
 @Data
 public class Zero extends Character{
 
-    // states
-    private boolean isIdle = true;
-
-    // indicated if the up key is pressed
-    private boolean isJumping = false;
-
-    // jump is divided into 'up' and 'down' procedures. It is
-    // distinguished by the 'isFalling' flag: true is up and false is down.
-    private boolean isFalling = false;
-
-    // indicates if the player is on the ground
-    private boolean isOnGround = true;
-    // indicates if the down key is pressed
-    private boolean isRolling = false;
-
-    // indicates if the left or right key are pressed
-    private boolean isRunning = false;
-    // By default, zero is facing right and textures are facing right
-    private boolean isFacingLeft = false;
-    private int run2IdleFlag = 0;
-
-    public static final int MIN_RADIUS = 18;
-
-
-    private double maximum_jump_time = 1000;
-    // velocity
-    private double x_velocity = 0;
-    private double x_accelerate = 0.7;
-    private double x_slowdown_accelerate = 5;
-
-    private double y_velocity = 0;
-    private double max_x_velocity = 9;
-    private double max_y_velocity = 9;
-
-    private final double initial_y_velocity = -6;
-    public final double gravityG = -0.3;
-
 
     // image path
     private static String zeroImgPathPrefix = "ZeroSprites/";
@@ -123,9 +86,9 @@ public class Zero extends Character{
 //        if (CommandCenter.getInstance().getFrame() % 2 == 0) {run2IdleFlag -= 1;}
         int currentPicIdx = (int) ((CommandCenter.getInstance().getFrame() / 2) % pics.size());
         if (isFacingLeft) {
-            renderRasterFlip((Graphics2D) g, pics.get(currentPicIdx));
+            renderRasterFlipFromRect((Graphics2D) g, pics.get(currentPicIdx));
         } else {
-            renderRaster((Graphics2D) g, pics.get(currentPicIdx));
+            renderRasterFromRect((Graphics2D) g, pics.get(currentPicIdx));
         }
     }
 
