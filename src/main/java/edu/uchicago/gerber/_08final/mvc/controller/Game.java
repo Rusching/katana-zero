@@ -9,6 +9,8 @@ import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -17,13 +19,13 @@ import java.util.Random;
 // == This Game class is the CONTROLLER
 // ===============================================
 
-public class Game implements Runnable, KeyListener {
+public class Game implements Runnable, KeyListener, MouseListener {
 
     // ===============================================
     // FIELDS
     // ===============================================
 
-    public static final Dimension DIM = new Dimension(1100, 700); //the dimension of the game.
+    public static final Dimension DIM = new Dimension(1100, 650); //the dimension of the game.
     private final GamePanel gamePanel;
     //this is used throughout many classes.
     public static final Random R = new Random();
@@ -67,6 +69,7 @@ public class Game implements Runnable, KeyListener {
 
         gamePanel = new GamePanel(DIM);
         gamePanel.addKeyListener(this); //Game object implements KeyListener
+        gamePanel.addMouseListener(this);
 //        soundThrust = Sound.clipForLoopFactory("whitenoise.wav");
 //        soundBackground = Sound.clipForLoopFactory("music-background.wav");
 
@@ -419,11 +422,27 @@ public class Game implements Runnable, KeyListener {
                 System.exit(0);
                 break;
             case UP:
-                if (zero.isOnPlatform()) {
+                if (zero.isOnPlatform() && !zero.isRolling()) {
                     zero.setY_velocity(zero.getInitial_y_velocity());
                     zero.setInAir(true);
                     zero.setFalling(false);
                 }
+                break;
+            case DOWN:
+                if (zero.isOnPlatform()) {
+                    if (!zero.isRolling()) {
+                        zero.setRolling(true);
+                        if (zero.isFacingLeft()) {
+                            zero.setX_velocity(-zero.getMax_x_velocity() * 2);
+                        } else {
+                            zero.setX_velocity(zero.getMax_x_velocity() * 2);
+                        }
+                    }
+                } else {
+                    zero.setY_velocity(zero.getY_velocity() + 5);
+                    zero.setDeltaY(zero.getDeltaY() + 7);
+                }
+
                 break;
             case LEFT:
 //                falcon.setTurnState(Falcon.TurnState.LEFT);
@@ -516,6 +535,47 @@ public class Game implements Runnable, KeyListener {
     public void keyTyped(KeyEvent e) {
     }
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        Zero zero = CommandCenter.getInstance().getZero();
+        System.out.println("Attack!");
+        if (!zero.isAttack()) {
+            zero.setAttack(true);
+            int attackX = e.getX();
+            int attackY = e.getY();
+            if (attackY < zero.getCenter().y) {
+                zero.setY_velocity(-zero.getMax_y_velocity() / 2);
+                zero.setDeltaY(zero.getDeltaY() - 7);
+            }
+            if (attackX < zero.getCenter().x) {
+                zero.setFacingLeft(true);
+                zero.setX_velocity(-zero.getMax_x_velocity() * 2);
+            } else {
+                zero.setFacingLeft(false);
+                zero.setX_velocity(zero.getMax_x_velocity() * 2);
+            }
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
 }
 
 

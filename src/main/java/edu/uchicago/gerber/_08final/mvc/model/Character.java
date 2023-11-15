@@ -21,11 +21,14 @@ public class Character extends Sprite{
     // distinguished by the 'isFalling' flag: true is up and false is down.
     protected boolean isFalling = false;
 
-    // indicates if the player is on the ground
-    protected boolean isOnGround = true;
-    // indicates if the down key is pressed
+    // relevant to rolling
     protected boolean isRolling = false;
+    protected final int rollFrames = 7;
+    protected int currentRollIdx = 0;
 
+    protected boolean isAttack = false;
+    protected final int attackFrames = 7;
+    protected int currentAttachIdx = 0;
     // indicates if the left or right key are pressed
     protected boolean isRunning = false;
     // By default, zero is facing right and textures are facing right
@@ -47,7 +50,6 @@ public class Character extends Sprite{
 
     protected  final double initial_y_velocity = -12;
     public final double gravityG = -0.8;
-
 
     public boolean isOnPlatform() {
         setCenterY(center.y += 5);

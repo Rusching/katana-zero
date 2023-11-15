@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static java.lang.Math.abs;
+import static java.lang.Math.max;
 
 @Data
 public class Zero extends Character{
@@ -73,13 +74,27 @@ public class Zero extends Character{
         for (int i = 0; i < 4; i++) {rasterMapFall.add(loadGraphic(imgPathPrefix + zeroImgPathPrefix + String.format("fall/spr_fall_%d.png", i)));}
         rasterMaps.put(Actions.FALL, rasterMapFall);
 
+        ArrayList<BufferedImage> rasterMapRoll = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {rasterMapRoll.add(loadGraphic(imgPathPrefix + zeroImgPathPrefix + String.format("roll/spr_roll_%d.png", i)));}
+        rasterMaps.put(Actions.ROLL, rasterMapRoll);
+
+        ArrayList<BufferedImage> rasterMapAttack = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {rasterMapAttack.add(loadGraphic(imgPathPrefix + zeroImgPathPrefix + String.format("attack/spr_attack_%d.png", i)));}
+        rasterMaps.put(Actions.ATTACK, rasterMapAttack);
+
         setRasterMaps(rasterMaps);
     }
 
     @Override
     public void draw(Graphics g) {
         ArrayList<BufferedImage> pics;
-        if (isOnPlatform()) {
+        if (isAttack) {
+            // attack
+            pics = getRasterMaps().get(Actions.ATTACK);
+        } else if (isRolling) {
+            // roll
+            pics = getRasterMaps().get(Actions.ROLL);
+        } else if (isOnPlatform()) {
             if (isRunning) {
                 // run
                 pics = getRasterMaps().get(Actions.RUN);
@@ -99,6 +114,33 @@ public class Zero extends Character{
         }
 
         int currentPicIdx = (int) ((CommandCenter.getInstance().getFrame() / 2) % pics.size());
+
+        if (isAttack) {
+            if (currentAttachIdx < 7) {
+                currentPicIdx = currentAttachIdx;
+                if ((CommandCenter.getInstance().getFrame() / 2) % 2 == 0) {
+                    currentAttachIdx += 1;
+                }
+            } else {
+                // currentRollIdx == 7
+                currentAttachIdx = 0;
+                isAttack = false;
+            }
+        } else if (isRolling) {
+            if (currentRollIdx < 7) {
+                currentPicIdx = currentRollIdx;
+                if ((CommandCenter.getInstance().getFrame() / 2) % 2 == 0) {
+                    currentRollIdx += 1;
+                }
+            } else {
+                // currentRollIdx == 7
+                currentRollIdx = 0;
+                isRolling = false;
+            }
+        }
+
+
+
         if (isFacingLeft) {
             renderRasterFlipFromRect((Graphics2D) g, pics.get(currentPicIdx));
         } else {
@@ -110,6 +152,11 @@ public class Zero extends Character{
     public void move() {
         super.move();
         if (isRunning) {
+            if (isFacingLeft) {
+                if (x_velocity < -max_x_velocity) {x_velocity = -max_x_velocity;}
+            } else {
+                if (x_velocity > max_x_velocity) {x_velocity = max_x_velocity;}
+            }
             if (abs(x_velocity) < max_x_velocity) {
                 if (isFacingLeft) {
                     x_velocity -= x_accelerate;
@@ -131,7 +178,7 @@ public class Zero extends Character{
 
             setDeltaY(y_velocity);
         if (!isOnPlatform()) {
-            if (abs(y_velocity) < max_y_velocity) {
+            if (abs(y_velocity) <= max_y_velocity) {
                 y_velocity -= gravityG;
             }
         }
