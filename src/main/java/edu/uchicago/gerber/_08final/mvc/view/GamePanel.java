@@ -170,31 +170,31 @@ public class GamePanel extends Panel {
         grpOff = imgOff.getGraphics();
 
         //Fill the off-screen image background with black.
-        grpOff.setColor(Color.BLACK);
+        grpOff.setColor(Color.WHITE);
         grpOff.fillRect(0, 0, Game.DIM.width, Game.DIM.height);
 
         //this is used for development, you may remove drawNumFrame() in your final game.
         drawNumFrame(grpOff);
 
-        if (CommandCenter.getInstance().isGameOver()) {
-            displayTextOnScreen(grpOff,
-                    "GAME OVER",
-                    "use the arrow keys to turn and thrust",
-                    "use the space bar to fire",
-                    "'S' to Start",
-                    "'P' to Pause",
-                    "'Q' to Quit",
-                    "'M' to toggle music"
-
-            );
-        } else if (CommandCenter.getInstance().isPaused()) {
-
-            displayTextOnScreen(grpOff, "Game Paused");
-
-        }
+//        if (CommandCenter.getInstance().isGameOver()) {
+//            displayTextOnScreen(grpOff,
+//                    "GAME OVER",
+//                    "use the arrow keys to turn and thrust",
+//                    "use the space bar to fire",
+//                    "'S' to Start",
+//                    "'P' to Pause",
+//                    "'Q' to Quit",
+//                    "'M' to toggle music"
+//
+//            );
+//        } else if (CommandCenter.getInstance().isPaused()) {
+//
+//            displayTextOnScreen(grpOff, "Game Paused");
+//
+//        }
 
         //playing and not paused!
-        else {
+//        else {
             moveDrawMovables(grpOff,
                     CommandCenter.getInstance().getMovDebris(),
                     CommandCenter.getInstance().getMovFloaters(),
@@ -208,7 +208,7 @@ public class GamePanel extends Panel {
             drawFalconStatus(grpOff);
 
 
-        }
+//        }
 
         //after drawing all the movables or text on the offscreen-image, copy it in one fell-swoop to graphics context
         // of the game panel, and show it for ~40ms. If you attempt to draw sprites directly on the gamePanel, e.g.

@@ -30,6 +30,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
     //this is used throughout many classes.
     public static final Random R = new Random();
 
+    private int runSoundIdx = 1;
     public final static int ANIMATION_DELAY = 40; // milliseconds between frames
 
     public final static int FRAMES_PER_SECOND = 1000 / ANIMATION_DELAY;
@@ -407,8 +408,6 @@ public class Game implements Runnable, KeyListener, MouseListener {
 
         if (keyCode == START && CommandCenter.getInstance().isGameOver()) {
             CommandCenter.getInstance().initGame();
-            System.out.println("Attempted to create floor");
-
             return;
         }
 
@@ -423,6 +422,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
                 break;
             case UP:
                 if (zero.isOnPlatform() && !zero.isRolling()) {
+                    Sound.playSound("Zero/player_jump.wav");
                     zero.setY_velocity(zero.getInitial_y_velocity());
                     zero.setInAir(true);
                     zero.setFalling(false);
@@ -432,10 +432,11 @@ public class Game implements Runnable, KeyListener, MouseListener {
                 if (zero.isOnPlatform()) {
                     if (!zero.isRolling()) {
                         zero.setRolling(true);
+                        Sound.playSound("Zero/player_roll.wav");
                         if (zero.isFacingLeft()) {
-                            zero.setX_velocity(-zero.getMax_x_velocity() * 2);
+                            zero.setX_velocity(-zero.getMax_x_velocity() * 3);
                         } else {
-                            zero.setX_velocity(zero.getMax_x_velocity() * 2);
+                            zero.setX_velocity(zero.getMax_x_velocity() * 3);
                         }
                     }
                 } else {
@@ -445,18 +446,32 @@ public class Game implements Runnable, KeyListener, MouseListener {
 
                 break;
             case LEFT:
-//                falcon.setTurnState(Falcon.TurnState.LEFT);
-                zero.setFacingLeft(true);
-//                zero.setX_velocity(-3);
-                zero.setRunning(true);
-                zero.setIdle(false);
+                if (!zero.isAttack() && !zero.isRolling()) {
+                    zero.setFacingLeft(true);
+                    zero.setRunning(true);
+                    zero.setIdle(false);
+                    if (CommandCenter.getInstance().getFrame() % 6 == 0) {
+                        Sound.playSound(String.format("Zero/player_running_%d.wav", runSoundIdx % 4 + 1));
+                        runSoundIdx += 1;
+                        if (runSoundIdx > 10000) {
+                            runSoundIdx = 0;
+                        }
+                    }
+                }
                 break;
             case RIGHT:
-//                falcon.setTurnState(Falcon.TurnState.RIGHT);
-                zero.setFacingLeft(false);
-//                zero.setX_velocity(3);
-                zero.setRunning(true);
-                zero.setIdle(false);
+                if (!zero.isAttack() && !zero.isRolling()) {
+                    zero.setFacingLeft(false);
+                    zero.setRunning(true);
+                    zero.setIdle(false);
+                    if (CommandCenter.getInstance().getFrame() % 6 == 0) {
+                        Sound.playSound(String.format("Zero/player_running_%d.wav", runSoundIdx % 4 + 1));
+                        runSoundIdx += 1;
+                        if (runSoundIdx > 10000) {
+                            runSoundIdx = 0;
+                        }
+                    }
+                }
                 break;
 
 
@@ -508,6 +523,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
                 zero.setIdle(true);
                 zero.setRun2IdleFlag(4);
                 break;
+
             case UP:
 //                falcon.setThrusting(false);
 //                soundThrust.stop();
@@ -541,8 +557,10 @@ public class Game implements Runnable, KeyListener, MouseListener {
         System.out.println("Attack!");
         if (!zero.isAttack()) {
             zero.setAttack(true);
+            Sound.playSound(String.format("Zero/slash_%d.wav", R.nextInt(3) + 1));
             int attackX = e.getX();
             int attackY = e.getY();
+            CommandCenter.getInstance().getOpsQueue().enqueue(new NormalSlashDebris(attackX, attackY, zero.getCenter(), zero.getBoundingBox()), GameOp.Action.ADD);
             if (attackY < zero.getCenter().y) {
                 zero.setY_velocity(-zero.getMax_y_velocity() / 2);
                 zero.setDeltaY(zero.getDeltaY() - 7);
@@ -554,6 +572,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
                 zero.setFacingLeft(false);
                 zero.setX_velocity(zero.getMax_x_velocity() * 2);
             }
+
         }
     }
 

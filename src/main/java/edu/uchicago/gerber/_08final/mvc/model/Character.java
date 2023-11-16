@@ -2,6 +2,7 @@ package edu.uchicago.gerber._08final.mvc.model;
 
 import edu.uchicago.gerber._08final.mvc.controller.CommandCenter;
 import edu.uchicago.gerber._08final.mvc.controller.Game;
+import edu.uchicago.gerber._08final.mvc.controller.Sound;
 import lombok.Data;
 
 import java.awt.*;
@@ -100,10 +101,11 @@ public class Character extends Sprite{
             Block blockCollision = findCollisionWall();
             if (blockCollision != null) {
                 if (getDeltaY() > 0) {
-                    setCenterY(blockCollision.boundingBox.y - 18);
+                    setCenterY(blockCollision.boundingBox.y - boundingBox.height / 2);
                     setY_velocity(0);
+                    Sound.playSound("Zero/player_land.wav");
                 } else if (getDeltaY() < 0) {
-                    setCenterY(blockCollision.boundingBox.y + blockCollision.boundingBox.height + 18);
+                    setCenterY(blockCollision.boundingBox.y + blockCollision.boundingBox.height + boundingBox.height / 2);
                     setY_velocity(0);
                 }
                 setDeltaY(0);
@@ -114,17 +116,17 @@ public class Character extends Sprite{
             blockCollision = findCollisionWall();
             if (blockCollision != null) {
                 if (getDeltaX() > 0) {
-                    setCenterX(blockCollision.boundingBox.x - 18);
+                    setCenterX(blockCollision.boundingBox.x - boundingBox.width / 2);
                     setX_velocity(0);
                 } else if (getDeltaX() < 0) {
-                    setCenterX(blockCollision.boundingBox.x + blockCollision.boundingBox.width + 18);
+                    setCenterX(blockCollision.boundingBox.x + blockCollision.boundingBox.width + boundingBox.width / 2);
                     setX_velocity(0);
                 }
                 setDeltaX(0);
             }
             if (boundingBox != null) {
-                boundingBox.x = center.x - 18;
-                boundingBox.y = center.y - 18;
+                boundingBox.x = center.x - boundingBox.width / 2;
+                boundingBox.y = center.y - boundingBox.height / 2;
             }
 //            setCenter(new Point((int) newXPos, (int) newYPos));
         }

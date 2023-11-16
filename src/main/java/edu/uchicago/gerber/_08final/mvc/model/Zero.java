@@ -1,6 +1,8 @@
 package edu.uchicago.gerber._08final.mvc.model;
 
 import edu.uchicago.gerber._08final.mvc.controller.CommandCenter;
+import edu.uchicago.gerber._08final.mvc.controller.Game;
+import edu.uchicago.gerber._08final.mvc.controller.Sound;
 import lombok.Data;
 
 import java.awt.*;
@@ -118,9 +120,7 @@ public class Zero extends Character{
         if (isAttack) {
             if (currentAttachIdx < 7) {
                 currentPicIdx = currentAttachIdx;
-                if ((CommandCenter.getInstance().getFrame() / 2) % 2 == 0) {
-                    currentAttachIdx += 1;
-                }
+                currentAttachIdx += 1;
             } else {
                 // currentRollIdx == 7
                 currentAttachIdx = 0;
@@ -129,9 +129,7 @@ public class Zero extends Character{
         } else if (isRolling) {
             if (currentRollIdx < 7) {
                 currentPicIdx = currentRollIdx;
-                if ((CommandCenter.getInstance().getFrame() / 2) % 2 == 0) {
-                    currentRollIdx += 1;
-                }
+                currentRollIdx += 1;
             } else {
                 // currentRollIdx == 7
                 currentRollIdx = 0;

@@ -54,7 +54,8 @@ public class CommandCenter {
 	private static CommandCenter instance = null;
 
 	// Constructor made private
-	private CommandCenter() {}
+	private CommandCenter() {
+	}
 
     //this class maintains game state - make this a singleton.
 	public static CommandCenter getInstance(){

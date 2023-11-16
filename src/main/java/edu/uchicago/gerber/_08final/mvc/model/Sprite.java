@@ -184,14 +184,14 @@ public abstract class Sprite implements Movable {
 
         AffineTransform oldTransform = g2d.getTransform();
         try {
-            double scaleX = width * 1.0 / bufferedImage.getWidth();
-            double scaleY = height * 1.0 / bufferedImage.getHeight();
+//            double scaleX = width * 1.0 / bufferedImage.getWidth();
+//            double scaleY = height * 1.0 / bufferedImage.getHeight();
 
             AffineTransform affineTransform = new AffineTransform( oldTransform );
             if ( centerX != 0 || centerY != 0 ) {
                 affineTransform.translate( centerX, centerY );
             }
-            affineTransform.scale( scaleX, scaleY );
+//            affineTransform.scale( scaleX, scaleY );
             if ( angleRadians != 0 ) {
                 affineTransform.rotate( angleRadians );
             }
@@ -219,14 +219,15 @@ public abstract class Sprite implements Movable {
 
         AffineTransform oldTransform = g2d.getTransform();
         try {
-            double scaleX = width * 1.0 / bufferedImage.getWidth();
-            double scaleY = height * 1.0 / bufferedImage.getHeight();
+//            double scaleX = width * 1.0 / bufferedImage.getWidth();
+//            double scaleY = height * 1.0 / bufferedImage.getHeight();
 
             AffineTransform affineTransform = new AffineTransform( oldTransform );
             if ( centerX != 0 || centerY != 0 ) {
                 affineTransform.translate( centerX, centerY );
             }
-            affineTransform.scale( -scaleX, scaleY );
+//            affineTransform.scale( -scaleX, scaleY );
+            affineTransform.scale( -1, 1 );
             if ( angleRadians != 0 ) {
                 affineTransform.rotate( angleRadians );
             }
@@ -255,14 +256,14 @@ public abstract class Sprite implements Movable {
 
         AffineTransform oldTransform = g2d.getTransform();
         try {
-            double scaleX = width * 1.0 / bufferedImage.getWidth();
-            double scaleY = height * 1.0 / bufferedImage.getHeight();
+//            double scaleX = width * 1.0 / bufferedImage.getWidth();
+//            double scaleY = height * 1.0 / bufferedImage.getHeight();
 
             AffineTransform affineTransform = new AffineTransform( oldTransform );
             if ( centerX != 0 || centerY != 0 ) {
                 affineTransform.translate( centerX, centerY );
             }
-            affineTransform.scale( scaleX, scaleY );
+            affineTransform.scale( 1, 1 );
             if ( angleRadians != 0 ) {
                 affineTransform.rotate( angleRadians );
             }
@@ -292,14 +293,15 @@ public abstract class Sprite implements Movable {
 
         AffineTransform oldTransform = g2d.getTransform();
         try {
-            double scaleX = width * 1.0 / bufferedImage.getWidth();
-            double scaleY = height * 1.0 / bufferedImage.getHeight();
+//            double scaleX = width * 1.0 / bufferedImage.getWidth();
+//            double scaleY = height * 1.0 / bufferedImage.getHeight();
 
             AffineTransform affineTransform = new AffineTransform( oldTransform );
             if ( centerX != 0 || centerY != 0 ) {
                 affineTransform.translate( centerX, centerY );
             }
-            affineTransform.scale( -scaleX, scaleY );
+//            affineTransform.scale( -scaleX, scaleY );
+            affineTransform.scale( -1, 1 );
             if ( angleRadians != 0 ) {
                 affineTransform.rotate( angleRadians );
             }
