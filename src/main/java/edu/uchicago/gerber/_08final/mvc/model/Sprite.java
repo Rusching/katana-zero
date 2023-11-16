@@ -31,7 +31,7 @@ public abstract class Sprite implements Movable {
     //this causes movement; change-in-x and change-in-y
     private double deltaX, deltaY;
 
-    public final int BLOCK_SIZE = 36;
+    public final int BLOCK_SIZE = 72;
     //every sprite has a team: friend, foe, floater, or debris.
     private Team team;
     //the radius of circumscribing/inscribing circle
@@ -80,12 +80,12 @@ public abstract class Sprite implements Movable {
 
     public void setCenterX(int x) {
         this.center.x = x;
-        if (this.boundingBox != null) {boundingBox.x = x - 18;}
+        if (this.boundingBox != null) {boundingBox.x = x - boundingBox.width / 2;}
     }
 
     public void setCenterY(int y) {
         this.center.y = y;
-        if (this.boundingBox != null) {boundingBox.y = y - 18;}
+        if (this.boundingBox != null) {boundingBox.y = y - boundingBox.height / 2;}
     }
 
     @Override
@@ -123,8 +123,8 @@ public abstract class Sprite implements Movable {
         if (spin != 0) orientation += spin;
 
         if (boundingBox != null) {
-            boundingBox.x = center.x - 18;
-            boundingBox.y = center.y - 18;
+            boundingBox.x = center.x - boundingBox.width / 2;
+            boundingBox.y = center.y - boundingBox.height / 2;
         }
 
     }
@@ -191,7 +191,7 @@ public abstract class Sprite implements Movable {
             if ( centerX != 0 || centerY != 0 ) {
                 affineTransform.translate( centerX, centerY );
             }
-//            affineTransform.scale( scaleX, scaleY );
+            affineTransform.scale( 2, 2 );
             if ( angleRadians != 0 ) {
                 affineTransform.rotate( angleRadians );
             }
@@ -263,7 +263,7 @@ public abstract class Sprite implements Movable {
             if ( centerX != 0 || centerY != 0 ) {
                 affineTransform.translate( centerX, centerY );
             }
-            affineTransform.scale( 1, 1 );
+            affineTransform.scale( 2, 2 );
             if ( angleRadians != 0 ) {
                 affineTransform.rotate( angleRadians );
             }
@@ -301,7 +301,7 @@ public abstract class Sprite implements Movable {
                 affineTransform.translate( centerX, centerY );
             }
 //            affineTransform.scale( -scaleX, scaleY );
-            affineTransform.scale( -1, 1 );
+            affineTransform.scale( -2, 2 );
             if ( angleRadians != 0 ) {
                 affineTransform.rotate( angleRadians );
             }

@@ -15,7 +15,7 @@ import java.util.Map;
 public class Floor {
     // The bricks are all 36 x 36
 
-    private final int BLOCK_SIZE = 36;
+    private final int BLOCK_SIZE = 72;
 
 
     public void buildFloors() {

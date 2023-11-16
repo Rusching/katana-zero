@@ -42,15 +42,15 @@ public class Character extends Sprite{
     protected double maximum_jump_time = 1000;
     // velocity
     protected double x_velocity = 0;
-    protected double x_accelerate = 0.7;
-    protected double x_slowdown_accelerate = 5;
+    protected double x_accelerate = 1.4;
+    protected double x_slowdown_accelerate = 10;
 
     protected double y_velocity = 0;
-    protected double max_x_velocity = 9;
-    protected double max_y_velocity = 15;
+    protected double max_x_velocity = 18;
+    protected double max_y_velocity = 30;
 
-    protected  final double initial_y_velocity = -12;
-    public final double gravityG = -0.8;
+    protected  final double initial_y_velocity = -24;
+    public final double gravityG = -1.6;
 
     public boolean isOnPlatform() {
         setCenterY(center.y += 5);

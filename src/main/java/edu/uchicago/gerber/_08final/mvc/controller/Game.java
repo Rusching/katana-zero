@@ -440,8 +440,8 @@ public class Game implements Runnable, KeyListener, MouseListener {
                         }
                     }
                 } else {
-                    zero.setY_velocity(zero.getY_velocity() + 5);
-                    zero.setDeltaY(zero.getDeltaY() + 7);
+                    zero.setY_velocity(zero.getY_velocity() + 10);
+                    zero.setDeltaY(zero.getDeltaY() + 14);
                 }
 
                 break;

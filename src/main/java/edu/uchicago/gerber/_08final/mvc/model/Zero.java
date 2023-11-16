@@ -52,7 +52,7 @@ public class Zero extends Character{
         setTeam(Team.FRIEND);
         setRadius(MIN_RADIUS);
         setBoundingType(BoundingType.RECTANGLE);
-        setBoundingBox(new Rectangle(getCenter().x - 18, getCenter().y - 18, BLOCK_SIZE, BLOCK_SIZE));
+        setBoundingBox(new Rectangle(getCenter().x - BLOCK_SIZE / 2, getCenter().y - BLOCK_SIZE / 2, BLOCK_SIZE, BLOCK_SIZE));
 
         Map<Actions, ArrayList<BufferedImage>> rasterMaps = new HashMap<>();
 

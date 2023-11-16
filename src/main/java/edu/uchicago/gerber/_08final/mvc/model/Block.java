@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class Block extends Sprite {
 
-	private final int BLOCK_SIZE = 36;
+	private final int BLOCK_SIZE = 72;
 
 	//The size of this brick is always square!
 	//we use upperLeftCorner because that is the origin when drawing graphics in Java
