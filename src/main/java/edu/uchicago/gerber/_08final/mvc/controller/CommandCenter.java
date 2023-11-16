@@ -78,7 +78,7 @@ public class CommandCenter {
 //		opsQueue.enqueue(falcon, GameOp.Action.ADD);
 		opsQueue.enqueue(zero, GameOp.Action.ADD);
 		Floor f = new Floor();
-		f.buildFloors();
+		f.loadLevelAndCreateFloors(1, 0);
 
 	}
 

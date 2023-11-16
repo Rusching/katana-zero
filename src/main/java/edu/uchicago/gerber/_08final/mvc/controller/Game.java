@@ -25,7 +25,9 @@ public class Game implements Runnable, KeyListener, MouseListener {
     // FIELDS
     // ===============================================
 
-    public static final Dimension DIM = new Dimension(1080, 648); //the dimension of the game.
+    // Each block is 72 * 72, so 1080 is 15 blocks, 684 = 9.5 blocks as the bar count 36 height.
+    // This way the canvas is 15 * 9 blocks.
+    public static final Dimension DIM = new Dimension(1080, 684); //the dimension of the game.
     private final GamePanel gamePanel;
     //this is used throughout many classes.
     public static final Random R = new Random();
@@ -451,7 +453,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
                     zero.setFacingLeft(true);
                     zero.setRunning(true);
                     zero.setIdle(false);
-                    if (CommandCenter.getInstance().getFrame() % 6 == 0) {
+                    if (zero.isOnPlatform() && CommandCenter.getInstance().getFrame() % 6 == 0) {
                         Sound.playSound(String.format("Zero/player_running_%d.wav", runSoundIdx % 4 + 1));
                         runSoundIdx += 1;
                         if (runSoundIdx > 10000) {
