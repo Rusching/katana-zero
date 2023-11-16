@@ -25,7 +25,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
     // FIELDS
     // ===============================================
 
-    public static final Dimension DIM = new Dimension(1100, 650); //the dimension of the game.
+    public static final Dimension DIM = new Dimension(1080, 648); //the dimension of the game.
     private final GamePanel gamePanel;
     //this is used throughout many classes.
     public static final Random R = new Random();
@@ -423,6 +423,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
             case UP:
                 if (zero.isOnPlatform() && !zero.isRolling()) {
                     Sound.playSound("Zero/player_jump.wav");
+                    CommandCenter.getInstance().getOpsQueue().enqueue(new JumpDebris(zero.getCenter()), GameOp.Action.ADD);
                     zero.setY_velocity(zero.getInitial_y_velocity());
                     zero.setInAir(true);
                     zero.setFalling(false);
