@@ -34,9 +34,9 @@ public class CommandCenter {
 	public int viewY = 0;
 
 	// margins between four bounds
-	public int verticalMargin = 100;
-	public int leftMargin = 50;
-	public int rightMargin = 100;
+	public int verticalMargin = 70;
+	public int leftMargin = 300;
+	public int rightMargin = 300;
 
 	//the falcon is located in the movFriends list, but since we use this reference a lot, we keep track of it in a
 	//separate reference. Use final to ensure that the falcon ref always points to the single falcon object on heap.

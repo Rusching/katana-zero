@@ -1,6 +1,8 @@
 package edu.uchicago.gerber._08final.mvc.model;
 
 
+import edu.uchicago.gerber._08final.mvc.controller.CommandCenter;
+
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -27,31 +29,32 @@ public class NormalSlashDebris extends Sprite{
         setExpiry(rasterMap.size());
 
         // calculate the orientation
-        int diffX = attachX - charCenter.x;
-        int diffY = attachY - charCenter.y;
+        int diffX = attachX - (charCenter.x - CommandCenter.getInstance().viewX);
+        int diffY = attachY - (charCenter.y - CommandCenter.getInstance().viewY);
         System.out.println(Math.atan2(diffY, diffX));
         double angle = Math.toDegrees(Math.atan2(diffY, diffX));
         setOrientation((int) angle);
 
+        System.out.println(String.format("Slash angle: %.2f", angle));
         // calculate the center
 //        setCenter(charCenter);
         Point virtualCenter = getLineRectangleIntersection(new Line2D.Float(attachX, attachY, charCenter.x, charCenter.y), charRect);
         if (virtualCenter == null) {
-            if (attachY >= center.y) {
-                if (attachX <= center.x) {
+            if (attachY >= charCenter.y) {
+                if (attachX <= charCenter.x) {
                     virtualCenter = new Point(charRect.x, charCenter.y);
                 } else {
                     virtualCenter = new Point(charRect.x + charRect.width, charCenter.y);
                 }
             } else {
-                if (attachX <= center.x) {
+                if (attachX <= charCenter.x) {
                     virtualCenter = new Point(charRect.x, charRect.y);
                 } else {
                     virtualCenter = new Point(charRect.x + charRect.width, charRect.y);
                 }
             }
         }
-        setCenter(virtualCenter);
+        setCenter(charCenter);
     }
 
 

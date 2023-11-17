@@ -413,6 +413,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 
         if (keyCode == START && CommandCenter.getInstance().isGameOver()) {
             CommandCenter.getInstance().initGame();
+            Sound.playSound("Song/song_sneaky_driver.wav");
             return;
         }
 
@@ -566,12 +567,22 @@ public class Game implements Runnable, KeyListener, MouseListener {
             Sound.playSound(String.format("Zero/slash_%d.wav", R.nextInt(3) + 1));
             int attackX = e.getX();
             int attackY = e.getY();
-            CommandCenter.getInstance().getOpsQueue().enqueue(new NormalSlashDebris(attackX, attackY, zero.getCenter(), zero.getBoundingBox()), GameOp.Action.ADD);
-            if (attackY < zero.getCenter().y) {
+//            CommandCenter.getInstance().getOpsQueue().enqueue(new NormalSlashDebris(
+//                    attackX, attackY,
+//                    new Point(zero.getCenter().x - CommandCenter.getInstance().viewX, zero.getCenter().y - CommandCenter.getInstance().viewY),
+//                    new Rectangle(zero.getBoundingBox().x - CommandCenter.getInstance().viewX, zero.getBoundingBox().y - CommandCenter.getInstance().viewY,
+//                            zero.getBoundingBox().width, zero.getBoundingBox().height)
+//                    ),
+//                    GameOp.Action.ADD);
+            CommandCenter.getInstance().getOpsQueue().enqueue(new NormalSlashDebris(
+                    attackX, attackY, zero.getCenter(), zero.getBoundingBox()),
+                    GameOp.Action.ADD
+            );
+            if (attackY < zero.getCenter().y - CommandCenter.getInstance().viewY) {
                 zero.setY_velocity(-zero.getMax_y_velocity() / 2);
                 zero.setDeltaY(zero.getDeltaY() - 7);
             }
-            if (attackX < zero.getCenter().x) {
+            if (attackX < zero.getCenter().x - CommandCenter.getInstance().viewX) {
                 zero.setFacingLeft(true);
                 zero.setX_velocity(-zero.getMax_x_velocity() * 2);
             } else {

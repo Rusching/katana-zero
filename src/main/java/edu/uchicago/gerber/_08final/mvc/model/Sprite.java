@@ -78,6 +78,14 @@ public abstract class Sprite implements Movable {
 
     }
 
+    public void setCenter(Point center) {
+        this.center = center;
+        if (boundingBox != null) {
+            boundingBox.x = center.x - boundingBox.width / 2;
+            boundingBox.y = center.y - boundingBox.height / 2;
+        }
+    }
+
     public void setCenterX(int x) {
         this.center.x = x;
         if (this.boundingBox != null) {boundingBox.x = x - boundingBox.width / 2;}
