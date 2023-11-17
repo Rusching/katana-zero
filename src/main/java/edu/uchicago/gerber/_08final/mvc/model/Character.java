@@ -83,19 +83,19 @@ public class Character extends Sprite{
     @Override
     public void move() {
         //right-bounds reached
-        if (center.x > Game.DIM.width) {
-            setCenter(new Point(1, center.y));
-            //left-bounds reached
-        } else if (center.x < 0) {
-            setCenter(new Point(Game.DIM.width - 1, center.y));
-            //bottom-bounds reached
-        } else if (center.y > Game.DIM.height) {
-            setCenter(new Point(center.x, 1));
-            //top-bounds reached
-        } else if (center.y < 0) {
-            setCenter(new Point(center.x, Game.DIM.height - 1));
-            //in-bounds
-        } else {
+//        if (center.x > Game.DIM.width) {
+//            setCenter(new Point(1, center.y));
+//            //left-bounds reached
+//        } else if (center.x < 0) {
+//            setCenter(new Point(Game.DIM.width - 1, center.y));
+//            //bottom-bounds reached
+//        } else if (center.y > Game.DIM.height) {
+//            setCenter(new Point(center.x, 1));
+//            //top-bounds reached
+//        } else if (center.y < 0) {
+//            setCenter(new Point(center.x, Game.DIM.height - 1));
+//            //in-bounds
+//        } else {
             double newYPos = center.y + getDeltaY();
             setCenterY((int) newYPos);
             Block blockCollision = findCollisionWall();
@@ -129,6 +129,6 @@ public class Character extends Sprite{
                 boundingBox.y = center.y - boundingBox.height / 2;
             }
 //            setCenter(new Point((int) newXPos, (int) newYPos));
-        }
+//        }
     }
 }

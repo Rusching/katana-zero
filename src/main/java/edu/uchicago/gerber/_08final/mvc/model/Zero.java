@@ -146,6 +146,28 @@ public class Zero extends Character{
         }
     }
 
+    public void scrollMap() {
+        int leftBoundary = CommandCenter.getInstance().viewX + CommandCenter.getInstance().leftMargin;
+        if (boundingBox.x < leftBoundary) {
+            CommandCenter.getInstance().viewX -= (leftBoundary - boundingBox.x);
+        }
+
+        int rightBoundary = CommandCenter.getInstance().viewX + Game.dimensionWidth - CommandCenter.getInstance().rightMargin;
+        if (boundingBox.x + boundingBox.width > rightBoundary) {
+            CommandCenter.getInstance().viewX += (boundingBox.x + boundingBox.width - rightBoundary);
+        }
+
+        int topBoundary = CommandCenter.getInstance().viewY + CommandCenter.getInstance().verticalMargin;
+        if (boundingBox.y < topBoundary) {
+            CommandCenter.getInstance().viewY -= (topBoundary - boundingBox.y);
+        }
+
+        int bottomBoundary = CommandCenter.getInstance().viewY + Game.dimensionHeight - CommandCenter.getInstance().verticalMargin;
+        if (boundingBox.y + boundingBox.height > bottomBoundary) {
+            CommandCenter.getInstance().viewY += (boundingBox.y + boundingBox.height - bottomBoundary);
+        }
+    }
+
     @Override
     public void move() {
         super.move();
@@ -180,6 +202,10 @@ public class Zero extends Character{
                 y_velocity -= gravityG;
             }
         }
+
+        // modify the viewX and viewY so that the map move
+        scrollMap();
+
 //        if (!isOnPlatform()) {
 //            setDeltaY(y_velocity);
 //            if (abs(y_velocity) < max_y_velocity) {

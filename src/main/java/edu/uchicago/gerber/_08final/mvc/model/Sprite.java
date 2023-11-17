@@ -96,23 +96,23 @@ public abstract class Sprite implements Movable {
         // where you need to override the move() method.
 
         //right-bounds reached
-        if (center.x > Game.DIM.width) {
-            setCenter(new Point(1, center.y));
-        //left-bounds reached
-        } else if (center.x < 0) {
-            setCenter(new Point(Game.DIM.width - 1, center.y));
-        //bottom-bounds reached
-        } else if (center.y > Game.DIM.height) {
-            setCenter(new Point(center.x, 1));
-        //top-bounds reached
-        } else if (center.y < 0) {
-            setCenter(new Point(center.x, Game.DIM.height - 1));
-        //in-bounds
-        } else {
+//        if (center.x > Game.DIM.width) {
+//            setCenter(new Point(1, center.y));
+//        //left-bounds reached
+//        } else if (center.x < 0) {
+//            setCenter(new Point(Game.DIM.width - 1, center.y));
+//        //bottom-bounds reached
+//        } else if (center.y > Game.DIM.height) {
+//            setCenter(new Point(center.x, 1));
+//        //top-bounds reached
+//        } else if (center.y < 0) {
+//            setCenter(new Point(center.x, Game.DIM.height - 1));
+//        //in-bounds
+//        } else {
             double newXPos = center.x + getDeltaX();
             double newYPos = center.y + getDeltaY();
             setCenter(new Point((int) newXPos, (int) newYPos));
-        }
+//        }
 
         //expire (decrement expiry) on short-lived objects only
         //the default value of expiry is zero, so this block will only apply to expiring sprites
@@ -189,7 +189,7 @@ public abstract class Sprite implements Movable {
 
             AffineTransform affineTransform = new AffineTransform( oldTransform );
             if ( centerX != 0 || centerY != 0 ) {
-                affineTransform.translate( centerX, centerY );
+                affineTransform.translate( centerX - CommandCenter.getInstance().viewX, centerY - CommandCenter.getInstance().viewY);
             }
             affineTransform.scale( 2, 2 );
             if ( angleRadians != 0 ) {
@@ -224,7 +224,7 @@ public abstract class Sprite implements Movable {
 
             AffineTransform affineTransform = new AffineTransform( oldTransform );
             if ( centerX != 0 || centerY != 0 ) {
-                affineTransform.translate( centerX, centerY );
+                affineTransform.translate( centerX - CommandCenter.getInstance().viewX, centerY - CommandCenter.getInstance().viewY);
             }
 //            affineTransform.scale( -scaleX, scaleY );
             affineTransform.scale( -1, 1 );
@@ -261,7 +261,7 @@ public abstract class Sprite implements Movable {
 
             AffineTransform affineTransform = new AffineTransform( oldTransform );
             if ( centerX != 0 || centerY != 0 ) {
-                affineTransform.translate( centerX, centerY );
+                affineTransform.translate( centerX - CommandCenter.getInstance().viewX, centerY - CommandCenter.getInstance().viewY);
             }
             affineTransform.scale( 2, 2 );
             if ( angleRadians != 0 ) {
@@ -298,7 +298,7 @@ public abstract class Sprite implements Movable {
 
             AffineTransform affineTransform = new AffineTransform( oldTransform );
             if ( centerX != 0 || centerY != 0 ) {
-                affineTransform.translate( centerX, centerY );
+                affineTransform.translate( centerX - CommandCenter.getInstance().viewX, centerY - CommandCenter.getInstance().viewY);
             }
 //            affineTransform.scale( -scaleX, scaleY );
             affineTransform.scale( -2, 2 );

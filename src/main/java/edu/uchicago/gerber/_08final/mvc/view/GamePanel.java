@@ -92,6 +92,7 @@ public class GamePanel extends Panel {
         gameFrame.setTitle("Game Base");
         gameFrame.setResizable(false);
         gameFrame.setVisible(true);
+//        gameFram
         setFocusable(true);
     }
 
@@ -196,11 +197,11 @@ public class GamePanel extends Panel {
         //playing and not paused!
 //        else {
             moveDrawMovables(grpOff,
-                    CommandCenter.getInstance().getMovDebris(),
                     CommandCenter.getInstance().getMovFloaters(),
                     CommandCenter.getInstance().getMovFoes(),
                     CommandCenter.getInstance().getMovFriends(),
-                    CommandCenter.getInstance().getMovFloors());
+                    CommandCenter.getInstance().getMovFloors(),
+                    CommandCenter.getInstance().getMovDebris());
 
 
 //            drawNumberShipsRemaining(grpOff);

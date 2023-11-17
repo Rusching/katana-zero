@@ -27,8 +27,11 @@ public class Game implements Runnable, KeyListener, MouseListener {
 
     // Each block is 72 * 72, so 1080 is 15 blocks, 684 = 9.5 blocks as the bar count 36 height.
     // This way the canvas is 15 * 9 blocks.
-    public static final Dimension DIM = new Dimension(1080, 684); //the dimension of the game.
+    public static int dimensionWidth = 1080;
+    public static int dimensionHeight = 684;
+    public static final Dimension DIM = new Dimension(dimensionWidth, dimensionHeight); //the dimension of the game.
     private final GamePanel gamePanel;
+
     //this is used throughout many classes.
     public static final Random R = new Random();
 

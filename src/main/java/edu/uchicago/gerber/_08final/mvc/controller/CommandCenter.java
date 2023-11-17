@@ -5,6 +5,7 @@ package edu.uchicago.gerber._08final.mvc.controller;
 import edu.uchicago.gerber._08final.mvc.model.*;
 import edu.uchicago.gerber._08final.mvc.model.Character;
 import edu.uchicago.gerber._08final.mvc.model.Zero;
+import edu.uchicago.gerber._08final.mvc.view.GamePanel;
 import lombok.Data;
 
 import java.awt.*;
@@ -19,14 +20,23 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Data
 public class CommandCenter {
 
-	private  int numFalcons;
-	private  int level;
-	private  long score;
-	private  boolean paused;
-	private  boolean muted;
+	private int numFalcons;
+	private int level;
+	private long score;
+	private boolean paused;
+	private boolean muted;
 
 	//this value is used to count the number of frames (full animation cycles) in the game
 	private long frame;
+
+	// values used to scroll map
+	public int viewX = 0;
+	public int viewY = 0;
+
+	// margins between four bounds
+	public int verticalMargin = 100;
+	public int leftMargin = 50;
+	public int rightMargin = 100;
 
 	//the falcon is located in the movFriends list, but since we use this reference a lot, we keep track of it in a
 	//separate reference. Use final to ensure that the falcon ref always points to the single falcon object on heap.
