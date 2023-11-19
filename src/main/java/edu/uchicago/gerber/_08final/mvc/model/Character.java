@@ -1,12 +1,12 @@
 package edu.uchicago.gerber._08final.mvc.model;
 
 import edu.uchicago.gerber._08final.mvc.controller.CommandCenter;
-import edu.uchicago.gerber._08final.mvc.controller.Game;
 import edu.uchicago.gerber._08final.mvc.controller.Sound;
 import lombok.Data;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Timer;
 
 import static java.lang.Math.abs;
 
@@ -39,23 +39,54 @@ public class Character extends Sprite{
     public static final int MIN_RADIUS = 18;
 
 
-    protected double maximum_jump_time = 1000;
+    // wall sliding
+
+
+
+    // slow motion
+    protected boolean isSlowMotion = false;
+    protected Timer slowMotionTimer = new Timer();
+    protected int maxSlowMotionDuration = 5000;
+
+    protected double maximumJumpTime = 1000;
     // velocity
-    protected double x_velocity = 0;
-    protected double x_accelerate = 1.4;
-    protected double x_slowdown_accelerate = 10;
+    protected double xVelocity = 0;
+    protected double xAccelerate = 1.4;
+    protected double xSlowdownAccelerate = 10;
 
-    protected double y_velocity = 0;
-    protected double max_x_velocity = 18;
-    protected double max_y_velocity = 30;
+    protected double yVelocity = 0;
+    protected double maxXVelocity = 18;
+    protected double maxYVelocity = 30;
 
-    protected  final double initial_y_velocity = -24;
+    protected  final double initialYVelocity = -24;
     public final double gravityG = -1.6;
 
-    public boolean isOnPlatform() {
-        setCenterY(center.y += 5);
+    public boolean isOnLeftWall() {
+        setCenterX(center.x - 2);
         Block block = findCollisionWall();
-        setCenterY(center.y -= 5);
+        setCenterX(center.x + 2);
+        if (block != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isOnRightWall() {
+        setCenterX(center.x + 2);
+        Block block = findCollisionWall();
+        setCenterX(center.x - 2);
+        if (block != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isOnPlatform() {
+        setCenterY(center.y + 2);
+        Block block = findCollisionWall();
+        setCenterY(center.y - 2);
         if (block != null) {
             return true;
         } else {
@@ -102,11 +133,11 @@ public class Character extends Sprite{
             if (blockCollision != null) {
                 if (getDeltaY() > 0) {
                     setCenterY(blockCollision.boundingBox.y - boundingBox.height / 2);
-                    setY_velocity(0);
+                    setYVelocity(0);
                     Sound.playSound("Zero/player_land.wav");
                 } else if (getDeltaY() < 0) {
                     setCenterY(blockCollision.boundingBox.y + blockCollision.boundingBox.height + boundingBox.height / 2);
-                    setY_velocity(0);
+                    setYVelocity(0);
                 }
                 setDeltaY(0);
             }
@@ -117,10 +148,10 @@ public class Character extends Sprite{
             if (blockCollision != null) {
                 if (getDeltaX() > 0) {
                     setCenterX(blockCollision.boundingBox.x - boundingBox.width / 2);
-                    setX_velocity(0);
+                    setXVelocity(0);
                 } else if (getDeltaX() < 0) {
                     setCenterX(blockCollision.boundingBox.x + blockCollision.boundingBox.width + boundingBox.width / 2);
-                    setX_velocity(0);
+                    setXVelocity(0);
                 }
                 setDeltaX(0);
             }

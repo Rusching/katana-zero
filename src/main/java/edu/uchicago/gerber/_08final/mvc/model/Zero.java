@@ -2,7 +2,6 @@ package edu.uchicago.gerber._08final.mvc.model;
 
 import edu.uchicago.gerber._08final.mvc.controller.CommandCenter;
 import edu.uchicago.gerber._08final.mvc.controller.Game;
-import edu.uchicago.gerber._08final.mvc.controller.Sound;
 import lombok.Data;
 
 import java.awt.*;
@@ -173,33 +172,35 @@ public class Zero extends Character{
         super.move();
         if (isRunning) {
             if (isFacingLeft) {
-                if (x_velocity < -max_x_velocity) {x_velocity = -max_x_velocity;}
+                if (xVelocity < -maxXVelocity) {
+                    xVelocity = -maxXVelocity;}
             } else {
-                if (x_velocity > max_x_velocity) {x_velocity = max_x_velocity;}
+                if (xVelocity > maxXVelocity) {
+                    xVelocity = maxXVelocity;}
             }
-            if (abs(x_velocity) < max_x_velocity) {
+            if (abs(xVelocity) < maxXVelocity) {
                 if (isFacingLeft) {
-                    x_velocity -= x_accelerate;
+                    xVelocity -= xAccelerate;
                 } else {
-                    x_velocity += x_accelerate;
+                    xVelocity += xAccelerate;
                 }
             }
-            setDeltaX(x_velocity);
+            setDeltaX(xVelocity);
         } else {
-            if (x_velocity != 0) {
-                if (x_velocity > 0) {
-                    x_velocity = x_velocity > x_slowdown_accelerate? x_velocity - x_slowdown_accelerate: 0;
+            if (xVelocity != 0) {
+                if (xVelocity > 0) {
+                    xVelocity = xVelocity > xSlowdownAccelerate ? xVelocity - xSlowdownAccelerate : 0;
                 } else {
-                    x_velocity = abs(x_velocity) > x_slowdown_accelerate? x_velocity + x_slowdown_accelerate: 0;
+                    xVelocity = abs(xVelocity) > xSlowdownAccelerate ? xVelocity + xSlowdownAccelerate : 0;
                 }
             }
-            setDeltaX(x_velocity);
+            setDeltaX(xVelocity);
         }
 
-            setDeltaY(y_velocity);
+            setDeltaY(yVelocity);
         if (!isOnPlatform()) {
-            if (abs(y_velocity) <= max_y_velocity) {
-                y_velocity -= gravityG;
+            if (abs(yVelocity) <= maxYVelocity) {
+                yVelocity -= gravityG;
             }
         }
 

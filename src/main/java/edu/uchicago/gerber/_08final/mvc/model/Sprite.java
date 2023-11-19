@@ -177,6 +177,14 @@ public abstract class Sprite implements Movable {
         return bufferedImage;
     }
 
+    private void applyBlueFilter(Graphics2D g2d) {
+        // Set the color to blue with some alpha for transparency (e.g., 128 for 50% transparency)
+        Color blueFilter = new Color(0, 0, 210, 5);
+        g2d.setColor(blueFilter);
+
+        // Draw the rectangle over the entire screen
+        g2d.fillRect(0, 0, Game.dimensionWidth, Game.dimensionHeight);
+    }
 
 
     //https://www.tabnine.com/code/java/methods/java.awt.geom.AffineTransform/rotate
@@ -195,6 +203,9 @@ public abstract class Sprite implements Movable {
 //            double scaleX = width * 1.0 / bufferedImage.getWidth();
 //            double scaleY = height * 1.0 / bufferedImage.getHeight();
 
+            if (CommandCenter.getInstance().isSlowMotion()) {
+                applyBlueFilter(g2d);
+            }
             AffineTransform affineTransform = new AffineTransform( oldTransform );
             if ( centerX != 0 || centerY != 0 ) {
                 affineTransform.translate( centerX - CommandCenter.getInstance().viewX, centerY - CommandCenter.getInstance().viewY);

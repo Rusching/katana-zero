@@ -171,7 +171,7 @@ public class GamePanel extends Panel {
         grpOff = imgOff.getGraphics();
 
         //Fill the off-screen image background with black.
-        grpOff.setColor(Color.BLACK);
+        grpOff.setColor(Color.WHITE);
         grpOff.fillRect(0, 0, Game.DIM.width, Game.DIM.height);
 
         //this is used for development, you may remove drawNumFrame() in your final game.

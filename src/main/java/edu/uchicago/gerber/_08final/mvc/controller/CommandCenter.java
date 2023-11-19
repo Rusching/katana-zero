@@ -25,6 +25,7 @@ public class CommandCenter {
 	private long score;
 	private boolean paused;
 	private boolean muted;
+	private boolean isSlowMotion = false;
 
 	//this value is used to count the number of frames (full animation cycles) in the game
 	private long frame;
@@ -34,7 +35,7 @@ public class CommandCenter {
 	public int viewY = 0;
 
 	// margins between four bounds
-	public int verticalMargin = 70;
+	public int verticalMargin = 150;
 	public int leftMargin = 300;
 	public int rightMargin = 300;
 

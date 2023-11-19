@@ -1,6 +1,7 @@
 package edu.uchicago.gerber._08final.mvc.controller;
 
 import edu.uchicago.gerber._08final.mvc.model.*;
+import edu.uchicago.gerber._08final.mvc.model.Character;
 import edu.uchicago.gerber._08final.mvc.model.Zero;
 import edu.uchicago.gerber._08final.mvc.view.GamePanel;
 
@@ -13,6 +14,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 // ===============================================
@@ -36,9 +39,9 @@ public class Game implements Runnable, KeyListener, MouseListener {
     public static final Random R = new Random();
 
     private int runSoundIdx = 1;
-    public final static int ANIMATION_DELAY = 40; // milliseconds between frames
+    public static int animationDelay = 30; // milliseconds between frames
 
-    public final static int FRAMES_PER_SECOND = 1000 / ANIMATION_DELAY;
+    public final static int FRAMES_PER_SECOND = 1000 / animationDelay;
 
     private final Thread animationThread;
 
@@ -50,7 +53,8 @@ public class Game implements Runnable, KeyListener, MouseListener {
             LEFT = 65, //  A
             RIGHT = 68, // D
             UP = 87, //  W
-            DOWN = 83,
+            DOWN = 83, //s
+            SHIFT = 16, // shift
             START = 83, // s key
             FIRE = 32, // space key
             MUTE = 77, // m-key mute
@@ -126,7 +130,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
                 // The total amount of time is guaranteed to be at least ANIMATION_DELAY long.  If processing (update)
                 // between frames takes longer than ANIMATION_DELAY, then the difference between startTime -
                 // System.currentTimeMillis() will be negative, then zero will be the sleep time
-                startTime += ANIMATION_DELAY;
+                startTime += animationDelay;
 
                 Thread.sleep(Math.max(0,
                         startTime - System.currentTimeMillis()));
@@ -414,6 +418,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
         if (keyCode == START && CommandCenter.getInstance().isGameOver()) {
             CommandCenter.getInstance().initGame();
             Sound.playSound("Song/song_sneaky_driver.wav");
+//            Sound.clipForLoopFactory("Song/song_sneaky_driver.wav");
             return;
         }
 
@@ -430,7 +435,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
                 if (zero.isOnPlatform() && !zero.isRolling()) {
                     Sound.playSound("Zero/player_jump.wav");
                     CommandCenter.getInstance().getOpsQueue().enqueue(new JumpDebris(zero.getCenter()), GameOp.Action.ADD);
-                    zero.setY_velocity(zero.getInitial_y_velocity());
+                    zero.setYVelocity(zero.getInitialYVelocity());
                     zero.setInAir(true);
                     zero.setFalling(false);
                 }
@@ -441,13 +446,13 @@ public class Game implements Runnable, KeyListener, MouseListener {
                         zero.setRolling(true);
                         Sound.playSound("Zero/player_roll.wav");
                         if (zero.isFacingLeft()) {
-                            zero.setX_velocity(-zero.getMax_x_velocity() * 3);
+                            zero.setXVelocity(-zero.getMaxXVelocity() * 3);
                         } else {
-                            zero.setX_velocity(zero.getMax_x_velocity() * 3);
+                            zero.setXVelocity(zero.getMaxXVelocity() * 3);
                         }
                     }
                 } else {
-                    zero.setY_velocity(zero.getY_velocity() + 10);
+                    zero.setYVelocity(zero.getYVelocity() + 10);
                     zero.setDeltaY(zero.getDeltaY() + 14);
                 }
 
@@ -480,8 +485,9 @@ public class Game implements Runnable, KeyListener, MouseListener {
                     }
                 }
                 break;
-
-
+            case SHIFT:
+                startSlowMotion();
+                break;
             // possible future use
             // case KILL:
             // case SHIELD:
@@ -536,6 +542,10 @@ public class Game implements Runnable, KeyListener, MouseListener {
 //                soundThrust.stop();
 //                zero.setJumping(false);
                 break;
+            case SHIFT:
+
+                endSlowMotion();
+                break;
 
             case MUTE:
                 CommandCenter.getInstance().setMuted(!CommandCenter.getInstance().isMuted());
@@ -551,6 +561,36 @@ public class Game implements Runnable, KeyListener, MouseListener {
                 break;
         }
 
+    }
+
+
+    public void startSlowMotion() {
+        Zero zero = CommandCenter.getInstance().getZero();
+        if (!CommandCenter.getInstance().isSlowMotion()) {
+            Sound.playSlowMotion();
+            this.animationDelay = 150;
+            CommandCenter.getInstance().setSlowMotion(true);
+            zero.getSlowMotionTimer().schedule(new TimerTask() {
+                   @Override
+                   public void run() {
+                        endSlowMotion();
+                   }
+               }, zero.getMaxSlowMotionDuration()
+            );
+        }
+    }
+
+    public void endSlowMotion() {
+        if (CommandCenter.getInstance().isSlowMotion()) {
+            CommandCenter.getInstance().setSlowMotion(false);
+            Clip slowMotionClip = Sound.slowMotionClip;
+            if (slowMotionClip != null && slowMotionClip.isRunning()) {
+                slowMotionClip.stop();
+                slowMotionClip.close();
+            }
+            Sound.playSound("Zero/Slowmo_Exit.wav");
+            this.animationDelay = 30;
+        }
     }
 
     @Override
@@ -579,15 +619,15 @@ public class Game implements Runnable, KeyListener, MouseListener {
                     GameOp.Action.ADD
             );
             if (attackY < zero.getCenter().y - CommandCenter.getInstance().viewY) {
-                zero.setY_velocity(-zero.getMax_y_velocity() / 2);
+                zero.setYVelocity(-zero.getMaxYVelocity() / 2);
                 zero.setDeltaY(zero.getDeltaY() - 7);
             }
             if (attackX < zero.getCenter().x - CommandCenter.getInstance().viewX) {
                 zero.setFacingLeft(true);
-                zero.setX_velocity(-zero.getMax_x_velocity() * 2);
+                zero.setXVelocity(-zero.getMaxXVelocity() * 2);
             } else {
                 zero.setFacingLeft(false);
-                zero.setX_velocity(zero.getMax_x_velocity() * 2);
+                zero.setXVelocity(zero.getMaxXVelocity() * 2);
             }
 
         }
