@@ -433,11 +433,30 @@ public class Game implements Runnable, KeyListener, MouseListener {
                 break;
             case UP:
                 if (zero.isOnPlatform() && !zero.isRolling()) {
-                    Sound.playSound("Zero/player_jump.wav");
-                    CommandCenter.getInstance().getOpsQueue().enqueue(new JumpDebris(zero.getCenter()), GameOp.Action.ADD);
-                    zero.setYVelocity(zero.getInitialYVelocity());
-                    zero.setInAir(true);
-                    zero.setFalling(false);
+                    if (zero.isRunning() && (zero.isOnLeftWall() || zero.isOnRightWall())) {
+                        Sound.playSound("Zero/player_jump.wav");
+                        zero.setYVelocity(-zero.getMaxYVelocity() * 3);
+//                        zero.setDeltaY(zero.getDeltaY() + 60);
+                    } else {
+                        Sound.playSound("Zero/player_jump.wav");
+                        CommandCenter.getInstance().getOpsQueue().enqueue(new JumpDebris(zero.getCenter()), GameOp.Action.ADD);
+                        zero.setYVelocity(zero.getInitialYVelocity());
+                        zero.setFalling(false);
+                    }
+                } else if (zero.isRunning()) {
+                    if (zero.isOnLeftWall()) {
+                        zero.setFlipping(true);
+                        zero.setFacingLeft(false);
+                        Sound.playSound("Zero/player_jump.wav");
+                        zero.setXVelocity(zero.getMaxXVelocity());
+                        zero.setYVelocity(-zero.getMaxYVelocity() * 2 / 3);
+                    } else if (zero.isOnRightWall()) {
+                        zero.setFlipping(true);
+                        zero.setFacingLeft(true);
+                        Sound.playSound("Zero/player_jump.wav");
+                        zero.setXVelocity(-zero.getMaxXVelocity());
+                        zero.setYVelocity(-zero.getMaxYVelocity() * 2 / 3);
+                    }
                 }
                 break;
             case DOWN:
@@ -461,7 +480,6 @@ public class Game implements Runnable, KeyListener, MouseListener {
                 if (!zero.isAttack() && !zero.isRolling()) {
                     zero.setFacingLeft(true);
                     zero.setRunning(true);
-                    zero.setIdle(false);
                     if (zero.isOnPlatform() && CommandCenter.getInstance().getFrame() % 6 == 0) {
                         Sound.playSound(String.format("Zero/player_running_%d.wav", runSoundIdx % 4 + 1));
                         runSoundIdx += 1;
@@ -475,7 +493,6 @@ public class Game implements Runnable, KeyListener, MouseListener {
                 if (!zero.isAttack() && !zero.isRolling()) {
                     zero.setFacingLeft(false);
                     zero.setRunning(true);
-                    zero.setIdle(false);
                     if (CommandCenter.getInstance().getFrame() % 6 == 0) {
                         Sound.playSound(String.format("Zero/player_running_%d.wav", runSoundIdx % 4 + 1));
                         runSoundIdx += 1;
@@ -533,14 +550,10 @@ public class Game implements Runnable, KeyListener, MouseListener {
             case RIGHT:
 //                falcon.setTurnState(Falcon.TurnState.IDLE);
                 zero.setRunning(false);
-                zero.setIdle(true);
                 zero.setRun2IdleFlag(4);
                 break;
 
             case UP:
-//                falcon.setThrusting(false);
-//                soundThrust.stop();
-//                zero.setJumping(false);
                 break;
             case SHIFT:
 

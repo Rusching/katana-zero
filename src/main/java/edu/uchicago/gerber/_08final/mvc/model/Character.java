@@ -13,25 +13,31 @@ import static java.lang.Math.abs;
 @Data
 public class Character extends Sprite{
 
-    // states
-    protected boolean isIdle = true;
-
-    protected boolean isInAir = false;
 
     // jump is divided into 'up' and 'down' procedures. It is
     // distinguished by the 'isFalling' flag: true is up and false is down.
     protected boolean isFalling = false;
 
-    // relevant to rolling
+    // rolling
     protected boolean isRolling = false;
     protected final int rollFrames = 7;
     protected int currentRollIdx = 0;
 
+    // attack
     protected boolean isAttack = false;
     protected final int attackFrames = 7;
     protected int currentAttachIdx = 0;
+
+    // flip
+    protected boolean isFlipping = false;
+    protected final int flipFrames = 11;
+    protected int currentFlipIdx = 0;
+
+    protected boolean isWallSliding = false;
+
     // indicates if the left or right key are pressed
     protected boolean isRunning = false;
+
     // By default, zero is facing right and textures are facing right
     protected boolean isFacingLeft = false;
     protected int run2IdleFlag = 0;
@@ -127,6 +133,10 @@ public class Character extends Sprite{
 //            setCenter(new Point(center.x, Game.DIM.height - 1));
 //            //in-bounds
 //        } else {
+
+
+            // Here is the part of collision detection
+
             double newYPos = center.y + getDeltaY();
             setCenterY((int) newYPos);
             Block blockCollision = findCollisionWall();

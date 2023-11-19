@@ -199,8 +199,8 @@ public class GamePanel extends Panel {
             moveDrawMovables(grpOff,
                     CommandCenter.getInstance().getMovFloaters(),
                     CommandCenter.getInstance().getMovFoes(),
-                    CommandCenter.getInstance().getMovFriends(),
                     CommandCenter.getInstance().getMovFloors(),
+                    CommandCenter.getInstance().getMovFriends(),
                     CommandCenter.getInstance().getMovDebris());
 
 

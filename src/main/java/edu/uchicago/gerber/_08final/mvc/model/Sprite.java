@@ -261,6 +261,7 @@ public abstract class Sprite implements Movable {
         }
     }
 
+
     protected void renderRasterFromRect(Graphics2D g2d, BufferedImage bufferedImage) {
 
         if (bufferedImage ==  null) return;
@@ -297,6 +298,41 @@ public abstract class Sprite implements Movable {
         }
     }
 
+    protected void renderRasterFromRect(Graphics2D g2d, BufferedImage bufferedImage, int offsetX) {
+
+        if (bufferedImage ==  null) return;
+        Rectangle rect = getBoundingBox();
+
+        int centerX = rect.x + rect.width / 2;
+        int centerY = rect.y + rect.height / 2;
+        int width = rect.width;
+        int height = rect.height;
+
+        double angleRadians = Math.toRadians(getOrientation());
+
+        AffineTransform oldTransform = g2d.getTransform();
+        try {
+//            double scaleX = width * 1.0 / bufferedImage.getWidth();
+//            double scaleY = height * 1.0 / bufferedImage.getHeight();
+
+            AffineTransform affineTransform = new AffineTransform( oldTransform );
+            if ( centerX != 0 || centerY != 0 ) {
+                affineTransform.translate( centerX - CommandCenter.getInstance().viewX + offsetX, centerY - CommandCenter.getInstance().viewY);
+            }
+            affineTransform.scale( 2, 2 );
+            if ( angleRadians != 0 ) {
+                affineTransform.rotate( angleRadians );
+            }
+            affineTransform.translate( -bufferedImage.getWidth() / 2.0, -bufferedImage.getHeight() / 2.0 );
+
+            g2d.setTransform( affineTransform );
+
+            g2d.drawImage( bufferedImage, 0, 0, bufferedImage.getWidth(), bufferedImage.getHeight(), null );
+        } finally {
+            g2d.setTransform( oldTransform );
+
+        }
+    }
 
     protected void renderRasterFlipFromRect(Graphics2D g2d, BufferedImage bufferedImage) {
 
@@ -335,6 +371,42 @@ public abstract class Sprite implements Movable {
         }
     }
 
+    protected void renderRasterFlipFromRect(Graphics2D g2d, BufferedImage bufferedImage, int offsetX) {
+
+        if (bufferedImage ==  null) return;
+
+        Rectangle rect = getBoundingBox();
+
+        int centerX = rect.x + rect.width / 2;
+        int centerY = rect.y + rect.height / 2;
+        int width = rect.width;
+        int height = rect.height;
+        double angleRadians = Math.toRadians(getOrientation());
+
+        AffineTransform oldTransform = g2d.getTransform();
+        try {
+//            double scaleX = width * 1.0 / bufferedImage.getWidth();
+//            double scaleY = height * 1.0 / bufferedImage.getHeight();
+
+            AffineTransform affineTransform = new AffineTransform( oldTransform );
+            if ( centerX != 0 || centerY != 0 ) {
+                affineTransform.translate( centerX - CommandCenter.getInstance().viewX - offsetX, centerY - CommandCenter.getInstance().viewY);
+            }
+//            affineTransform.scale( -scaleX, scaleY );
+            affineTransform.scale( -2, 2 );
+            if ( angleRadians != 0 ) {
+                affineTransform.rotate( angleRadians );
+            }
+            affineTransform.translate( -bufferedImage.getWidth() / 2.0, -bufferedImage.getHeight() / 2.0 );
+
+            g2d.setTransform( affineTransform );
+
+            g2d.drawImage( bufferedImage, 0, 0, bufferedImage.getWidth(), bufferedImage.getHeight(), null );
+        } finally {
+            g2d.setTransform( oldTransform );
+
+        }
+    }
 
     protected void renderVector(Graphics g) {
 

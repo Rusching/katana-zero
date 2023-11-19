@@ -31,6 +31,8 @@ public class Zero extends Character{
         HURT,
         IDLE,
         JUMP,
+        WALL_SLIDE,
+        FLIP,
         KICK,
         LOOK_AROUND,
         NORMAL_SLASH,
@@ -83,6 +85,14 @@ public class Zero extends Character{
         for (int i = 0; i < 7; i++) {rasterMapAttack.add(loadGraphic(imgPathPrefix + zeroImgPathPrefix + String.format("attack/spr_attack_%d.png", i)));}
         rasterMaps.put(Actions.ATTACK, rasterMapAttack);
 
+        ArrayList<BufferedImage> rasterMapFlip = new ArrayList<>();
+        for (int i = 0; i < 11; i++) {rasterMapFlip.add(loadGraphic(imgPathPrefix + zeroImgPathPrefix + String.format("flip/spr_flip_%d.png", i)));}
+        rasterMaps.put(Actions.FLIP, rasterMapFlip);
+
+        ArrayList<BufferedImage> rasterMapWallSlide = new ArrayList<>();
+        rasterMapWallSlide.add(loadGraphic(imgPathPrefix + zeroImgPathPrefix + "wallSlide/spr_wallSlide_0.png"));
+        rasterMaps.put(Actions.WALL_SLIDE, rasterMapWallSlide);
+
         setRasterMaps(rasterMaps);
     }
 
@@ -95,6 +105,19 @@ public class Zero extends Character{
         } else if (isRolling) {
             // roll
             pics = getRasterMaps().get(Actions.ROLL);
+        } else if (isFlipping) {
+            if ((isOnLeftWall() || isOnRightWall()) && currentFlipIdx != 0) {
+                // flip terminate to wall slide
+                pics = getRasterMaps().get(Actions.WALL_SLIDE);
+                isWallSliding = true;
+            } else {
+                // flip
+                pics = getRasterMaps().get(Actions.FLIP);
+            }
+        } else if ((isOnLeftWall() || isOnRightWall()) && isRunning && !isOnPlatform()) {
+            // wall slide
+            pics = getRasterMaps().get(Actions.WALL_SLIDE);
+            isWallSliding = true;
         } else if (isOnPlatform()) {
             if (isRunning) {
                 // run
@@ -117,16 +140,16 @@ public class Zero extends Character{
         int currentPicIdx = (int) ((CommandCenter.getInstance().getFrame() / 2) % pics.size());
 
         if (isAttack) {
-            if (currentAttachIdx < 7) {
+            if (currentAttachIdx < attackFrames) {
                 currentPicIdx = currentAttachIdx;
                 currentAttachIdx += 1;
             } else {
-                // currentRollIdx == 7
+                // currentAttachIdx == 7
                 currentAttachIdx = 0;
                 isAttack = false;
             }
         } else if (isRolling) {
-            if (currentRollIdx < 7) {
+            if (currentRollIdx < rollFrames) {
                 currentPicIdx = currentRollIdx;
                 currentRollIdx += 1;
             } else {
@@ -134,15 +157,37 @@ public class Zero extends Character{
                 currentRollIdx = 0;
                 isRolling = false;
             }
+        } else if (isFlipping) {
+            if (!(isOnLeftWall() || isOnRightWall())) {
+                if (currentFlipIdx < flipFrames) {
+                    currentPicIdx = currentFlipIdx;
+                    currentFlipIdx += 1;
+                } else {
+                    // currentFlipIdx == 11
+                    currentFlipIdx = 0;
+                    isFlipping = false;
+                }
+            } else if (currentFlipIdx != 0){
+                currentFlipIdx = 0;
+                isFlipping = false;
+            }
+
         }
-
-
 
         if (isFacingLeft) {
-            renderRasterFlipFromRect((Graphics2D) g, pics.get(currentPicIdx));
+            if (!isWallSliding) {
+                renderRasterFlipFromRect((Graphics2D) g, pics.get(currentPicIdx));
+            } else {
+                renderRasterFlipFromRect((Graphics2D) g, pics.get(currentPicIdx), 19);
+            }
         } else {
-            renderRasterFromRect((Graphics2D) g, pics.get(currentPicIdx));
+            if (!isWallSliding) {
+                renderRasterFromRect((Graphics2D) g, pics.get(currentPicIdx));
+            } else {
+                renderRasterFromRect((Graphics2D) g, pics.get(currentPicIdx), 19);
+            }
         }
+        isWallSliding = false;
     }
 
     public void scrollMap() {
@@ -170,39 +215,55 @@ public class Zero extends Character{
     @Override
     public void move() {
         super.move();
-        if (isRunning) {
-            if (isFacingLeft) {
-                if (xVelocity < -maxXVelocity) {
-                    xVelocity = -maxXVelocity;}
-            } else {
-                if (xVelocity > maxXVelocity) {
-                    xVelocity = maxXVelocity;}
-            }
-            if (abs(xVelocity) < maxXVelocity) {
-                if (isFacingLeft) {
-                    xVelocity -= xAccelerate;
-                } else {
-                    xVelocity += xAccelerate;
-                }
-            }
-            setDeltaX(xVelocity);
-        } else {
-            if (xVelocity != 0) {
-                if (xVelocity > 0) {
-                    xVelocity = xVelocity > xSlowdownAccelerate ? xVelocity - xSlowdownAccelerate : 0;
-                } else {
-                    xVelocity = abs(xVelocity) > xSlowdownAccelerate ? xVelocity + xSlowdownAccelerate : 0;
-                }
-            }
-            setDeltaX(xVelocity);
-        }
 
-            setDeltaY(yVelocity);
+        // compute the x change
+        if (!isFlipping) {
+            if (isRunning) {
+                // bound the maximum speed
+                if (isFacingLeft) {
+                    if (xVelocity < -maxXVelocity) {
+                        xVelocity = -maxXVelocity;
+                    }
+                } else {
+                    if (xVelocity > maxXVelocity) {
+                        xVelocity = maxXVelocity;
+                    }
+                }
+
+                // wall sliding
+                if (!isOnPlatform() && (isOnLeftWall() || isOnRightWall())) {
+                    yVelocity = 3;
+                    xVelocity = 0;
+
+                    // accelerate
+                } else if (abs(xVelocity) < maxXVelocity) {
+                    if (isFacingLeft) {
+                        xVelocity -= xAccelerate;
+                    } else {
+                        xVelocity += xAccelerate;
+                    }
+                }
+            } else {
+                // slow down
+                if (xVelocity != 0) {
+                    if (xVelocity > 0) {
+                        xVelocity = xVelocity > xSlowdownAccelerate ? xVelocity - xSlowdownAccelerate : 0;
+                    } else {
+                        xVelocity = abs(xVelocity) > xSlowdownAccelerate ? xVelocity + xSlowdownAccelerate : 0;
+                    }
+                }
+            }
+        }
+        // compute y change
         if (!isOnPlatform()) {
             if (abs(yVelocity) <= maxYVelocity) {
                 yVelocity -= gravityG;
             }
         }
+
+        // apply the coordinates change
+        setDeltaX(xVelocity);
+        setDeltaY(yVelocity);
 
         // modify the viewX and viewY so that the map move
         scrollMap();
