@@ -99,17 +99,20 @@ public class Zero extends Character{
     @Override
     public void draw(Graphics g) {
         ArrayList<BufferedImage> pics;
+        int offsetX = 0, offsetY = 0;
+
         if (isAttack) {
             // attack
             pics = getRasterMaps().get(Actions.ATTACK);
         } else if (isRolling) {
             // roll
             pics = getRasterMaps().get(Actions.ROLL);
+            offsetY = 1;
         } else if (isFlipping) {
             if ((isOnLeftWall() || isOnRightWall()) && currentFlipIdx != 0) {
                 // flip terminate to wall slide
                 pics = getRasterMaps().get(Actions.WALL_SLIDE);
-                isWallSliding = true;
+                offsetX = 20;
             } else {
                 // flip
                 pics = getRasterMaps().get(Actions.FLIP);
@@ -117,14 +120,16 @@ public class Zero extends Character{
         } else if ((isOnLeftWall() || isOnRightWall()) && isRunning && !isOnPlatform()) {
             // wall slide
             pics = getRasterMaps().get(Actions.WALL_SLIDE);
-            isWallSliding = true;
+            offsetX = 20;
         } else if (isOnPlatform()) {
             if (isRunning) {
                 // run
                 pics = getRasterMaps().get(Actions.RUN);
+                offsetY = 1;
             } else {
                 // stand
                 pics = getRasterMaps().get(Actions.STAND);
+                offsetY = 1;
             }
         } else {
             // in air
@@ -175,19 +180,10 @@ public class Zero extends Character{
         }
 
         if (isFacingLeft) {
-            if (!isWallSliding) {
-                renderRasterFlipFromRect((Graphics2D) g, pics.get(currentPicIdx));
-            } else {
-                renderRasterFlipFromRect((Graphics2D) g, pics.get(currentPicIdx), 19);
-            }
+            renderRasterFlipFromRect((Graphics2D) g, pics.get(currentPicIdx), offsetX, offsetY);
         } else {
-            if (!isWallSliding) {
-                renderRasterFromRect((Graphics2D) g, pics.get(currentPicIdx));
-            } else {
-                renderRasterFromRect((Graphics2D) g, pics.get(currentPicIdx), 19);
-            }
+            renderRasterFromRect((Graphics2D) g, pics.get(currentPicIdx), offsetX, offsetY);
         }
-        isWallSliding = false;
     }
 
     public void scrollMap() {

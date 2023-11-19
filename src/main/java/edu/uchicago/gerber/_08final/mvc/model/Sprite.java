@@ -298,7 +298,7 @@ public abstract class Sprite implements Movable {
         }
     }
 
-    protected void renderRasterFromRect(Graphics2D g2d, BufferedImage bufferedImage, int offsetX) {
+    protected void renderRasterFromRect(Graphics2D g2d, BufferedImage bufferedImage, int offsetX, int offsetY) {
 
         if (bufferedImage ==  null) return;
         Rectangle rect = getBoundingBox();
@@ -317,7 +317,7 @@ public abstract class Sprite implements Movable {
 
             AffineTransform affineTransform = new AffineTransform( oldTransform );
             if ( centerX != 0 || centerY != 0 ) {
-                affineTransform.translate( centerX - CommandCenter.getInstance().viewX + offsetX, centerY - CommandCenter.getInstance().viewY);
+                affineTransform.translate( centerX - CommandCenter.getInstance().viewX + offsetX, centerY - CommandCenter.getInstance().viewY + offsetY);
             }
             affineTransform.scale( 2, 2 );
             if ( angleRadians != 0 ) {
@@ -371,7 +371,7 @@ public abstract class Sprite implements Movable {
         }
     }
 
-    protected void renderRasterFlipFromRect(Graphics2D g2d, BufferedImage bufferedImage, int offsetX) {
+    protected void renderRasterFlipFromRect(Graphics2D g2d, BufferedImage bufferedImage, int offsetX, int offsetY) {
 
         if (bufferedImage ==  null) return;
 
@@ -390,7 +390,7 @@ public abstract class Sprite implements Movable {
 
             AffineTransform affineTransform = new AffineTransform( oldTransform );
             if ( centerX != 0 || centerY != 0 ) {
-                affineTransform.translate( centerX - CommandCenter.getInstance().viewX - offsetX, centerY - CommandCenter.getInstance().viewY);
+                affineTransform.translate( centerX - CommandCenter.getInstance().viewX - offsetX, centerY - CommandCenter.getInstance().viewY + offsetY);
             }
 //            affineTransform.scale( -scaleX, scaleY );
             affineTransform.scale( -2, 2 );
