@@ -5,10 +5,13 @@ import edu.uchicago.gerber._08final.mvc.controller.Game;
 import edu.uchicago.gerber._08final.mvc.controller.Utils;
 import edu.uchicago.gerber._08final.mvc.model.*;
 
+import javax.imageio.ImageIO;
+import javax.tools.Tool;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
+import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
@@ -94,6 +97,15 @@ public class GamePanel extends Panel {
         gameFrame.setVisible(true);
 //        gameFram
         setFocusable(true);
+
+        Cursor customCursor = null;
+        BufferedImage cursorImage = Utils.loadGraphic("/imgs/Cursor/0.png");
+        if (cursorImage != null) {
+            Toolkit toolkit = Toolkit.getDefaultToolkit();
+            Point hotSpot = new Point(0, 0);
+            customCursor = toolkit.createCustomCursor(cursorImage, hotSpot, "Custom Cursor");
+        }
+        gameFrame.setCursor(customCursor);
     }
 
 

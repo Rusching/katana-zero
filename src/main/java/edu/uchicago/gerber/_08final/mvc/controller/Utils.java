@@ -1,10 +1,15 @@
 package edu.uchicago.gerber._08final.mvc.controller;
 
 import edu.uchicago.gerber._08final.mvc.model.PolarPoint;
+import edu.uchicago.gerber._08final.mvc.model.Sprite;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -44,6 +49,16 @@ public class Utils {
                 .collect(Collectors.toList());
 
     }
-
+    public static BufferedImage loadGraphic(String imagePath) {
+        BufferedImage bufferedImage;
+        try {
+            bufferedImage = ImageIO.read(Objects.requireNonNull(Sprite.class.getResourceAsStream(imagePath)));
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            bufferedImage = null;
+        }
+        return bufferedImage;
+    }
 
 }
