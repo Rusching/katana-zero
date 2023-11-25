@@ -614,7 +614,6 @@ public class Game implements Runnable, KeyListener, MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         Zero zero = CommandCenter.getInstance().getZero();
-        System.out.println("Attack!");
         if (!zero.isAttack()) {
             zero.setAttack(true);
             Sound.playSound(String.format("Zero/slash_%d.wav", R.nextInt(3) + 1));

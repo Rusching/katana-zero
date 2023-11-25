@@ -88,6 +88,8 @@ public class CommandCenter {
 		//add the falcon to the movFriends list
 //		opsQueue.enqueue(falcon, GameOp.Action.ADD);
 		opsQueue.enqueue(zero, GameOp.Action.ADD);
+		opsQueue.enqueue(new Grunt(new Point(120, 120)), GameOp.Action.ADD);
+
 		Floor f = new Floor();
 		f.loadLevelAndCreateFloors(1, 0);
 
