@@ -2,6 +2,7 @@ package edu.uchicago.gerber._08final.mvc.model;
 
 import edu.uchicago.gerber._08final.mvc.controller.CommandCenter;
 import edu.uchicago.gerber._08final.mvc.controller.Game;
+import edu.uchicago.gerber._08final.mvc.controller.GameOp;
 import lombok.Data;
 
 import java.awt.*;
@@ -20,6 +21,7 @@ public class Zero extends Character{
     // image path
     private static String zeroImgPathPrefix = "ZeroSprites/";
 
+    public Katana katana = null;
     enum Actions {
         ATTACK,
         BIG_SLASH,
@@ -152,6 +154,8 @@ public class Zero extends Character{
                 // currentAttachIdx == 7
                 currentAttachIdx = 0;
                 isAttack = false;
+                // attack finish, remove the katana
+                katana = null;
             }
         } else if (isRolling) {
             if (currentRollIdx < rollFrames) {

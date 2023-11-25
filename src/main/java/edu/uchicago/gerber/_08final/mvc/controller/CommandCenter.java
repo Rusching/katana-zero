@@ -54,6 +54,7 @@ public class CommandCenter {
 	{
 		movCharacters.add(zero);
 	}
+	private List<Movable> movEnemies = new LinkedList<>();
 //	protected List<Block> movBlocks = new ArrayList<>();
 
 	private final GameOpsQueue opsQueue = new GameOpsQueue();
@@ -88,7 +89,7 @@ public class CommandCenter {
 		//add the falcon to the movFriends list
 //		opsQueue.enqueue(falcon, GameOp.Action.ADD);
 		opsQueue.enqueue(zero, GameOp.Action.ADD);
-		opsQueue.enqueue(new Grunt(new Point(120, 120)), GameOp.Action.ADD);
+		opsQueue.enqueue(new Grunt(new Point(240, 240)), GameOp.Action.ADD);
 
 		Floor f = new Floor();
 		f.loadLevelAndCreateFloors(1, 0);

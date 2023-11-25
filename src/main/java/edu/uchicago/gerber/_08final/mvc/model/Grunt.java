@@ -1,6 +1,7 @@
 package edu.uchicago.gerber._08final.mvc.model;
 
 import edu.uchicago.gerber._08final.mvc.controller.CommandCenter;
+import edu.uchicago.gerber._08final.mvc.controller.GameOp;
 import lombok.Data;
 
 import java.awt.*;
@@ -12,13 +13,20 @@ import java.util.Map;
 import static java.lang.Math.abs;
 
 @Data
-public class Grunt extends Character{
+public class Grunt extends Character {
 
 
     // image path
     private static String gruntImgPathPrefix = "Grunt/";
 
-    enum gruntActions {
+    protected boolean isProtected = false;
+
+    // hurt ground
+    protected boolean isHurtGround = false;
+    protected final int hurtGroundFrames = 16;
+    protected int currentHurtGroundIdx = 0;
+
+    public enum gruntActions {
         ATTACK,
         HURT_FLY,
         HURT_FALL,
@@ -28,7 +36,7 @@ public class Grunt extends Character{
         RUN
     }
 
-    gruntActions action = gruntActions.IDLE;
+    public gruntActions action = gruntActions.IDLE;
 
     public Grunt(Point center) {
         setTeam(Team.ENEMY);
@@ -72,6 +80,10 @@ public class Grunt extends Character{
     }
 
     @Override
+    public boolean isProtected() {
+        return isProtected;
+    }
+    @Override
     public void draw(Graphics g) {
         ArrayList<BufferedImage> pics = new ArrayList<>();
         int offsetX = 0, offsetY = 0;
@@ -97,6 +109,15 @@ public class Grunt extends Character{
 
         int currentPicIdx = (int) ((CommandCenter.getInstance().getFrame() / 2) % pics.size());
 
+        if (isHurtGround) {
+            if (currentHurtGroundIdx < hurtGroundFrames) {
+                currentPicIdx = currentHurtGroundIdx;
+                currentHurtGroundIdx += 1;
+            } else {
+                // currentAttachIdx == 16
+                currentPicIdx = 15;
+            }
+        }
         if (isFacingLeft) {
             renderRasterFlipFromRect((Graphics2D) g, pics.get(currentPicIdx), offsetX, offsetY);
         } else {

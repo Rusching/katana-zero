@@ -42,7 +42,7 @@ public class Character extends Sprite{
     protected boolean isFacingLeft = false;
     protected int run2IdleFlag = 0;
 
-    public static final int MIN_RADIUS = 18;
+    public static final int MIN_RADIUS = 36;
 
 
     // wall sliding

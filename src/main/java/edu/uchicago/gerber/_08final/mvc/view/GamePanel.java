@@ -212,6 +212,7 @@ public class GamePanel extends Panel {
                     CommandCenter.getInstance().getMovFloaters(),
                     CommandCenter.getInstance().getMovFoes(),
                     CommandCenter.getInstance().getMovFloors(),
+                    CommandCenter.getInstance().getMovEnemies(),
                     CommandCenter.getInstance().getMovFriends(),
                     CommandCenter.getInstance().getMovDebris());
 

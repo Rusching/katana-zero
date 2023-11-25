@@ -118,7 +118,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
             // see GamePanel class for details
             gamePanel.update(gamePanel.getGraphics());
 
-            checkCollisions();
+            checkCollision();
             checkNewLevel();
             //keep track of the frame for development purposes
             CommandCenter.getInstance().incrementFrame();
@@ -144,6 +144,31 @@ public class Game implements Runnable, KeyListener, MouseListener {
         spawnNewWallFloater();
         spawnShieldFloater();
         spawnNukeFloater();
+    }
+
+    private void checkCollision() {
+        Zero zero = CommandCenter.getInstance().getZero();
+        if (zero.isAttack()) {
+            // only in attack action we check the collision between
+            // katana and enemies
+            Katana currentKatana = zero.getKatana();
+            int katanaRadius = currentKatana.getRadius();
+            int enemyRadius = Character.MIN_RADIUS;
+            for (Movable enemy: CommandCenter.getInstance().getMovEnemies()) {
+                if (currentKatana.getCenter().distance(enemy.getCenter()) < (katanaRadius + enemyRadius)) {
+                    if (!enemy.isProtected()) {
+                        if (enemy instanceof Grunt) {
+                            Grunt gruntEnemy = (Grunt) enemy;
+                            gruntEnemy.action = Grunt.gruntActions.HURT_GROUND;
+                            gruntEnemy.setProtected(true);
+                            gruntEnemy.setHurtGround(true);
+                        }
+                    }
+                }
+            }
+
+        }
+        processGameOpsQueue();
     }
 
     private void checkCollisions() {
@@ -262,6 +287,13 @@ public class Game implements Runnable, KeyListener, MouseListener {
                         } else {
                             CommandCenter.getInstance().getMovFriends().remove(mov);
                         }
+                    }
+                    break;
+                case ENEMY:
+                    if (action == GameOp.Action.ADD) {
+                        CommandCenter.getInstance().getMovEnemies().add(mov);
+                    } else {
+                        CommandCenter.getInstance().getMovEnemies().remove(mov);
                     }
                     break;
 
@@ -615,21 +647,22 @@ public class Game implements Runnable, KeyListener, MouseListener {
     public void mouseClicked(MouseEvent e) {
         Zero zero = CommandCenter.getInstance().getZero();
         if (!zero.isAttack()) {
-            zero.setAttack(true);
             Sound.playSound(String.format("Zero/slash_%d.wav", R.nextInt(3) + 1));
             int attackX = e.getX();
             int attackY = e.getY();
-//            CommandCenter.getInstance().getOpsQueue().enqueue(new NormalSlashDebris(
-//                    attackX, attackY,
-//                    new Point(zero.getCenter().x - CommandCenter.getInstance().viewX, zero.getCenter().y - CommandCenter.getInstance().viewY),
-//                    new Rectangle(zero.getBoundingBox().x - CommandCenter.getInstance().viewX, zero.getBoundingBox().y - CommandCenter.getInstance().viewY,
-//                            zero.getBoundingBox().width, zero.getBoundingBox().height)
-//                    ),
-//                    GameOp.Action.ADD);
+
+            // add attack slash
             CommandCenter.getInstance().getOpsQueue().enqueue(new NormalSlashDebris(
                     attackX, attackY, zero.getCenter(), zero.getBoundingBox()),
                     GameOp.Action.ADD
             );
+
+            // add katana
+            Katana currentKatana = new Katana(attackX, attackY, zero.getCenter(), zero.getRadius());
+            zero.katana = currentKatana;
+            zero.setAttack(true);
+
+            // set attack impact
             if (attackY < zero.getCenter().y - CommandCenter.getInstance().viewY) {
                 zero.setYVelocity(-zero.getMaxYVelocity() / 2);
                 zero.setDeltaY(zero.getDeltaY() - 7);
