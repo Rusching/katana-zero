@@ -44,9 +44,10 @@ public class Character extends Sprite{
 
     public static final int MIN_RADIUS = 36;
 
+    // blood effect
+    protected boolean isProtected = false;
 
-    // wall sliding
-
+    public BloodDebris bloodDebris = null;
 
 
     // slow motion
@@ -55,6 +56,7 @@ public class Character extends Sprite{
     protected int maxSlowMotionDuration = 5000;
 
     protected double maximumJumpTime = 1000;
+
     // velocity
     protected double xVelocity = 0;
     protected double xAccelerate = 1.4;
@@ -104,6 +106,10 @@ public class Character extends Sprite{
 
     }
 
+    @Override
+    public boolean isProtected() {
+        return isProtected;
+    }
     public Block findCollisionWall() {
         List<Movable> blocks = CommandCenter.getInstance().getMovFloors();
         for (Movable block: blocks) {

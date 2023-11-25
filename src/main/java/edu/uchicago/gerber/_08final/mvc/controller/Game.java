@@ -162,11 +162,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
                             System.out.println("Katana center: " + currentKatana.getCenter().x + " " + currentKatana.getCenter().y);
                             System.out.println("Grunt center: " + enemy.getCenter().x + " " + enemy.getCenter().y);
                             Grunt gruntEnemy = (Grunt) enemy;
-                            gruntEnemy.setDeltaX((enemy.getCenter().x - currentKatana.getCenter().x) * 2);
-                            gruntEnemy.setDeltaY(enemy.getCenter().y - currentKatana.getCenter().y);
-                            gruntEnemy.action = Grunt.gruntActions.HURT_GROUND;
-                            gruntEnemy.setProtected(true);
-                            gruntEnemy.setHurtGround(true);
+                            gruntEnemy.getHurt(currentKatana);
                         }
                     }
                 }
@@ -307,6 +303,13 @@ public class Game implements Runnable, KeyListener, MouseListener {
                         CommandCenter.getInstance().getMovFloaters().add(mov);
                     } else { //GameOp.Operation.REMOVE
                         CommandCenter.getInstance().getMovFloaters().remove(mov);
+                    }
+                    break;
+                case BLOOD:
+                    if (action == GameOp.Action.ADD) {
+                        CommandCenter.getInstance().getMovBloods().add(mov);
+                    } else { //GameOp.Operation.REMOVE
+                        CommandCenter.getInstance().getMovBloods().remove(mov);
                     }
                     break;
                 case KATANA:

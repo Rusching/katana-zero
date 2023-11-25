@@ -46,6 +46,7 @@ public class CommandCenter {
 	private final Zero zero = new Zero();
 	//lists containing our movables subdivided by team
 	private final List<Movable> movDebris = new LinkedList<>();
+	private final List<Movable> movBloods = new LinkedList<>();
 	private final List<Movable> movFriends = new LinkedList<>();
 	private final List<Movable> movFoes = new LinkedList<>();
 	private final List<Movable> movFloaters = new LinkedList<>();

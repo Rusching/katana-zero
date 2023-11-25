@@ -210,6 +210,7 @@ public class GamePanel extends Panel {
 //        else {
             moveDrawMovables(grpOff,
                     CommandCenter.getInstance().getMovFloaters(),
+                    CommandCenter.getInstance().getMovBloods(),
                     CommandCenter.getInstance().getMovFoes(),
                     CommandCenter.getInstance().getMovFloors(),
                     CommandCenter.getInstance().getMovEnemies(),

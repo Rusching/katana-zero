@@ -225,7 +225,42 @@ public abstract class Sprite implements Movable {
         }
     }
 
+    protected void renderRasterScale(Graphics2D g2d, BufferedImage bufferedImage, int scaleX, int scaleY) {
 
+        if (bufferedImage ==  null) return;
+
+        int centerX = getCenter().x;
+        int centerY = getCenter().y;
+        int width = getRadius() * 2;
+        int height = getRadius() * 2;
+        double angleRadians = Math.toRadians(getOrientation());
+
+        AffineTransform oldTransform = g2d.getTransform();
+        try {
+//            double scaleX = width * 1.0 / bufferedImage.getWidth();
+//            double scaleY = height * 1.0 / bufferedImage.getHeight();
+
+            if (CommandCenter.getInstance().isSlowMotion()) {
+                applyBlueFilter(g2d);
+            }
+            AffineTransform affineTransform = new AffineTransform( oldTransform );
+            if ( centerX != 0 || centerY != 0 ) {
+                affineTransform.translate( centerX - CommandCenter.getInstance().viewX, centerY - CommandCenter.getInstance().viewY);
+            }
+            affineTransform.scale( scaleX, scaleY );
+            if ( angleRadians != 0 ) {
+                affineTransform.rotate( angleRadians );
+            }
+            affineTransform.translate( -bufferedImage.getWidth() / 2.0, -bufferedImage.getHeight() / 2.0 );
+
+            g2d.setTransform( affineTransform );
+
+            g2d.drawImage( bufferedImage, 0, 0, bufferedImage.getWidth(), bufferedImage.getHeight(), null );
+        } finally {
+            g2d.setTransform( oldTransform );
+
+        }
+    }
     protected void renderRasterFlip(Graphics2D g2d, BufferedImage bufferedImage) {
 
         if (bufferedImage ==  null) return;

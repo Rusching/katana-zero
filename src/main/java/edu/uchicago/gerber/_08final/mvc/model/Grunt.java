@@ -19,8 +19,6 @@ public class Grunt extends Character {
     // image path
     private static String gruntImgPathPrefix = "Grunt/";
 
-    protected boolean isProtected = false;
-
     // hurt ground
     protected boolean isHurtGround = false;
     protected final int hurtGroundFrames = 16;
@@ -129,6 +127,17 @@ public class Grunt extends Character {
         g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().viewX, getCenter().y - getRadius() - CommandCenter.getInstance().viewY, getRadius() *2, getRadius() *2);
     }
 
+    public void getHurt(Katana currentKatana) {
+        setDeltaX((getCenter().x - currentKatana.getCenter().x) * 2);
+        setDeltaY(getCenter().y - currentKatana.getCenter().y);
+        action = Grunt.gruntActions.HURT_GROUND;
+        setProtected(true);
+        setHurtGround(true);
+
+        double theta = currentKatana.getTheta();
+        bloodDebris = new BloodDebris(theta, center);
+        CommandCenter.getInstance().getOpsQueue().enqueue(bloodDebris, GameOp.Action.ADD);
+    }
     @Override
     public void move() {
         super.move();

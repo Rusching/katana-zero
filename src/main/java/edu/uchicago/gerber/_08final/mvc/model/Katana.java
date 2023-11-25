@@ -1,16 +1,19 @@
 package edu.uchicago.gerber._08final.mvc.model;
 
 import edu.uchicago.gerber._08final.mvc.controller.CommandCenter;
+import lombok.Data;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.nio.channels.Pipe;
 import java.util.ArrayList;
 
+@Data
 public class Katana extends Sprite {
 
     public static int katanaRadius = 36;
 
+    public double theta;
     public Katana(int attackX, int attackY, Point zeroCenter, int zeroRadius) {
 
         setTeam(Team.KATANA);
@@ -21,11 +24,9 @@ public class Katana extends Sprite {
 
         setCenter(katanaCenter);
         setRadius(katanaRadius);
-
-
     }
 
-    public static Point findIntersection(Point circleCenter, double radius, int x_p, int y_p) {
+    public Point findIntersection(Point circleCenter, double radius, int x_p, int y_p) {
         int x_c = circleCenter.x;
         int y_c = circleCenter.y;
 
@@ -37,7 +38,9 @@ public class Katana extends Sprite {
             double dx = x_p - x_c;
             double dy = y_p - y_c;
             double theta = Math.atan2(dy, dx);
-//            System.out.println("Katana angle: " + Math.toDegrees(theta) + " Sin value: " + Math.sin(theta) + " Cos value: " + Math.cos(theta));
+            // this is radians;
+            setTheta(theta);
+
             // Calculate intersection points
             double x_intersection = x_c + radius * Math.cos(theta);
             double y_intersection = y_c + radius * Math.sin(theta);
