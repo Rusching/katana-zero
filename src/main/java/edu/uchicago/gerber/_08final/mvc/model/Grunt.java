@@ -112,7 +112,9 @@ public class Grunt extends Character {
         if (isHurtGround) {
             if (currentHurtGroundIdx < hurtGroundFrames) {
                 currentPicIdx = currentHurtGroundIdx;
-                currentHurtGroundIdx += 1;
+                if (CommandCenter.getInstance().getFrame() % 2 == 0) {
+                    currentHurtGroundIdx += 1;
+                }
             } else {
                 // currentAttachIdx == 16
                 currentPicIdx = 15;
@@ -123,6 +125,8 @@ public class Grunt extends Character {
         } else {
             renderRasterFromRect((Graphics2D) g, pics.get(currentPicIdx), offsetX, offsetY);
         }
+        g.setColor(Color.RED);
+        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().viewX, getCenter().y - getRadius() - CommandCenter.getInstance().viewY, getRadius() *2, getRadius() *2);
     }
 
     @Override

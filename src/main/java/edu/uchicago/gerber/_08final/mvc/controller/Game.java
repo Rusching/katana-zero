@@ -158,7 +158,12 @@ public class Game implements Runnable, KeyListener, MouseListener {
                 if (currentKatana.getCenter().distance(enemy.getCenter()) < (katanaRadius + enemyRadius)) {
                     if (!enemy.isProtected()) {
                         if (enemy instanceof Grunt) {
+                            System.out.println("Grunt hurt to ground");
+                            System.out.println("Katana center: " + currentKatana.getCenter().x + " " + currentKatana.getCenter().y);
+                            System.out.println("Grunt center: " + enemy.getCenter().x + " " + enemy.getCenter().y);
                             Grunt gruntEnemy = (Grunt) enemy;
+                            gruntEnemy.setDeltaX((enemy.getCenter().x - currentKatana.getCenter().x) * 2);
+                            gruntEnemy.setDeltaY(enemy.getCenter().y - currentKatana.getCenter().y);
                             gruntEnemy.action = Grunt.gruntActions.HURT_GROUND;
                             gruntEnemy.setProtected(true);
                             gruntEnemy.setHurtGround(true);
@@ -304,7 +309,13 @@ public class Game implements Runnable, KeyListener, MouseListener {
                         CommandCenter.getInstance().getMovFloaters().remove(mov);
                     }
                     break;
-
+                case KATANA:
+                    if (action == GameOp.Action.ADD) {
+                        CommandCenter.getInstance().getMovKatanas().add(mov);
+                    } else { //GameOp.Operation.REMOVE
+                        CommandCenter.getInstance().getMovKatanas().remove(mov);
+                    }
+                    break;
                 case DEBRIS:
                     if (action == GameOp.Action.ADD) {
                         CommandCenter.getInstance().getMovDebris().add(mov);
@@ -449,7 +460,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 
         if (keyCode == START && CommandCenter.getInstance().isGameOver()) {
             CommandCenter.getInstance().initGame();
-            Sound.playSound("Song/song_sneaky_driver.wav");
+//            Sound.playSound("Song/song_sneaky_driver.wav");
 //            Sound.clipForLoopFactory("Song/song_sneaky_driver.wav");
             return;
         }
@@ -659,6 +670,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 
             // add katana
             Katana currentKatana = new Katana(attackX, attackY, zero.getCenter(), zero.getRadius());
+            CommandCenter.getInstance().getOpsQueue().enqueue(currentKatana, GameOp.Action.ADD);
             zero.katana = currentKatana;
             zero.setAttack(true);
 

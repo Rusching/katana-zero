@@ -1,5 +1,7 @@
 package edu.uchicago.gerber._08final.mvc.model;
 
+import edu.uchicago.gerber._08final.mvc.controller.CommandCenter;
+
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.nio.channels.Pipe;
@@ -12,9 +14,9 @@ public class Katana extends Sprite {
     public Katana(int attackX, int attackY, Point zeroCenter, int zeroRadius) {
 
         setTeam(Team.KATANA);
-        Point katanaCenter = findIntersection(zeroCenter, zeroRadius, attackX, attackY);
-        System.out.println("Click Position: " + attackX + " " + attackY);
-        System.out.println("Zero Position: " + zeroCenter.x + " " + zeroCenter.y);
+        Point katanaCenter = findIntersection(zeroCenter, zeroRadius, attackX + CommandCenter.getInstance().viewX, attackY + CommandCenter.getInstance().viewY);
+        System.out.println("Click Position: " + (attackX + CommandCenter.getInstance().viewX) + " " + (attackY + CommandCenter.getInstance().viewY));
+        System.out.println("Zero Position: " + (zeroCenter.x) + " " + (zeroCenter.y));
         System.out.println("Katana Position: " + katanaCenter.x + " " + katanaCenter.y);
 
         setCenter(katanaCenter);
@@ -35,7 +37,7 @@ public class Katana extends Sprite {
             double dx = x_p - x_c;
             double dy = y_p - y_c;
             double theta = Math.atan2(dy, dx);
-
+//            System.out.println("Katana angle: " + Math.toDegrees(theta) + " Sin value: " + Math.sin(theta) + " Cos value: " + Math.cos(theta));
             // Calculate intersection points
             double x_intersection = x_c + radius * Math.cos(theta);
             double y_intersection = y_c + radius * Math.sin(theta);
@@ -45,6 +47,7 @@ public class Katana extends Sprite {
 
     @Override
     public void draw(Graphics g) {
-
+        g.setColor(Color.RED);
+        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().viewX, getCenter().y - getRadius() - CommandCenter.getInstance().viewY, getRadius() *2, getRadius() *2);
     }
 }

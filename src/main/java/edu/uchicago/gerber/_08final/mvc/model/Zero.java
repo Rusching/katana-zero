@@ -155,6 +155,7 @@ public class Zero extends Character{
                 currentAttachIdx = 0;
                 isAttack = false;
                 // attack finish, remove the katana
+                CommandCenter.getInstance().getOpsQueue().enqueue(katana, GameOp.Action.REMOVE);
                 katana = null;
             }
         } else if (isRolling) {
@@ -188,6 +189,9 @@ public class Zero extends Character{
         } else {
             renderRasterFromRect((Graphics2D) g, pics.get(currentPicIdx), offsetX, offsetY);
         }
+        g.setColor(Color.RED);
+        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().viewX, getCenter().y - getRadius() - CommandCenter.getInstance().viewY, getRadius() *2, getRadius() *2);
+
     }
 
     public void scrollMap() {
