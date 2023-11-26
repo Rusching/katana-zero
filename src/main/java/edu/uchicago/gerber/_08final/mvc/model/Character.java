@@ -126,6 +126,9 @@ public class Character extends Sprite{
 
     }
 
+    public void getHurt(Sprite obj) {
+
+    }
     @Override
     public boolean isProtected() {
         return isProtected;

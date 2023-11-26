@@ -93,7 +93,7 @@ public class CommandCenter {
 		//add the falcon to the movFriends list
 //		opsQueue.enqueue(falcon, GameOp.Action.ADD);
 		opsQueue.enqueue(zero, GameOp.Action.ADD);
-		opsQueue.enqueue(new Ganster(new Point(500, 240)), GameOp.Action.ADD);
+		opsQueue.enqueue(new ShieldCop(new Point(500, 240)), GameOp.Action.ADD);
 //		opsQueue.enqueue(new Grunt(new Point(600, 240)), GameOp.Action.ADD);
 //		opsQueue.enqueue(new Grunt(new Point(700, 240)), GameOp.Action.ADD);
 //		opsQueue.enqueue(new Grunt(new Point(800, 240)), GameOp.Action.ADD);

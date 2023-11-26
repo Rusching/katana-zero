@@ -21,7 +21,6 @@ public class Ganster extends Character {
     // image path
     private static String gangsterImgPathPrefix = "Gangster/";
 
-    Punch punch = null;
     public enum gruntActions {
         ATTACK,
         HURT_GROUND,
@@ -118,7 +117,7 @@ public class Ganster extends Character {
                 }
             } else {
                 // currentAttachIdx == 16
-                currentPicIdx = 13;
+                currentPicIdx = hurtGroundFrames - 1;
             }
         } else if (isAttack) {
             if (currentAttackIdx < attackFrames) {
@@ -130,8 +129,6 @@ public class Ganster extends Character {
                 // currentAttachIdx == 7
                 currentAttackIdx = 0;
                 isAttack = false;
-                CommandCenter.getInstance().getOpsQueue().enqueue(punch, GameOp.Action.REMOVE);
-                punch = null;
             }
         }
         if (isFacingLeft || atLeft) {
@@ -147,6 +144,7 @@ public class Ganster extends Character {
         g.setColor(Color.GREEN);
         g.drawOval(getCenter().x - getAttackRadius() - CommandCenter.getInstance().viewX, getCenter().y - getAttackRadius() - CommandCenter.getInstance().viewY, getAttackRadius() *2, getAttackRadius() *2);
     }
+    @Override
 
     public void getHurt(Sprite obj) {
         setDeltaX((getCenter().x - obj.getCenter().x) * 2);
@@ -157,7 +155,6 @@ public class Ganster extends Character {
 
         setYVelocity(0);
         setChasing(false);
-        Sound.playSound(String.format("Enemy/sound_enemy_death_sword_0%d.wav", Game.R.nextInt(2)));
         double theta = obj.getTheta();
         bloodDebris = new BloodDebris(theta, center);
         CommandCenter.getInstance().getOpsQueue().enqueue(bloodDebris, GameOp.Action.ADD);

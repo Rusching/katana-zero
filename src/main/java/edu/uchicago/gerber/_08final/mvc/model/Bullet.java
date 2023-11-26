@@ -1,6 +1,7 @@
 package edu.uchicago.gerber._08final.mvc.model;
 
 import edu.uchicago.gerber._08final.mvc.controller.CommandCenter;
+import edu.uchicago.gerber._08final.mvc.controller.Game;
 import edu.uchicago.gerber._08final.mvc.controller.Utils;
 import lombok.Data;
 
@@ -30,7 +31,7 @@ public class Bullet extends Sprite {
         } else {
             setXVelocity(xVelocity);
         }
-        setYVelocity(yVelocity);
+        setYVelocity(Game.R.nextInt(7) - 3);
 
         HashMap<Integer, BufferedImage> rasterMap = new HashMap<>();
         rasterMap.put(0, loadGraphic(imgPathPrefix + "bullet.png"));

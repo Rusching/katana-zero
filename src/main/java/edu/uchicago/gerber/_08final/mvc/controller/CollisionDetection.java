@@ -37,14 +37,8 @@ public class CollisionDetection {
             for (Movable enemy: CommandCenter.getInstance().getMovEnemies()) {
                 if (currentKatana.getCenter().distance(enemy.getCenter()) < (katanaRadius + enemyRadius)) {
                     if (!enemy.isProtected()) {
-                        if (enemy instanceof Grunt) {
-                            Grunt gruntEnemy = (Grunt) enemy;
-                            gruntEnemy.getHurt(currentKatana);
-                        } else if (enemy instanceof Ganster) {
-                            Ganster gangsterEnemy = (Ganster) enemy;
-                            gangsterEnemy.getHurt(currentKatana);
-                        }
-                            Sound.playSound(String.format("Enemy/sound_enemy_death_sword_0%d.wav", Game.R.nextInt(2)));
+                        ((Character) enemy).getHurt(currentKatana);
+                        Sound.playSound(String.format("Enemy/sound_enemy_death_sword_0%d.wav", Game.R.nextInt(2) + 1));
                     }
                 }
             }
@@ -89,13 +83,7 @@ public class CollisionDetection {
                     if (bulletObj.getCenter().distance(enemy.getCenter()) < (enemy.getRadius() + bulletObj.getRadius())) {
                         if (!enemy.isProtected()) {
                             CommandCenter.getInstance().getOpsQueue().enqueue(bullet, GameOp.Action.REMOVE);
-                            if (enemy instanceof Grunt) {
-                                Grunt gruntEnemy = (Grunt) enemy;
-                                gruntEnemy.getHurt(bulletObj);
-                            } else if (enemy instanceof Ganster) {
-                                Ganster gangsterEnemy = (Ganster) enemy;
-                                gangsterEnemy.getHurt(bulletObj);
-                            }
+                            ((Character) enemy).getHurt(bulletObj);
                             Sound.playSound("Bullet/sound_enemy_death_bullet.wav");
                             Sound.playSound("Enemy/sound_enemy_death_generic.wav");
                         }

@@ -12,7 +12,6 @@ import java.util.function.Function;
 import edu.uchicago.gerber._08final.mvc.controller.GameOp;
 import edu.uchicago.gerber._08final.mvc.controller.Utils;
 import lombok.Data;
-import lombok.experimental.Tolerate;
 
 import javax.imageio.ImageIO;
 import java.awt.geom.AffineTransform;
@@ -180,10 +179,11 @@ public abstract class Sprite implements Movable {
         return bufferedImage;
     }
 
-    private void applyBlueFilter(Graphics2D g2d) {
+    private void applyFilter(Graphics2D g2d) {
         // Set the color to blue with some alpha for transparency (e.g., 128 for 50% transparency)
-        Color blueFilter = new Color(0, 0, 210, 5);
-        g2d.setColor(blueFilter);
+//        Color blueFilter = new Color(0, 0, 210, 5);
+        Color darkFilter = new Color(10, 10, 10, 15);
+        g2d.setColor(darkFilter);
 
         // Draw the rectangle over the entire screen
         g2d.fillRect(0, 0, Game.dimensionWidth, Game.dimensionHeight);
@@ -207,7 +207,7 @@ public abstract class Sprite implements Movable {
 //            double scaleY = height * 1.0 / bufferedImage.getHeight();
 
             if (CommandCenter.getInstance().isSlowMotion()) {
-                applyBlueFilter(g2d);
+                applyFilter(g2d);
             }
             AffineTransform affineTransform = new AffineTransform( oldTransform );
             if ( centerX != 0 || centerY != 0 ) {
@@ -244,7 +244,7 @@ public abstract class Sprite implements Movable {
 //            double scaleY = height * 1.0 / bufferedImage.getHeight();
 
             if (CommandCenter.getInstance().isSlowMotion()) {
-                applyBlueFilter(g2d);
+                applyFilter(g2d);
             }
             AffineTransform affineTransform = new AffineTransform( oldTransform );
             if ( centerX != 0 || centerY != 0 ) {
