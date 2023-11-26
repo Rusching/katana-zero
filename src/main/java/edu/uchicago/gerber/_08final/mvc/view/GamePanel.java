@@ -29,9 +29,6 @@ public class GamePanel extends Panel {
     private int fontWidth;
     private int fontHeight;
 
-    //used to draw number of ships remaining
-    private final Point[] pntShipsRemaining;
-
     //used for double-buffering
     private Image imgOff;
     private Graphics grpOff;
@@ -46,47 +43,6 @@ public class GamePanel extends Panel {
         GameFrame gameFrame = new GameFrame();
 
         gameFrame.getContentPane().add(this);
-
-        // Robert Alef's awesome falcon design
-        List<Point> listShip = new ArrayList<>();
-        listShip.add(new Point(0,9));
-        listShip.add(new Point(-1, 6));
-        listShip.add(new Point(-1,3));
-        listShip.add(new Point(-4, 1));
-        listShip.add(new Point(4,1));
-        listShip.add(new Point(-4,1));
-        listShip.add(new Point(-4, -2));
-        listShip.add(new Point(-1, -2));
-        listShip.add(new Point(-1, -9));
-        listShip.add(new Point(-1, -2));
-        listShip.add(new Point(-4, -2));
-        listShip.add(new Point(-10, -8));
-        listShip.add(new Point(-5, -9));
-        listShip.add(new Point(-7, -11));
-        listShip.add(new Point(-4, -11));
-        listShip.add(new Point(-2, -9));
-        listShip.add(new Point(-2, -10));
-        listShip.add(new Point(-1, -10));
-        listShip.add(new Point(-1, -9));
-        listShip.add(new Point(1, -9));
-        listShip.add(new Point(1, -10));
-        listShip.add(new Point(2, -10));
-        listShip.add(new Point(2, -9));
-        listShip.add(new Point(4, -11));
-        listShip.add(new Point(7, -11));
-        listShip.add(new Point(5, -9));
-        listShip.add(new Point(10, -8));
-        listShip.add(new Point(4, -2));
-        listShip.add(new Point(1, -2));
-        listShip.add(new Point(1, -9));
-        listShip.add(new Point(1, -2));
-        listShip.add(new Point(4,-2));
-        listShip.add(new Point(4, 1));
-        listShip.add(new Point(1, 3));
-        listShip.add(new Point(1,6));
-        listShip.add(new Point(0,9));
-
-        pntShipsRemaining = listShip.toArray(new Point[0]);
 
         gameFrame.pack();
         initFontInfo();
@@ -249,71 +205,6 @@ public class GamePanel extends Panel {
                 //we use flatMap to flatten the teams (List<Movable>[]) passed-in above into a single stream of Movables
                 .flatMap(Collection::stream) //Stream<Movable>
                 .forEach(m -> moveDraw.accept(m, g));
-
-
-    }
-
-
-
-
-    // Draw the number of falcons remaining on the bottom-right of the screen.
-    private void drawNumberShipsRemaining(Graphics g) {
-        int numFalcons = CommandCenter.getInstance().getNumFalcons();
-        while (numFalcons > 0) {
-            drawOneShip(g, numFalcons--);
-        }
-    }
-
-
-    private void drawOneShip(Graphics g, int offSet) {
-
-        g.setColor(Color.ORANGE);
-
-        //rotate the ship 90 degrees
-        double degrees90 = 90.0;
-        int radius = 15;
-        int xVal = Game.DIM.width - (27 * offSet);
-        int yVal = Game.DIM.height - 45;
-
-        //the reason we convert to polar-points is that it's much easier to rotate polar-points.
-        List<PolarPoint> polars = Utils.cartesianToPolar(pntShipsRemaining);
-
-        Function<PolarPoint, PolarPoint> rotatePolarBy90 =
-                pp -> new PolarPoint(
-                        pp.getR(),
-                        pp.getTheta() + Math.toRadians(degrees90) //rotated Theta
-                );
-
-        Function<PolarPoint, Point> polarToCartesian =
-                pp -> new Point(
-                        (int)  (pp.getR() * radius * Math.sin(pp.getTheta())),
-                        (int)  (pp.getR() * radius * Math.cos(pp.getTheta())));
-
-        Function<Point, Point> adjustForLocation =
-                pnt -> new Point(
-                        pnt.x + xVal,
-                        pnt.y + yVal);
-
-
-        g.drawPolygon(
-
-                polars.stream()
-                        .map(rotatePolarBy90)
-                        .map(polarToCartesian)
-                        .map(adjustForLocation)
-                        .map(pnt -> pnt.x)
-                        .mapToInt(Integer::intValue)
-                        .toArray(),
-
-                polars.stream()
-                        .map(rotatePolarBy90)
-                        .map(polarToCartesian)
-                        .map(adjustForLocation)
-                        .map(pnt -> pnt.y)
-                        .mapToInt(Integer::intValue)
-                        .toArray(),
-
-                polars.size());
 
 
     }

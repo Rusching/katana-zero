@@ -39,6 +39,7 @@ public class CollisionDetection {
                     if (!enemy.isProtected()) {
                         ((Character) enemy).getHurt(currentKatana);
                         Sound.playSound(String.format("Enemy/sound_enemy_death_sword_0%d.wav", Game.R.nextInt(2) + 1));
+                        Sound.playSound("Enemy/sound_enemy_death_generic.wav");
                     }
                 }
             }
@@ -112,6 +113,11 @@ public class CollisionDetection {
                         // if body circle overlap, enter attack mode
                         charEnemy.setChasing(false);
                         charEnemy.setCanAttack(true);
+                        if (zero.getCenter().x < charEnemy.getCenter().x) {
+                            charEnemy.setAtLeft(true);
+                        } else {
+                            charEnemy.setAtLeft(false);
+                        }
                         charEnemy.attack();
 
                     } else {

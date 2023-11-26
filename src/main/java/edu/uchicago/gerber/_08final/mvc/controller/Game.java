@@ -4,6 +4,7 @@ import edu.uchicago.gerber._08final.mvc.model.*;
 import edu.uchicago.gerber._08final.mvc.model.Character;
 import edu.uchicago.gerber._08final.mvc.model.Zero;
 import edu.uchicago.gerber._08final.mvc.view.GamePanel;
+import edu.uchicago.gerber._08final.mvc.view.StartMenuPanel;
 
 
 import javax.sound.sampled.Clip;
@@ -22,7 +23,7 @@ import java.util.TimerTask;
 // == This Game class is the CONTROLLER
 // ===============================================
 
-public class Game implements Runnable, KeyListener, MouseListener {
+public class Game implements Runnable {
 
     // ===============================================
     // FIELDS
@@ -33,41 +34,34 @@ public class Game implements Runnable, KeyListener, MouseListener {
     public static int dimensionWidth = 1080;
     public static int dimensionHeight = 684;
     public static final Dimension DIM = new Dimension(dimensionWidth, dimensionHeight); //the dimension of the game.
-    private final GamePanel gamePanel;
+    public final GamePanel gamePanel;
+//    public final StartMenuPanel startMenuPanel;
 
     //this is used throughout many classes.
     public static final Random R = new Random();
-
-    private int runSoundIdx = 1;
     public static int animationDelay = 30; // milliseconds between frames
-
     public final static int FRAMES_PER_SECOND = 1000 / animationDelay;
 
     private final Thread animationThread;
 
+    public static enum GameState {
+        GAME_PLAY,
+        START_MENU,
+        LEVEL_SWITCH,
+        GAME_OVER,
+        LEVEL_CLEAR,
+        GAME_WIN
+    }
 
-    //key-codes
-    private static final int
-            PAUSE = 80, // p key
-            QUIT = 81, // q key
-            LEFT = 65, //  A
-            RIGHT = 68, // D
-            UP = 87, //  W
-            DOWN = 83, //s
-            SHIFT = 16, // shift
-            START = 83, // s key
-            FIRE = 32, // space key
-            MUTE = 77, // m-key mute
-
-            NUKE = 78; // n-key mute
-
+    public static GameState gameState = GameState.GAME_PLAY;
+    public static GameState preGameState = GameState.GAME_PLAY;
     // for possible future use
     // HYPER = 68, 					// D key
     //ALIEN = 65;                // A key
     // SPECIAL = 70; 					// fire special weapon;  F key
 
 //    private final Clip soundThrust;
-//    private final Clip soundBackground;
+    private final Clip soundBackground;
 
 
 
@@ -77,12 +71,21 @@ public class Game implements Runnable, KeyListener, MouseListener {
 
     public Game() {
 
+
+
+
         gamePanel = new GamePanel(DIM);
-        gamePanel.addKeyListener(this); //Game object implements KeyListener
-        gamePanel.addMouseListener(this);
+        gamePanel.addKeyListener(GamePanelListener.getInstance()); //Game object implements KeyListener
+        gamePanel.addMouseListener(GamePanelListener.getInstance());
+
+//        startMenuPanel = new StartMenuPanel(DIM);
+//        startMenuPanel.addKeyListener(StartMenuPanelListener.getInstance());
+
+
 //        soundThrust = Sound.clipForLoopFactory("whitenoise.wav");
 //        soundBackground = Sound.clipForLoopFactory("music-background.wav");
-
+        soundBackground = Sound.clipForLoopFactory("Song/song_sneaky_driver.wav");
+        soundBackground.loop(5);
         //fire up the animation thread
         animationThread = new Thread(this); // pass the animation thread a runnable object, the Game object
         animationThread.start();
@@ -114,31 +117,71 @@ public class Game implements Runnable, KeyListener, MouseListener {
         while (Thread.currentThread() == animationThread) {
 
 
+            switch (gameState) {
+                case START_MENU:
+//                    System.out.println("Current state: " + gameState + " Pre state: " + preGameState);
+//                    if (gameState != preGameState) {
+//                        startMenuPanel.repaint();
+//                    }
+//                    preGameState = GameState.START_MENU;
+//
+//                    startMenuPanel.update(startMenuPanel.getGraphics());
+//                    CommandCenter.getInstance().incrementFrame();
+//                    try {
+//                        // The total amount of time is guaranteed to be at least ANIMATION_DELAY long.  If processing (update)
+//                        // between frames takes longer than ANIMATION_DELAY, then the difference between startTime -
+//                        // System.currentTimeMillis() will be negative, then zero will be the sleep time
+//                        startTime += animationDelay;
+//
+//                        Thread.sleep(Math.max(0,
+//                                startTime - System.currentTimeMillis()));
+//                    } catch (InterruptedException e) {
+//                        // do nothing (bury the exception), and just continue, e.g. skip this frame -- no big deal
+//                    }
+                    break;
+                case GAME_PLAY:
+//                    System.out.println("Current state: " + gameState + " Pre state: " + preGameState);
+
+//                    if (gameState != preGameState) {
+//                        gamePanel.repaint();
+//                        gamePanel.requestFocus();
+//                    }
+                    preGameState = gameState;
+                    gamePanel.update(gamePanel.getGraphics());
+                    CollisionDetection.checkAllCollisions();
+                    processGameOpsQueue();
+                    checkNewLevel();
+                    //keep track of the frame for development purposes
+                    CommandCenter.getInstance().incrementFrame();
+
+                    // surround the sleep() in a try/catch block
+                    // this simply controls delay time between
+                    // the frames of the animation
+                    try {
+                        // The total amount of time is guaranteed to be at least ANIMATION_DELAY long.  If processing (update)
+                        // between frames takes longer than ANIMATION_DELAY, then the difference between startTime -
+                        // System.currentTimeMillis() will be negative, then zero will be the sleep time
+                        startTime += animationDelay;
+
+                        Thread.sleep(Math.max(0,
+                                startTime - System.currentTimeMillis()));
+                    } catch (InterruptedException e) {
+                        // do nothing (bury the exception), and just continue, e.g. skip this frame -- no big deal
+                    }
+
+                    break;
+                case LEVEL_SWITCH:
+                    break;
+                case LEVEL_CLEAR:
+                    break;
+                case GAME_OVER:
+                    break;
+                case GAME_WIN:
+                    break;
+
+            }
             //this call will cause all movables to move() and draw() themselves every ~40ms
             // see GamePanel class for details
-            gamePanel.update(gamePanel.getGraphics());
-
-//            checkCollision();
-            CollisionDetection.checkAllCollisions();
-            processGameOpsQueue();
-            checkNewLevel();
-            //keep track of the frame for development purposes
-            CommandCenter.getInstance().incrementFrame();
-
-            // surround the sleep() in a try/catch block
-            // this simply controls delay time between
-            // the frames of the animation
-            try {
-                // The total amount of time is guaranteed to be at least ANIMATION_DELAY long.  If processing (update)
-                // between frames takes longer than ANIMATION_DELAY, then the difference between startTime -
-                // System.currentTimeMillis() will be negative, then zero will be the sleep time
-                startTime += animationDelay;
-
-                Thread.sleep(Math.max(0,
-                        startTime - System.currentTimeMillis()));
-            } catch (InterruptedException e) {
-                // do nothing (bury the exception), and just continue, e.g. skip this frame -- no big deal
-            }
         } // end while
     } // end run
 
@@ -147,109 +190,6 @@ public class Game implements Runnable, KeyListener, MouseListener {
         spawnShieldFloater();
         spawnNukeFloater();
     }
-
-    private void checkCollision() {
-        Zero zero = CommandCenter.getInstance().getZero();
-        if (zero.isAttack()) {
-            // only in attack action we check the collision between
-            // katana and enemies
-            Katana currentKatana = zero.getKatana();
-            int katanaRadius = currentKatana.getRadius();
-            int enemyRadius = Character.MIN_RADIUS;
-            for (Movable enemy: CommandCenter.getInstance().getMovEnemies()) {
-                if (currentKatana.getCenter().distance(enemy.getCenter()) < (katanaRadius + enemyRadius)) {
-                    if (!enemy.isProtected()) {
-                        if (enemy instanceof Grunt) {
-
-                            Sound.playSound(String.format("Enemy/sound_enemy_death_sword_0%d.wav", R.nextInt(2)));
-                            System.out.println("Grunt hurt to ground");
-                            System.out.println("Katana center: " + currentKatana.getCenter().x + " " + currentKatana.getCenter().y);
-                            System.out.println("Grunt center: " + enemy.getCenter().x + " " + enemy.getCenter().y);
-                            Grunt gruntEnemy = (Grunt) enemy;
-                            gruntEnemy.getHurt(currentKatana);
-                        }
-                    }
-                }
-            }
-
-        }
-        processGameOpsQueue();
-    }
-
-    private void checkCollisions() {
-
-        Point pntFriendCenter, pntFoeCenter;
-        int radFriend, radFoe;
-
-        //This has order-of-growth of O(n^2), there is no way around this.
-        for (Movable movFriend : CommandCenter.getInstance().getMovFriends()) {
-            for (Movable movFoe : CommandCenter.getInstance().getMovFoes()) {
-
-                pntFriendCenter = movFriend.getCenter();
-                pntFoeCenter = movFoe.getCenter();
-                radFriend = movFriend.getRadius();
-                radFoe = movFoe.getRadius();
-
-                //detect collision
-                if (pntFriendCenter.distance(pntFoeCenter) < (radFriend + radFoe)) {
-                    //remove the friend (so long as he is not protected)
-                    if (!movFriend.isProtected()) {
-                        CommandCenter.getInstance().getOpsQueue().enqueue(movFriend, GameOp.Action.REMOVE);
-                    }
-
-                    //remove the foe
-                    CommandCenter.getInstance().getOpsQueue().enqueue(movFoe, GameOp.Action.REMOVE);
-
-                    if (movFoe instanceof Brick) {
-                        CommandCenter.getInstance().setScore(CommandCenter.getInstance().getScore() + 1000);
-                        Sound.playSound("rock.wav");
-                    } else {
-                        CommandCenter.getInstance().setScore(CommandCenter.getInstance().getScore() + 10);
-                        Sound.playSound("kapow.wav");
-                    }
-                }
-
-            }//end inner for
-        }//end outer for
-
-        //check for collisions between falcon and floaters. Order of growth of O(n) where n is number of floaters
-        Point pntFalCenter = CommandCenter.getInstance().getFalcon().getCenter();
-        int radFalcon = CommandCenter.getInstance().getFalcon().getRadius();
-
-        Point pntFloaterCenter;
-        int radFloater;
-        for (Movable movFloater : CommandCenter.getInstance().getMovFloaters()) {
-            pntFloaterCenter = movFloater.getCenter();
-            radFloater = movFloater.getRadius();
-
-            //detect collision
-            if (pntFalCenter.distance(pntFloaterCenter) < (radFalcon + radFloater)) {
-
-                Class<? extends Movable> clazz = movFloater.getClass();
-                switch (clazz.getSimpleName()) {
-                    case "ShieldFloater":
-                        Sound.playSound("shieldup.wav");
-                        CommandCenter.getInstance().getFalcon().setShield(Falcon.MAX_SHIELD);
-                        break;
-                    case "NewWallFloater":
-                        Sound.playSound("insect.wav");
-                        buildWall();
-                        break;
-                    case "NukeFloater":
-                        Sound.playSound("nuke-up.wav");
-                        CommandCenter.getInstance().getFalcon().setNukeMeter(Falcon.MAX_NUKE);
-                        break;
-                }
-                CommandCenter.getInstance().getOpsQueue().enqueue(movFloater, GameOp.Action.REMOVE);
-
-
-            }//end if
-        }//end for
-
-        processGameOpsQueue();
-
-    }//end meth
-
 
     //This method adds and removes movables to/from their respective linked-lists.
     //This method is being called by the animationThread. The entire method is locked on the intrinsic lock of this
@@ -473,263 +413,6 @@ public class Game implements Runnable, KeyListener, MouseListener {
     // KEYLISTENER METHODS
     // ===============================================
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-//        Falcon falcon = CommandCenter.getInstance().getFalcon();
-        Zero zero = CommandCenter.getInstance().getZero();
-        int keyCode = e.getKeyCode();
-
-        if (keyCode == START && CommandCenter.getInstance().isGameOver()) {
-            CommandCenter.getInstance().initGame();
-//            Sound.playSound("Song/song_sneaky_driver.wav");
-//            Sound.clipForLoopFactory("Song/song_sneaky_driver.wav");
-            return;
-        }
-
-
-        switch (keyCode) {
-            case PAUSE:
-//                CommandCenter.getInstance().setPaused(!CommandCenter.getInstance().isPaused());
-//                if (CommandCenter.getInstance().isPaused()) stopLoopingSounds(soundBackground, soundThrust);
-                break;
-            case QUIT:
-                System.exit(0);
-                break;
-            case UP:
-                if (zero.isOnPlatform() && !zero.isRolling()) {
-                    if (zero.isRunning() && (zero.isOnLeftWall() || zero.isOnRightWall())) {
-                        Sound.playSound("Zero/player_jump.wav");
-                        zero.setYVelocity(-zero.getMaxYVelocity() * 3);
-//                        zero.setDeltaY(zero.getDeltaY() + 60);
-                    } else {
-                        Sound.playSound("Zero/player_jump.wav");
-                        CommandCenter.getInstance().getOpsQueue().enqueue(new JumpDebris(zero.getCenter()), GameOp.Action.ADD);
-                        zero.setYVelocity(zero.getInitialYVelocity());
-                        zero.setFalling(false);
-                    }
-                } else if (zero.isRunning()) {
-                    if (zero.isOnLeftWall()) {
-                        zero.setFlipping(true);
-                        zero.setFacingLeft(false);
-                        Sound.playSound("Zero/player_jump.wav");
-                        zero.setXVelocity(zero.getMaxXVelocity());
-                        zero.setYVelocity(-zero.getMaxYVelocity() * 2 / 3);
-                    } else if (zero.isOnRightWall()) {
-                        zero.setFlipping(true);
-                        zero.setFacingLeft(true);
-                        Sound.playSound("Zero/player_jump.wav");
-                        zero.setXVelocity(-zero.getMaxXVelocity());
-                        zero.setYVelocity(-zero.getMaxYVelocity() * 2 / 3);
-                    }
-                }
-                break;
-            case DOWN:
-                if (zero.isOnPlatform()) {
-                    if (!zero.isRolling()) {
-                        zero.setRolling(true);
-                        Sound.playSound("Zero/player_roll.wav");
-                        if (zero.isFacingLeft()) {
-                            zero.setXVelocity(-zero.getMaxXVelocity() * 3);
-                        } else {
-                            zero.setXVelocity(zero.getMaxXVelocity() * 3);
-                        }
-                    }
-                } else {
-                    zero.setYVelocity(zero.getYVelocity() + 10);
-                    zero.setDeltaY(zero.getDeltaY() + 14);
-                }
-
-                break;
-            case LEFT:
-                if (!zero.isAttack() && !zero.isRolling()) {
-                    zero.setFacingLeft(true);
-                    zero.setRunning(true);
-                    if (zero.isOnPlatform() && CommandCenter.getInstance().getFrame() % 6 == 0) {
-                        Sound.playSound(String.format("Zero/player_running_%d.wav", runSoundIdx % 4 + 1));
-                        runSoundIdx += 1;
-                        if (runSoundIdx > 10000) {
-                            runSoundIdx = 0;
-                        }
-                    }
-                }
-                break;
-            case RIGHT:
-                if (!zero.isAttack() && !zero.isRolling()) {
-                    zero.setFacingLeft(false);
-                    zero.setRunning(true);
-                    if (CommandCenter.getInstance().getFrame() % 6 == 0) {
-                        Sound.playSound(String.format("Zero/player_running_%d.wav", runSoundIdx % 4 + 1));
-                        runSoundIdx += 1;
-                        if (runSoundIdx > 10000) {
-                            runSoundIdx = 0;
-                        }
-                    }
-                }
-                break;
-            case SHIFT:
-                startSlowMotion();
-                break;
-            // possible future use
-            // case KILL:
-            // case SHIELD:
-            // case NUM_ENTER:
-
-            default:
-                break;
-        }
-
-    }
-
-    //key events are triggered by the main (Swing) thread which is listening for keystrokes. Notice that some of the
-    // cases below touch the GameOpsQueue such as fire bullet and nuke.
-    //The animation-thread also has access to the GameOpsQueue via the processGameOpsQueue() method.
-    // Therefore, to avoid mutating the GameOpsQueue on the main thread, while we are iterating it on the
-    // animation-thread, we synchronize on the same intrinsic lock. processGameOpsQueue() is also synchronized.
-    @Override
-    public void keyReleased(KeyEvent e) {
-//        Falcon falcon = CommandCenter.getInstance().getFalcon();
-        Zero zero = CommandCenter.getInstance().getZero();
-        int keyCode = e.getKeyCode();
-        //show the key-code in the console
-        System.out.println(keyCode);
-
-        switch (keyCode) {
-            case FIRE:
-//                synchronized (this){
-//                    CommandCenter.getInstance().getOpsQueue().enqueue(new Bullet(falcon), GameOp.Action.ADD);
-//                }
-//                Sound.playSound("thump.wav");
-                break;
-            case NUKE:
-//                if (CommandCenter.getInstance().getFalcon().getNukeMeter() > 0){
-//                    synchronized (this) {
-//                        CommandCenter.getInstance().getOpsQueue().enqueue(new Nuke(falcon), GameOp.Action.ADD);
-//                    }
-//                    Sound.playSound("nuke.wav");
-//                    CommandCenter.getInstance().getFalcon().setNukeMeter(0);
-//                }
-                break;
-            //releasing either the LEFT or RIGHT arrow key will set the TurnState to IDLE
-            case LEFT:
-            case RIGHT:
-//                falcon.setTurnState(Falcon.TurnState.IDLE);
-                zero.setRunning(false);
-                zero.setRun2IdleFlag(4);
-                break;
-
-            case UP:
-                break;
-            case SHIFT:
-
-                endSlowMotion();
-                break;
-
-            case MUTE:
-                CommandCenter.getInstance().setMuted(!CommandCenter.getInstance().isMuted());
-
-//                if (!CommandCenter.getInstance().isMuted()) {
-//                    stopLoopingSounds(soundBackground);
-//                } else {
-//                    soundBackground.loop(Clip.LOOP_CONTINUOUSLY);
-//                }
-                break;
-
-            default:
-                break;
-        }
-
-    }
-
-
-    public void startSlowMotion() {
-        Zero zero = CommandCenter.getInstance().getZero();
-        if (!CommandCenter.getInstance().isSlowMotion()) {
-            Sound.playSlowMotion();
-            this.animationDelay = 150;
-            CommandCenter.getInstance().setSlowMotion(true);
-            zero.getSlowMotionTimer().schedule(new TimerTask() {
-                   @Override
-                   public void run() {
-                        endSlowMotion();
-                   }
-               }, zero.getMaxSlowMotionDuration()
-            );
-        }
-    }
-
-    public void endSlowMotion() {
-        if (CommandCenter.getInstance().isSlowMotion()) {
-            CommandCenter.getInstance().setSlowMotion(false);
-            Clip slowMotionClip = Sound.slowMotionClip;
-            if (slowMotionClip != null && slowMotionClip.isRunning()) {
-                slowMotionClip.stop();
-                slowMotionClip.close();
-            }
-            Sound.playSound("Zero/Slowmo_Exit.wav");
-            this.animationDelay = 30;
-        }
-    }
-
-    @Override
-    // does nothing, but we need it b/c of KeyListener contract
-    public void keyTyped(KeyEvent e) {
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        Zero zero = CommandCenter.getInstance().getZero();
-        if (!zero.isAttack()) {
-            Sound.playSound(String.format("Zero/slash_%d.wav", R.nextInt(3) + 1));
-            int attackX = e.getX();
-            int attackY = e.getY();
-
-            // add attack slash
-            CommandCenter.getInstance().getOpsQueue().enqueue(new NormalSlashDebris(
-                    attackX, attackY, zero.getCenter(), zero.getBoundingBox()),
-                    GameOp.Action.ADD
-            );
-
-            // add katana
-            Katana currentKatana = new Katana(attackX, attackY, zero.getCenter(), zero.getRadius());
-            CommandCenter.getInstance().getOpsQueue().enqueue(currentKatana, GameOp.Action.ADD);
-            zero.katana = currentKatana;
-            zero.setAttack(true);
-
-            // set attack impact
-            if (attackY < zero.getCenter().y - CommandCenter.getInstance().viewY) {
-                zero.setYVelocity(-zero.getMaxYVelocity() / 2);
-                zero.setDeltaY(zero.getDeltaY() - 7);
-            }
-            if (attackX < zero.getCenter().x - CommandCenter.getInstance().viewX) {
-                zero.setFacingLeft(true);
-                zero.setXVelocity(-zero.getMaxXVelocity() * 2);
-            } else {
-                zero.setFacingLeft(false);
-                zero.setXVelocity(zero.getMaxXVelocity() * 2);
-            }
-
-        }
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
 }
 
 

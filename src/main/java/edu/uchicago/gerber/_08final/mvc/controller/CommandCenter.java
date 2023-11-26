@@ -27,6 +27,10 @@ public class CommandCenter {
 	private boolean muted;
 	private boolean isSlowMotion = false;
 
+	public boolean isGameOver = true;
+
+//	public boolean isPaused = false;
+
 	//this value is used to count the number of frames (full animation cycles) in the game
 	private long frame;
 
@@ -43,7 +47,7 @@ public class CommandCenter {
 	//separate reference. Use final to ensure that the falcon ref always points to the single falcon object on heap.
 	//Lombok will not provide setter methods on final members
 	private final Falcon falcon  = new Falcon();
-	private final Zero zero = new Zero();
+	private final Zero zero = new Zero(new Point(300, 240));
 	//lists containing our movables subdivided by team
 	private final List<Movable> movDebris = new LinkedList<>();
 	private final List<Movable> movBloods = new LinkedList<>();
@@ -92,15 +96,16 @@ public class CommandCenter {
 		initFalconAndDecrementFalconNum();
 		//add the falcon to the movFriends list
 //		opsQueue.enqueue(falcon, GameOp.Action.ADD);
-		opsQueue.enqueue(zero, GameOp.Action.ADD);
-		opsQueue.enqueue(new ShieldCop(new Point(500, 240)), GameOp.Action.ADD);
-//		opsQueue.enqueue(new Grunt(new Point(600, 240)), GameOp.Action.ADD);
-//		opsQueue.enqueue(new Grunt(new Point(700, 240)), GameOp.Action.ADD);
-//		opsQueue.enqueue(new Grunt(new Point(800, 240)), GameOp.Action.ADD);
-//		opsQueue.enqueue(new Grunt(new Point(900, 240)), GameOp.Action.ADD);
-
 		Floor f = new Floor();
 		f.loadLevelAndCreateFloors(1, 0);
+
+		opsQueue.enqueue(zero, GameOp.Action.ADD);
+//		opsQueue.enqueue(new ShieldCop(new Point(500, 240)), GameOp.Action.ADD);
+		opsQueue.enqueue(new Grunt(new Point(600, 240)), GameOp.Action.ADD);
+		opsQueue.enqueue(new Grunt(new Point(700, 240)), GameOp.Action.ADD);
+//		opsQueue.enqueue(new Grunt(new Point(800, 240)), GameOp.Action.ADD);
+		opsQueue.enqueue(new Grunt(new Point(900, 240)), GameOp.Action.ADD);
+
 
 	}
 
@@ -141,9 +146,6 @@ public class CommandCenter {
 		movPunches.clear();
 	}
 
-	public boolean isGameOver() {		//if the number of falcons is zero, then game over
-		return numFalcons < 1;
-	}
 
 
 

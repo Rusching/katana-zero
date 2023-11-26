@@ -18,9 +18,9 @@ public class Katana extends Sprite {
 
         setTeam(Team.KATANA);
         Point katanaCenter = findIntersection(zeroCenter, zeroRadius, attackX + CommandCenter.getInstance().viewX, attackY + CommandCenter.getInstance().viewY);
-        System.out.println("Click Position: " + (attackX + CommandCenter.getInstance().viewX) + " " + (attackY + CommandCenter.getInstance().viewY));
-        System.out.println("Zero Position: " + (zeroCenter.x) + " " + (zeroCenter.y));
-        System.out.println("Katana Position: " + katanaCenter.x + " " + katanaCenter.y);
+//        System.out.println("Click Position: " + (attackX + CommandCenter.getInstance().viewX) + " " + (attackY + CommandCenter.getInstance().viewY));
+//        System.out.println("Zero Position: " + (zeroCenter.x) + " " + (zeroCenter.y));
+//        System.out.println("Katana Position: " + katanaCenter.x + " " + katanaCenter.y);
 
         setCenter(katanaCenter);
         setRadius(katanaRadius);

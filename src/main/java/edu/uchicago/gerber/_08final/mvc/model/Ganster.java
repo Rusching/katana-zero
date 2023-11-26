@@ -132,10 +132,8 @@ public class Ganster extends Character {
             }
         }
         if (isFacingLeft || atLeft) {
-            System.out.println("Current Pic idx:" + currentPicIdx);
             renderRasterFlipFromRect((Graphics2D) g, pics.get(currentPicIdx), offsetX, offsetY);
         } else {
-            System.out.println("Current Pic idx:" + currentPicIdx);
             renderRasterFromRect((Graphics2D) g, pics.get(currentPicIdx), offsetX, offsetY);
         }
         g.setColor(Color.RED);

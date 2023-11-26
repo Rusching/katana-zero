@@ -53,7 +53,8 @@ public class Zero extends Character{
         WALK
     }
 
-    public Zero() {
+    public Zero(Point center) {
+        setCenter(center);
         setTeam(Team.FRIEND);
         setRadius(MIN_RADIUS);
         setBoundingType(BoundingType.RECTANGLE);
@@ -126,6 +127,7 @@ public class Zero extends Character{
         double theta = obj.getTheta();
         bloodDebris = new BloodDebris(theta, center);
         CommandCenter.getInstance().getOpsQueue().enqueue(bloodDebris, GameOp.Action.ADD);
+        CommandCenter.getInstance().setGameOver(true);
     }
     @Override
     public void draw(Graphics g) {
