@@ -42,7 +42,7 @@ public class Ganster extends Character {
         setHurtGroundFrames(14);
         setMaxXVelocity(15);
         setAttackRadius(300);
-        setTotalPreAttackFrames(20);
+        setTotalPreAttackFrames(10);
 
         setBoundingBox(new Rectangle(getCenter().x - BLOCK_SIZE / 2, getCenter().y - BLOCK_SIZE / 2, BLOCK_SIZE, BLOCK_SIZE));
 
@@ -91,6 +91,7 @@ public class Ganster extends Character {
         switch (action) {
             case IDLE:
                 pics = getRasterMaps().get(gruntActions.IDLE);
+                offsetY = -13;
                 break;
             case RUN:
                 pics = getRasterMaps().get(gruntActions.RUN);
@@ -103,6 +104,7 @@ public class Ganster extends Character {
                 break;
             case HURT_GROUND:
                 pics = getRasterMaps().get(gruntActions.HURT_GROUND);
+                offsetY = 5;
                 break;
         }
 
@@ -116,7 +118,7 @@ public class Ganster extends Character {
                 }
             } else {
                 // currentAttachIdx == 16
-                currentPicIdx = 15;
+                currentPicIdx = 13;
             }
         } else if (isAttack) {
             if (currentAttackIdx < attackFrames) {
@@ -133,8 +135,10 @@ public class Ganster extends Character {
             }
         }
         if (isFacingLeft || atLeft) {
+            System.out.println("Current Pic idx:" + currentPicIdx);
             renderRasterFlipFromRect((Graphics2D) g, pics.get(currentPicIdx), offsetX, offsetY);
         } else {
+            System.out.println("Current Pic idx:" + currentPicIdx);
             renderRasterFromRect((Graphics2D) g, pics.get(currentPicIdx), offsetX, offsetY);
         }
         g.setColor(Color.RED);
@@ -144,9 +148,9 @@ public class Ganster extends Character {
         g.drawOval(getCenter().x - getAttackRadius() - CommandCenter.getInstance().viewX, getCenter().y - getAttackRadius() - CommandCenter.getInstance().viewY, getAttackRadius() *2, getAttackRadius() *2);
     }
 
-    public void getHurt(Katana currentKatana) {
-        setDeltaX((getCenter().x - currentKatana.getCenter().x) * 2);
-        setDeltaY(getCenter().y - currentKatana.getCenter().y);
+    public void getHurt(Sprite obj) {
+        setDeltaX((getCenter().x - obj.getCenter().x) * 2);
+        setDeltaY(getCenter().y - obj.getCenter().y);
         action = Ganster.gruntActions.HURT_GROUND;
         setProtected(true);
         setHurtGround(true);
@@ -154,7 +158,7 @@ public class Ganster extends Character {
         setYVelocity(0);
         setChasing(false);
         Sound.playSound(String.format("Enemy/sound_enemy_death_sword_0%d.wav", Game.R.nextInt(2)));
-        double theta = currentKatana.getTheta();
+        double theta = obj.getTheta();
         bloodDebris = new BloodDebris(theta, center);
         CommandCenter.getInstance().getOpsQueue().enqueue(bloodDebris, GameOp.Action.ADD);
     }
@@ -169,7 +173,7 @@ public class Ganster extends Character {
                 if (currentAttackIntervalFrame == 0) {
                     currentPreAttackFrame = 0;
                     currentAttackIntervalFrame = totalAttackIntervalFrames;
-                    Bullet bullet = new Bullet(getCenter());
+                    Bullet bullet = new Bullet(getCenter(), atLeft);
                     CommandCenter.getInstance().getOpsQueue().enqueue(bullet, GameOp.Action.ADD);
                     Sound.playSound("Bullet/gun_fire.wav");
                     Sound.playSound("Bullet/sound_enemy_shotgun_reload_01.wav");

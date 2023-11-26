@@ -156,9 +156,9 @@ public class Grunt extends Character {
         g.drawOval(getCenter().x - getViewRadius() - CommandCenter.getInstance().viewX, getCenter().y - getViewRadius() - CommandCenter.getInstance().viewY, getViewRadius() *2, getViewRadius() *2);
     }
 
-    public void getHurt(Katana currentKatana) {
-        setDeltaX((getCenter().x - currentKatana.getCenter().x) * 2);
-        setDeltaY(getCenter().y - currentKatana.getCenter().y);
+    public void getHurt(Sprite obj) {
+        setDeltaX((getCenter().x - obj.getCenter().x) * 2);
+        setDeltaY(getCenter().y - obj.getCenter().y);
         action = Grunt.gruntActions.HURT_GROUND;
         setProtected(true);
         setHurtGround(true);
@@ -166,7 +166,7 @@ public class Grunt extends Character {
         setYVelocity(0);
         setChasing(false);
         Sound.playSound(String.format("Enemy/sound_enemy_death_sword_0%d.wav", Game.R.nextInt(2)));
-        double theta = currentKatana.getTheta();
+        double theta = obj.getTheta();
         bloodDebris = new BloodDebris(theta, center);
         CommandCenter.getInstance().getOpsQueue().enqueue(bloodDebris, GameOp.Action.ADD);
     }

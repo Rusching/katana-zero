@@ -44,6 +44,9 @@ public abstract class Sprite implements Movable {
     protected Rectangle boundingBox = null;
     //orientation from 0-359
     private int orientation;
+
+    //
+    public double theta;
     //natural mortality (short-lived sprites only)
     private int expiry;
 

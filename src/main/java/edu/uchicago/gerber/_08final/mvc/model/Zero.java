@@ -106,20 +106,24 @@ public class Zero extends Character{
     }
 
 
-    public void getHurt(Punch punch) {
-        setDeltaX((getCenter().x - punch.getCenter().x) * 2);
-        setDeltaY(getCenter().y - punch.getCenter().y);
+    public void getHurt(Sprite obj) {
+        setDeltaX((getCenter().x - obj.getCenter().x) * 2);
+        setDeltaY(getCenter().y - obj.getCenter().y);
         setProtected(true);
         setHurtGround(true);
         setXVelocity(0);
         setYVelocity(0);
         if (!deathSoundPlayed) {
-            Sound.playSound("Enemy/punch_hit.wav");
+            if (obj instanceof Punch) {
+                Sound.playSound("Enemy/punch_hit.wav");
+            } else if (obj instanceof Bullet) {
+                Sound.playSound("Bullet/death_bullet.wav");
+            }
             Sound.playSound(String.format("Zero/death_generic_%d.wav", Game.R.nextInt(3) + 1));
             Sound.playSound("Zero/playerdie.wav");
             deathSoundPlayed = true;
         }
-        double theta = punch.getTheta();
+        double theta = obj.getTheta();
         bloodDebris = new BloodDebris(theta, center);
         CommandCenter.getInstance().getOpsQueue().enqueue(bloodDebris, GameOp.Action.ADD);
     }

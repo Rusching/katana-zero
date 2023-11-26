@@ -9,13 +9,14 @@ public class Block extends Sprite {
 
 	private final int BLOCK_SIZE = 72;
 
+	public int blockRadius = 36;
 	//The size of this brick is always square!
 	//we use upperLeftCorner because that is the origin when drawing graphics in Java
 	public Block(Point upperLeftCorner, int size) {
 
 		//you can shoot to destroy the wall which yields big points
 		setTeam(Team.FLOOR);
-
+		setRadius(blockRadius);
 		setCenter(new Point(upperLeftCorner.x + size/2, upperLeftCorner.y + size/2));
 
 		setBoundingType(BoundingType.RECTANGLE);

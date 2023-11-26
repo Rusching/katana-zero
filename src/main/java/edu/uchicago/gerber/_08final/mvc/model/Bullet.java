@@ -14,18 +14,22 @@ import java.util.List;
 public class Bullet extends Sprite {
 
     public static int bulletRadius = 16;
-    public int xVelocity = 54;
+    public int xVelocity = 50;
     public int yVelocity = 0;
 
     public boolean isReflected = false;
-    public Bullet(Point center) {
+    public Bullet(Point center, boolean atLeft) {
 
         setTeam(Team.BULLET);
 
 
         setRadius(bulletRadius);
 
-        setXVelocity(xVelocity);
+        if (atLeft) {
+            setXVelocity(-xVelocity);
+        } else {
+            setXVelocity(xVelocity);
+        }
         setYVelocity(yVelocity);
 
         HashMap<Integer, BufferedImage> rasterMap = new HashMap<>();

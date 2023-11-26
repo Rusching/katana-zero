@@ -133,6 +133,12 @@ public class CommandCenter {
 		movFoes.clear();
 		movFloaters.clear();
 		movFloors.clear();
+		movCharacters.clear();
+		movBloods.clear();
+		movEnemies.clear();
+		movBullets.clear();
+		movKatanas.clear();
+		movPunches.clear();
 	}
 
 	public boolean isGameOver() {		//if the number of falcons is zero, then game over

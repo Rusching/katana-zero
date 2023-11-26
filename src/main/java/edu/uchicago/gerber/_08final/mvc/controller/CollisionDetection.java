@@ -38,14 +38,27 @@ public class CollisionDetection {
                 if (currentKatana.getCenter().distance(enemy.getCenter()) < (katanaRadius + enemyRadius)) {
                     if (!enemy.isProtected()) {
                         if (enemy instanceof Grunt) {
-
-                            Sound.playSound(String.format("Enemy/sound_enemy_death_sword_0%d.wav", Game.R.nextInt(2)));
-                            System.out.println("Grunt hurt to ground");
-                            System.out.println("Katana center: " + currentKatana.getCenter().x + " " + currentKatana.getCenter().y);
-                            System.out.println("Grunt center: " + enemy.getCenter().x + " " + enemy.getCenter().y);
                             Grunt gruntEnemy = (Grunt) enemy;
                             gruntEnemy.getHurt(currentKatana);
+                        } else if (enemy instanceof Ganster) {
+                            Ganster gangsterEnemy = (Ganster) enemy;
+                            gangsterEnemy.getHurt(currentKatana);
                         }
+                            Sound.playSound(String.format("Enemy/sound_enemy_death_sword_0%d.wav", Game.R.nextInt(2)));
+                    }
+                }
+            }
+
+            // detect if there are collision between katana and bullets
+            for (Movable bullet: CommandCenter.getInstance().getMovBullets()) {
+                Bullet bulletObj = (Bullet) bullet;
+                if (!bulletObj.isReflected) {
+                    if (currentKatana.getCenter().distance(bullet.getCenter()) < (katanaRadius + bullet.getRadius())) {
+                        // detect a collision
+                        Sound.playSound("Bullet/slash_bullet.wav");
+                        bulletObj.setReflected(true);
+                        bulletObj.setYVelocity(-bulletObj.getYVelocity());
+                        bulletObj.setXVelocity(-bulletObj.getXVelocity());
                     }
                 }
             }
@@ -54,35 +67,51 @@ public class CollisionDetection {
 
     public static void checkEnemyAttackResult() {
         Zero zero = CommandCenter.getInstance().getZero();
+
+        // check if player is hit by punch
         for (Movable punch: CommandCenter.getInstance().getMovPunches()) {
             if (punch.getCenter().distance(zero.getCenter()) < (punch.getRadius() + zero.getRadius())) {
                 zero.getHurt((Punch) punch);
-                System.out.println("Zero get hurt");
             }
         }
 
-        if (zero.isAttack()) {
-            // only in attack action we check the collision between
-            // katana and enemies
-            Katana currentKatana = zero.getKatana();
-            int katanaRadius = currentKatana.getRadius();
-            int enemyRadius = Character.MIN_RADIUS;
-            for (Movable enemy: CommandCenter.getInstance().getMovEnemies()) {
-                if (currentKatana.getCenter().distance(enemy.getCenter()) < (katanaRadius + enemyRadius)) {
-                    if (!enemy.isProtected()) {
-                        if (enemy instanceof Grunt) {
-
-                            System.out.println("Grunt hurt to ground");
-                            System.out.println("Katana center: " + currentKatana.getCenter().x + " " + currentKatana.getCenter().y);
-                            System.out.println("Grunt center: " + enemy.getCenter().x + " " + enemy.getCenter().y);
-                            Grunt gruntEnemy = (Grunt) enemy;
-                            gruntEnemy.getHurt(currentKatana);
+        // check if player is hit by bullet
+        for (Movable bullet: CommandCenter.getInstance().getMovBullets()) {
+            Bullet bulletObj = (Bullet) bullet;
+            if (!bulletObj.isReflected) {
+                if (bulletObj.getCenter().distance(zero.getCenter()) < (bulletObj.getRadius() + zero.getRadius())) {
+                    zero.getHurt(bulletObj);
+                    CommandCenter.getInstance().getOpsQueue().enqueue(bullet, GameOp.Action.REMOVE);
+                }
+            } else {
+                // it is a reflected bullet that should check collision with enemies
+                for (Movable enemy: CommandCenter.getInstance().getMovEnemies()) {
+                    if (bulletObj.getCenter().distance(enemy.getCenter()) < (enemy.getRadius() + bulletObj.getRadius())) {
+                        if (!enemy.isProtected()) {
+                            CommandCenter.getInstance().getOpsQueue().enqueue(bullet, GameOp.Action.REMOVE);
+                            if (enemy instanceof Grunt) {
+                                Grunt gruntEnemy = (Grunt) enemy;
+                                gruntEnemy.getHurt(bulletObj);
+                            } else if (enemy instanceof Ganster) {
+                                Ganster gangsterEnemy = (Ganster) enemy;
+                                gangsterEnemy.getHurt(bulletObj);
+                            }
+                            Sound.playSound("Bullet/sound_enemy_death_bullet.wav");
+                            Sound.playSound("Enemy/sound_enemy_death_generic.wav");
                         }
                     }
                 }
             }
         }
 
+        // check if bullet is hit on brick
+        for (Movable bullet: CommandCenter.getInstance().getMovBullets()) {
+            for (Movable block: CommandCenter.getInstance().getMovFloors()) {
+                if (bullet.getCenter().distance(block.getCenter()) < (bullet.getRadius() + block.getRadius())) {
+                    CommandCenter.getInstance().getOpsQueue().enqueue(bullet, GameOp.Action.REMOVE);
+                }
+            }
+        }
     }
 
     public static void checkEnemyViewRange() {
