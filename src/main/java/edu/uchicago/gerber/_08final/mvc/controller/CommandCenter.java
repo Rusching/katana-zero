@@ -53,6 +53,7 @@ public class CommandCenter {
 	private final List<Movable> movFloors = new LinkedList<>();
 	private List<Movable> movEnemies = new LinkedList<>();
 	private List<Movable> movKatanas = new LinkedList<>();
+	private final List<Movable> movPunches = new LinkedList<>();
 	private List<Character> movCharacters = new LinkedList<>();
 	{
 		movCharacters.add(zero);
@@ -94,7 +95,7 @@ public class CommandCenter {
 		opsQueue.enqueue(new Grunt(new Point(500, 240)), GameOp.Action.ADD);
 //		opsQueue.enqueue(new Grunt(new Point(600, 240)), GameOp.Action.ADD);
 //		opsQueue.enqueue(new Grunt(new Point(700, 240)), GameOp.Action.ADD);
-		opsQueue.enqueue(new Grunt(new Point(800, 240)), GameOp.Action.ADD);
+//		opsQueue.enqueue(new Grunt(new Point(800, 240)), GameOp.Action.ADD);
 //		opsQueue.enqueue(new Grunt(new Point(900, 240)), GameOp.Action.ADD);
 
 		Floor f = new Floor();

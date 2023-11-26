@@ -19,11 +19,7 @@ public class Grunt extends Character {
     // image path
     private static String gruntImgPathPrefix = "Grunt/";
 
-    // hurt ground
-    protected boolean isHurtGround = false;
-    protected final int hurtGroundFrames = 16;
-    protected int currentHurtGroundIdx = 0;
-
+    Punch punch = null;
     public enum gruntActions {
         ATTACK,
         HURT_FLY,
@@ -36,11 +32,15 @@ public class Grunt extends Character {
 
     public gruntActions action = gruntActions.IDLE;
 
+
     public Grunt(Point center) {
         setTeam(Team.ENEMY);
         setRadius(MIN_RADIUS);
         setCenter(center);
         setBoundingType(BoundingType.RECTANGLE);
+
+        setHurtGroundFrames(16);
+        setMaxXVelocity(15);
 
         setBoundingBox(new Rectangle(getCenter().x - BLOCK_SIZE / 2, getCenter().y - BLOCK_SIZE / 2, BLOCK_SIZE, BLOCK_SIZE));
 
@@ -86,7 +86,7 @@ public class Grunt extends Character {
     @Override
     public void setChasing(boolean state) {
         isChasing = state;
-        if (!isProtected) {
+        if (!isProtected && !isAttack) {
             if (state) {
                 action = gruntActions.RUN;
             } else {
@@ -112,7 +112,6 @@ public class Grunt extends Character {
                 break;
             case ATTACK:
                 pics = getRasterMaps().get(gruntActions.ATTACK);
-                System.out.println("get attack imgs");
                 break;
             case HURT_GROUND:
                 pics = getRasterMaps().get(gruntActions.HURT_GROUND);
@@ -132,13 +131,17 @@ public class Grunt extends Character {
                 currentPicIdx = 15;
             }
         } else if (isAttack) {
-            if (currentAttachIdx < attackFrames) {
-                currentPicIdx = currentAttachIdx;
-                currentAttachIdx += 1;
+            if (currentAttackIdx < attackFrames) {
+                currentPicIdx = currentAttackIdx;
+                if (CommandCenter.getInstance().getFrame() % 2 == 0) {
+                    currentAttackIdx += 1;
+                }
             } else {
                 // currentAttachIdx == 7
-                currentAttachIdx = 0;
+                currentAttackIdx = 0;
                 isAttack = false;
+                CommandCenter.getInstance().getOpsQueue().enqueue(punch, GameOp.Action.REMOVE);
+                punch = null;
             }
         }
         if (isFacingLeft || atLeft) {
@@ -177,7 +180,8 @@ public class Grunt extends Character {
                     currentAttackIntervalFrame = totalAttackIntervalFrames;
                     isAttack = true;
                     action = gruntActions.ATTACK;
-                    System.out.println("Grunt attack");
+                    punch = new Punch(getCenter());
+                    CommandCenter.getInstance().getOpsQueue().enqueue(punch, GameOp.Action.ADD);
                 } else {
                     if (CommandCenter.getInstance().getFrame() % 2 == 0) { currentAttackIntervalFrame -= 1;}
                 }

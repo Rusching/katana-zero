@@ -323,6 +323,14 @@ public class Game implements Runnable, KeyListener, MouseListener {
                         CommandCenter.getInstance().getMovKatanas().remove(mov);
                     }
                     break;
+                case PUNCH:
+                    if (action == GameOp.Action.ADD) {
+                        CommandCenter.getInstance().getMovPunches().add(mov);
+                    } else { //GameOp.Operation.REMOVE
+                        CommandCenter.getInstance().getMovPunches().remove(mov);
+                    }
+                    break;
+
                 case DEBRIS:
                     if (action == GameOp.Action.ADD) {
                         CommandCenter.getInstance().getMovDebris().add(mov);

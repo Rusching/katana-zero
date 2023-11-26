@@ -26,7 +26,7 @@ public class Character extends Sprite{
     // attack
     protected boolean isAttack = false;
     protected int attackFrames = 7;
-    protected int currentAttachIdx = 0;
+    protected int currentAttackIdx = 0;
 
     // flip
     protected boolean isFlipping = false;
@@ -60,10 +60,15 @@ public class Character extends Sprite{
     public int attackRadius = 36;
 
     public boolean canAttack = false;
-    public int totalPreAttackFrames = 25;
+    public int totalPreAttackFrames = 5;
     public int currentPreAttackFrame = 0;
-    public int totalAttackIntervalFrames = 50;
+    public int totalAttackIntervalFrames = 15;
     public int currentAttackIntervalFrame = 0;
+
+    // hurt
+    protected boolean isHurtGround = false;
+    protected int hurtGroundFrames = 16;
+    protected int currentHurtGroundIdx = 0;
 
     // slow motion
     protected boolean isSlowMotion = false;

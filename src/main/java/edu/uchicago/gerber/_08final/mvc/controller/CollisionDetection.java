@@ -19,12 +19,12 @@ public class CollisionDetection {
      *      1. character is attacking,
      *      2. katana's circle overlap with some enemies' body circle
      */
+    public static int runSoundIdx = 1;
 
     public static void checkAllCollisions() {
         checkPlayerAttackResult();
         checkEnemyAttackResult();
         checkEnemyViewRange();
-        checkEnemyAttack();
     }
     public static void checkPlayerAttackResult() {
         Zero zero = CommandCenter.getInstance().getZero();
@@ -53,7 +53,36 @@ public class CollisionDetection {
     }
 
     public static void checkEnemyAttackResult() {
+        Zero zero = CommandCenter.getInstance().getZero();
+        for (Movable punch: CommandCenter.getInstance().getMovPunches()) {
+            if (punch.getCenter().distance(zero.getCenter()) < (punch.getRadius() + zero.getRadius())) {
+                zero.getHurt((Punch) punch);
+                System.out.println("Zero get hurt");
+            }
+        }
 
+        if (zero.isAttack()) {
+            // only in attack action we check the collision between
+            // katana and enemies
+            Katana currentKatana = zero.getKatana();
+            int katanaRadius = currentKatana.getRadius();
+            int enemyRadius = Character.MIN_RADIUS;
+            for (Movable enemy: CommandCenter.getInstance().getMovEnemies()) {
+                if (currentKatana.getCenter().distance(enemy.getCenter()) < (katanaRadius + enemyRadius)) {
+                    if (!enemy.isProtected()) {
+                        if (enemy instanceof Grunt) {
+
+                            Sound.playSound(String.format("Enemy/sound_enemy_death_sword_0%d.wav", Game.R.nextInt(2)));
+                            System.out.println("Grunt hurt to ground");
+                            System.out.println("Katana center: " + currentKatana.getCenter().x + " " + currentKatana.getCenter().y);
+                            System.out.println("Grunt center: " + enemy.getCenter().x + " " + enemy.getCenter().y);
+                            Grunt gruntEnemy = (Grunt) enemy;
+                            gruntEnemy.getHurt(currentKatana);
+                        }
+                    }
+                }
+            }
+        }
 
     }
 
@@ -61,7 +90,7 @@ public class CollisionDetection {
         Zero zero = CommandCenter.getInstance().getZero();
         for (Movable enemy: CommandCenter.getInstance().getMovEnemies()) {
             Character charEnemy = (Character) enemy;
-            if (!enemy.isProtected()) {
+            if (!enemy.isProtected() && !zero.isProtected()) {
                 if (zero.getCenter().distance(charEnemy.getCenter()) < (zero.getRadius() + charEnemy.viewRadius)) {
                     if (zero.getCenter().distance(charEnemy.getCenter()) < (zero.getRadius() + charEnemy.getAttackRadius())) {
                         // if body circle overlap, enter attack mode
@@ -71,10 +100,16 @@ public class CollisionDetection {
 
                     } else {
                         // chase
-
                         charEnemy.setCanAttack(false);
                         charEnemy.setChasing(true);
                         charEnemy.setNoticed(true);
+                        if (CommandCenter.getInstance().getFrame() % 6 == 0) {
+                            Sound.playSound(String.format("Enemy/sound_generic_enemy_run_%d.wav", runSoundIdx % 4 + 1));
+                            runSoundIdx += 1;
+                            if (runSoundIdx > 10000) {
+                                runSoundIdx = 0;
+                            }
+                        }
                         if (zero.getCenter().x < charEnemy.getCenter().x) {
                             charEnemy.setAtLeft(true);
                         } else {
@@ -91,8 +126,4 @@ public class CollisionDetection {
 
     }
 
-    public static void checkEnemyAttack() {
-
-
-    }
 }

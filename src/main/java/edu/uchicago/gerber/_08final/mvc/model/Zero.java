@@ -3,6 +3,7 @@ package edu.uchicago.gerber._08final.mvc.model;
 import edu.uchicago.gerber._08final.mvc.controller.CommandCenter;
 import edu.uchicago.gerber._08final.mvc.controller.Game;
 import edu.uchicago.gerber._08final.mvc.controller.GameOp;
+import edu.uchicago.gerber._08final.mvc.controller.Sound;
 import lombok.Data;
 
 import java.awt.*;
@@ -57,6 +58,7 @@ public class Zero extends Character{
         setBoundingType(BoundingType.RECTANGLE);
         setBoundingBox(new Rectangle(getCenter().x - BLOCK_SIZE / 2, getCenter().y - BLOCK_SIZE / 2, BLOCK_SIZE, BLOCK_SIZE));
 
+        setHurtGroundFrames(6);
         Map<Actions, ArrayList<BufferedImage>> rasterMaps = new HashMap<>();
 
         ArrayList<BufferedImage> rasterMapIdle = new ArrayList<>();
@@ -95,15 +97,35 @@ public class Zero extends Character{
         rasterMapWallSlide.add(loadGraphic(imgPathPrefix + zeroImgPathPrefix + "wallSlide/spr_wallSlide_0.png"));
         rasterMaps.put(Actions.WALL_SLIDE, rasterMapWallSlide);
 
+        ArrayList<BufferedImage> rasterMapHurt = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {rasterMapHurt.add(loadGraphic(imgPathPrefix + zeroImgPathPrefix + String.format("hurt/spr_hurtground_%d.png", i)));}
+        rasterMaps.put(Actions.HURT, rasterMapHurt);
+
         setRasterMaps(rasterMaps);
     }
 
+
+    public void getHurt(Punch punch) {
+        setDeltaX((getCenter().x - punch.getCenter().x) * 2);
+        setDeltaY(getCenter().y - punch.getCenter().y);
+        setProtected(true);
+        setHurtGround(true);
+        setXVelocity(0);
+        setYVelocity(0);
+        Sound.playSound(String.format("Zero/death_generic_%d.wav", Game.R.nextInt(3) + 1));
+        Sound.playSound("Zero/playerdie.wav");
+        double theta = punch.getTheta();
+        bloodDebris = new BloodDebris(theta, center);
+        CommandCenter.getInstance().getOpsQueue().enqueue(bloodDebris, GameOp.Action.ADD);
+    }
     @Override
     public void draw(Graphics g) {
         ArrayList<BufferedImage> pics;
         int offsetX = 0, offsetY = 0;
-
-        if (isAttack) {
+        if (isHurtGround) {
+            // hurt ground
+            pics = getRasterMaps().get(Actions.HURT);
+        } else if (isAttack) {
             // attack
             pics = getRasterMaps().get(Actions.ATTACK);
         } else if (isRolling) {
@@ -146,13 +168,22 @@ public class Zero extends Character{
 
         int currentPicIdx = (int) ((CommandCenter.getInstance().getFrame() / 2) % pics.size());
 
-        if (isAttack) {
-            if (currentAttachIdx < attackFrames) {
-                currentPicIdx = currentAttachIdx;
-                currentAttachIdx += 1;
+        if (isHurtGround) {
+            offsetY = 13;
+            if (currentHurtGroundIdx < hurtGroundFrames) {
+                currentPicIdx = currentHurtGroundIdx;
+                currentHurtGroundIdx += 1;
+            } else {
+                // currentAttachIdx == 6
+                currentPicIdx = hurtGroundFrames - 1;
+            }
+        } else if (isAttack) {
+            if (currentAttackIdx < attackFrames) {
+                currentPicIdx = currentAttackIdx;
+                currentAttackIdx += 1;
             } else {
                 // currentAttachIdx == 7
-                currentAttachIdx = 0;
+                currentAttackIdx = 0;
                 isAttack = false;
                 // attack finish, remove the katana
                 CommandCenter.getInstance().getOpsQueue().enqueue(katana, GameOp.Action.REMOVE);

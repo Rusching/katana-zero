@@ -116,12 +116,12 @@ public class Dragon extends Character{
         int currentPicIdx = (int) ((CommandCenter.getInstance().getFrame() / 2) % pics.size());
 
         if (isAttack) {
-            if (currentAttachIdx < 7) {
-                currentPicIdx = currentAttachIdx;
-                currentAttachIdx += 1;
+            if (currentAttackIdx < 7) {
+                currentPicIdx = currentAttackIdx;
+                currentAttackIdx += 1;
             } else {
                 // currentRollIdx == 7
-                currentAttachIdx = 0;
+                currentAttackIdx = 0;
                 isAttack = false;
             }
         } else if (isRolling) {
