@@ -102,7 +102,6 @@ public class ShieldCop extends Character {
                 break;
             case HURT_GROUND:
                 pics = getRasterMaps().get(gruntActions.HURT_GROUND);
-                offsetY = 21;
                 break;
         }
 
@@ -114,9 +113,15 @@ public class ShieldCop extends Character {
                 if (CommandCenter.getInstance().getFrame() % 2 == 0) {
                     currentHurtGroundIdx += 1;
                 }
+                if (currentPicIdx < 7) {
+                    offsetY = 14;
+                } else {
+                    offsetY = 21;
+                }
             } else {
                 // currentAttachIdx == 16
                 currentPicIdx = hurtGroundFrames - 1;
+                offsetY = 21;
             }
         } else if (isAttack) {
             if (currentAttackIdx < attackFrames) {
