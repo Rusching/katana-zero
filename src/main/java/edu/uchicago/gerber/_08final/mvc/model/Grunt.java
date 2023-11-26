@@ -74,12 +74,25 @@ public class Grunt extends Character {
         for (int i = 0; i < 8; i++) {rasterMapAttack.add(loadGraphic(imgPathPrefix + gruntImgPathPrefix + String.format("spr_grunt_attack/%d.png", i)));}
         rasterMaps.put(gruntActions.ATTACK, rasterMapAttack);
 
+        attackFrames = rasterMapAttack.size();
+
         setRasterMaps(rasterMaps);
     }
 
     @Override
     public boolean isProtected() {
         return isProtected;
+    }
+    @Override
+    public void setChasing(boolean state) {
+        isChasing = state;
+        if (!isProtected) {
+            if (state) {
+                action = gruntActions.RUN;
+            } else {
+                action = gruntActions.IDLE;
+            }
+        }
     }
     @Override
     public void draw(Graphics g) {
@@ -99,6 +112,7 @@ public class Grunt extends Character {
                 break;
             case ATTACK:
                 pics = getRasterMaps().get(gruntActions.ATTACK);
+                System.out.println("get attack imgs");
                 break;
             case HURT_GROUND:
                 pics = getRasterMaps().get(gruntActions.HURT_GROUND);
@@ -117,14 +131,24 @@ public class Grunt extends Character {
                 // currentAttachIdx == 16
                 currentPicIdx = 15;
             }
+        } else if (isAttack) {
+            if (currentAttachIdx < attackFrames) {
+                currentPicIdx = currentAttachIdx;
+                currentAttachIdx += 1;
+            } else {
+                // currentAttachIdx == 7
+                currentAttachIdx = 0;
+                isAttack = false;
+            }
         }
-        if (isFacingLeft) {
+        if (isFacingLeft || atLeft) {
             renderRasterFlipFromRect((Graphics2D) g, pics.get(currentPicIdx), offsetX, offsetY);
         } else {
             renderRasterFromRect((Graphics2D) g, pics.get(currentPicIdx), offsetX, offsetY);
         }
         g.setColor(Color.RED);
         g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().viewX, getCenter().y - getRadius() - CommandCenter.getInstance().viewY, getRadius() *2, getRadius() *2);
+        g.drawOval(getCenter().x - getViewRadius() - CommandCenter.getInstance().viewX, getCenter().y - getViewRadius() - CommandCenter.getInstance().viewY, getViewRadius() *2, getViewRadius() *2);
     }
 
     public void getHurt(Katana currentKatana) {
@@ -133,42 +157,59 @@ public class Grunt extends Character {
         action = Grunt.gruntActions.HURT_GROUND;
         setProtected(true);
         setHurtGround(true);
-
+        setXVelocity(0);
+        setYVelocity(0);
+        setChasing(false);
         double theta = currentKatana.getTheta();
         bloodDebris = new BloodDebris(theta, center);
         CommandCenter.getInstance().getOpsQueue().enqueue(bloodDebris, GameOp.Action.ADD);
+    }
+
+    @Override
+    public void attack() {
+        if (canAttack) {
+            if (currentPreAttackFrame < totalPreAttackFrames) {
+                if (CommandCenter.getInstance().getFrame() % 2 == 0) { currentPreAttackFrame += 1;}
+            } else {
+                // finish preparation
+                if (currentAttackIntervalFrame == 0) {
+                    currentPreAttackFrame = 0;
+                    currentAttackIntervalFrame = totalAttackIntervalFrames;
+                    isAttack = true;
+                    action = gruntActions.ATTACK;
+                    System.out.println("Grunt attack");
+                } else {
+                    if (CommandCenter.getInstance().getFrame() % 2 == 0) { currentAttackIntervalFrame -= 1;}
+                }
+
+            }
+        }
+
     }
     @Override
     public void move() {
         super.move();
 
         // compute the x change
-        if (!isFlipping) {
-            if (isRunning) {
+        if (!isAttack) {
+            if (isChasing) {
                 // bound the maximum speed
-                if (isFacingLeft) {
-                    if (xVelocity < -maxXVelocity) {
-                        xVelocity = -maxXVelocity;
-                    }
-                } else {
-                    if (xVelocity > maxXVelocity) {
-                        xVelocity = maxXVelocity;
-                    }
-                }
 
-                // wall sliding
-                if (!isOnPlatform() && (isOnLeftWall() || isOnRightWall())) {
-                    yVelocity = 3;
-                    xVelocity = 0;
-
-                    // accelerate
-                } else if (abs(xVelocity) < maxXVelocity) {
-                    if (isFacingLeft) {
+                if (abs(xVelocity) < maxXVelocity) {
+                    if (atLeft) {
                         xVelocity -= xAccelerate;
                     } else {
                         xVelocity += xAccelerate;
                     }
                 }
+
+                if (atLeft && xVelocity > 0) {
+                    xVelocity = -xVelocity;
+                }
+                if (!atLeft && xVelocity < 0) {
+                    xVelocity = -xVelocity;
+                }
+
             } else {
                 // slow down
                 if (xVelocity != 0) {
@@ -179,26 +220,17 @@ public class Grunt extends Character {
                     }
                 }
             }
-        }
-        // compute y change
-        if (!isOnPlatform()) {
-            if (abs(yVelocity) <= maxYVelocity) {
-                yVelocity -= gravityG;
+
+            // compute y change
+            if (!isOnPlatform()) {
+                if (abs(yVelocity) <= maxYVelocity) {
+                    yVelocity -= gravityG;
+                }
             }
+            // apply the coordinates change
+            setDeltaX(xVelocity);
+            setDeltaY(yVelocity);
         }
 
-        // apply the coordinates change
-        setDeltaX(xVelocity);
-        setDeltaY(yVelocity);
-
-        // modify the viewX and viewY so that the map move
-//        scrollMap();
-
-//        if (!isOnPlatform()) {
-//            setDeltaY(y_velocity);
-//            if (abs(y_velocity) < max_y_velocity) {
-//                y_velocity -= gravityG;
-//            }
-//        }
     }
 }

@@ -118,7 +118,9 @@ public class Game implements Runnable, KeyListener, MouseListener {
             // see GamePanel class for details
             gamePanel.update(gamePanel.getGraphics());
 
-            checkCollision();
+//            checkCollision();
+            CollisionDetection.checkAllCollisions();
+            processGameOpsQueue();
             checkNewLevel();
             //keep track of the frame for development purposes
             CommandCenter.getInstance().incrementFrame();
@@ -158,6 +160,8 @@ public class Game implements Runnable, KeyListener, MouseListener {
                 if (currentKatana.getCenter().distance(enemy.getCenter()) < (katanaRadius + enemyRadius)) {
                     if (!enemy.isProtected()) {
                         if (enemy instanceof Grunt) {
+
+                            Sound.playSound(String.format("Enemy/sound_enemy_death_sword_0%d.wav", R.nextInt(2)));
                             System.out.println("Grunt hurt to ground");
                             System.out.println("Katana center: " + currentKatana.getCenter().x + " " + currentKatana.getCenter().y);
                             System.out.println("Grunt center: " + enemy.getCenter().x + " " + enemy.getCenter().y);

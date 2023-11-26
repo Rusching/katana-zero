@@ -25,7 +25,7 @@ public class Character extends Sprite{
 
     // attack
     protected boolean isAttack = false;
-    protected final int attackFrames = 7;
+    protected int attackFrames = 7;
     protected int currentAttachIdx = 0;
 
     // flip
@@ -49,6 +49,21 @@ public class Character extends Sprite{
 
     public BloodDebris bloodDebris = null;
 
+    // view (enemy)
+    public int viewRadius = 600;
+    public boolean isNoticed = false;
+    public boolean atLeft = false;
+    public boolean isChasing = false;
+
+
+    // attack (enemy)
+    public int attackRadius = 36;
+
+    public boolean canAttack = false;
+    public int totalPreAttackFrames = 25;
+    public int currentPreAttackFrame = 0;
+    public int totalAttackIntervalFrames = 50;
+    public int currentAttackIntervalFrame = 0;
 
     // slow motion
     protected boolean isSlowMotion = false;
@@ -123,6 +138,8 @@ public class Character extends Sprite{
         }
         return null;
     }
+
+    public void attack() {}
     @Override
     public void move() {
         //right-bounds reached

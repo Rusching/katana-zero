@@ -233,7 +233,12 @@ public class Zero extends Character{
                         xVelocity = maxXVelocity;
                     }
                 }
-
+                if (isFacingLeft && xVelocity > 0) {
+                    xVelocity = -xVelocity;
+                }
+                if (!isFacingLeft && xVelocity < 0) {
+                    xVelocity = -xVelocity;
+                }
                 // wall sliding
                 if (!isOnPlatform() && (isOnLeftWall() || isOnRightWall())) {
                     yVelocity = 3;

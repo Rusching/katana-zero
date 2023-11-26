@@ -68,6 +68,8 @@ public class BloodDebris extends Sprite {
 
         setBgBloodIdx(Game.R.nextInt(BG_BLOOD_TYPES));
         setBgBloodLeft(Game.R.nextInt(2) == 0);
+        setOrientation(Game.R.nextInt(360));
+
         setSplatterIdx();
     }
 
