@@ -23,6 +23,7 @@ public class Zero extends Character{
     private static String zeroImgPathPrefix = "ZeroSprites/";
 
     public Katana katana = null;
+    public boolean deathSoundPlayed = false;
     enum Actions {
         ATTACK,
         BIG_SLASH,
@@ -112,8 +113,12 @@ public class Zero extends Character{
         setHurtGround(true);
         setXVelocity(0);
         setYVelocity(0);
-        Sound.playSound(String.format("Zero/death_generic_%d.wav", Game.R.nextInt(3) + 1));
-        Sound.playSound("Zero/playerdie.wav");
+        if (!deathSoundPlayed) {
+            Sound.playSound("Enemy/punch_hit.wav");
+            Sound.playSound(String.format("Zero/death_generic_%d.wav", Game.R.nextInt(3) + 1));
+            Sound.playSound("Zero/playerdie.wav");
+            deathSoundPlayed = true;
+        }
         double theta = punch.getTheta();
         bloodDebris = new BloodDebris(theta, center);
         CommandCenter.getInstance().getOpsQueue().enqueue(bloodDebris, GameOp.Action.ADD);
@@ -193,10 +198,14 @@ public class Zero extends Character{
             if (currentRollIdx < rollFrames) {
                 currentPicIdx = currentRollIdx;
                 currentRollIdx += 1;
+                if (!isProtected) {
+                    setProtected(true);
+                }
             } else {
                 // currentRollIdx == 7
                 currentRollIdx = 0;
                 isRolling = false;
+                setProtected(false);
             }
         } else if (isFlipping) {
             if (!(isOnLeftWall() || isOnRightWall())) {

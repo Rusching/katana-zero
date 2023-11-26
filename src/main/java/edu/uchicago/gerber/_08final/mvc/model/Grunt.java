@@ -1,7 +1,9 @@
 package edu.uchicago.gerber._08final.mvc.model;
 
 import edu.uchicago.gerber._08final.mvc.controller.CommandCenter;
+import edu.uchicago.gerber._08final.mvc.controller.Game;
 import edu.uchicago.gerber._08final.mvc.controller.GameOp;
+import edu.uchicago.gerber._08final.mvc.controller.Sound;
 import lombok.Data;
 
 import java.awt.*;
@@ -160,9 +162,10 @@ public class Grunt extends Character {
         action = Grunt.gruntActions.HURT_GROUND;
         setProtected(true);
         setHurtGround(true);
-        setXVelocity(0);
+
         setYVelocity(0);
         setChasing(false);
+        Sound.playSound(String.format("Enemy/sound_enemy_death_sword_0%d.wav", Game.R.nextInt(2)));
         double theta = currentKatana.getTheta();
         bloodDebris = new BloodDebris(theta, center);
         CommandCenter.getInstance().getOpsQueue().enqueue(bloodDebris, GameOp.Action.ADD);
@@ -182,6 +185,7 @@ public class Grunt extends Character {
                     action = gruntActions.ATTACK;
                     punch = new Punch(getCenter());
                     CommandCenter.getInstance().getOpsQueue().enqueue(punch, GameOp.Action.ADD);
+                    Sound.playSound("Enemy/punch.wav");
                 } else {
                     if (CommandCenter.getInstance().getFrame() % 2 == 0) { currentAttackIntervalFrame -= 1;}
                 }

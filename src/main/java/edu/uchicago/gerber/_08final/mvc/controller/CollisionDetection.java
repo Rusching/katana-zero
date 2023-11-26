@@ -72,7 +72,6 @@ public class CollisionDetection {
                     if (!enemy.isProtected()) {
                         if (enemy instanceof Grunt) {
 
-                            Sound.playSound(String.format("Enemy/sound_enemy_death_sword_0%d.wav", Game.R.nextInt(2)));
                             System.out.println("Grunt hurt to ground");
                             System.out.println("Katana center: " + currentKatana.getCenter().x + " " + currentKatana.getCenter().y);
                             System.out.println("Grunt center: " + enemy.getCenter().x + " " + enemy.getCenter().y);

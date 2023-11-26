@@ -54,6 +54,7 @@ public class CommandCenter {
 	private List<Movable> movEnemies = new LinkedList<>();
 	private List<Movable> movKatanas = new LinkedList<>();
 	private final List<Movable> movPunches = new LinkedList<>();
+	private final List<Movable> movBullets = new LinkedList<>();
 	private List<Character> movCharacters = new LinkedList<>();
 	{
 		movCharacters.add(zero);
@@ -92,7 +93,7 @@ public class CommandCenter {
 		//add the falcon to the movFriends list
 //		opsQueue.enqueue(falcon, GameOp.Action.ADD);
 		opsQueue.enqueue(zero, GameOp.Action.ADD);
-		opsQueue.enqueue(new Grunt(new Point(500, 240)), GameOp.Action.ADD);
+		opsQueue.enqueue(new Ganster(new Point(500, 240)), GameOp.Action.ADD);
 //		opsQueue.enqueue(new Grunt(new Point(600, 240)), GameOp.Action.ADD);
 //		opsQueue.enqueue(new Grunt(new Point(700, 240)), GameOp.Action.ADD);
 //		opsQueue.enqueue(new Grunt(new Point(800, 240)), GameOp.Action.ADD);
