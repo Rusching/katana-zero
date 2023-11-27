@@ -3,6 +3,7 @@ package edu.uchicago.gerber._08final.mvc.controller;
 import edu.uchicago.gerber._08final.mvc.model.*;
 import edu.uchicago.gerber._08final.mvc.model.Character;
 import edu.uchicago.gerber._08final.mvc.model.Zero;
+import edu.uchicago.gerber._08final.mvc.view.GameFrame;
 import edu.uchicago.gerber._08final.mvc.view.GamePanel;
 import edu.uchicago.gerber._08final.mvc.view.StartMenuPanel;
 
@@ -13,6 +14,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Timer;
@@ -35,7 +38,7 @@ public class Game implements Runnable {
     public static int dimensionHeight = 684;
     public static final Dimension DIM = new Dimension(dimensionWidth, dimensionHeight); //the dimension of the game.
     public final GamePanel gamePanel;
-//    public final StartMenuPanel startMenuPanel;
+    public final StartMenuPanel startMenuPanel;
 
     //this is used throughout many classes.
     public static final Random R = new Random();
@@ -53,14 +56,15 @@ public class Game implements Runnable {
         GAME_WIN
     }
 
-    public static GameState gameState = GameState.GAME_PLAY;
-    public static GameState preGameState = GameState.GAME_PLAY;
+    public static GameState gameState = GameState.START_MENU;
+    public static GameState preGameState = GameState.START_MENU;
     // for possible future use
     // HYPER = 68, 					// D key
     //ALIEN = 65;                // A key
     // SPECIAL = 70; 					// fire special weapon;  F key
 
 //    private final Clip soundThrust;
+    public GameFrame gameFrame;
     private final Clip soundBackground;
 
 
@@ -71,20 +75,55 @@ public class Game implements Runnable {
 
     public Game() {
 
-
-
-
-        gamePanel = new GamePanel(DIM);
+        gamePanel = new GamePanel();
         gamePanel.addKeyListener(GamePanelListener.getInstance()); //Game object implements KeyListener
         gamePanel.addMouseListener(GamePanelListener.getInstance());
 
-//        startMenuPanel = new StartMenuPanel(DIM);
-//        startMenuPanel.addKeyListener(StartMenuPanelListener.getInstance());
+        startMenuPanel = new StartMenuPanel();
+        startMenuPanel.addKeyListener(StartMenuPanelListener.getInstance());
+
+        gameFrame = new GameFrame();
+
+        gameFrame.getContentPane().add(startMenuPanel);
+        startMenuPanel.setFocusable(true);
+
+        gameFrame.pack();
+//        initFontInfo();
+        gameFrame.setSize(DIM);
+        //change the name of the game-frame to your game name
+        gameFrame.setTitle("Game Base");
+        gameFrame.setResizable(false);
+        gameFrame.setVisible(true);
+//        gameFram
+//        setFocusable(true);
+
+        Cursor customCursor = null;
+        BufferedImage cursorImage = Utils.loadGraphic("/imgs/Cursor/0.png");
+        if (cursorImage != null) {
+            Toolkit toolkit = Toolkit.getDefaultToolkit();
+            Point hotSpot = new Point(0, 0);
+            customCursor = toolkit.createCustomCursor(cursorImage, hotSpot, "Custom Cursor");
+        }
+        gameFrame.setCursor(customCursor);
+
+        try {
+
+            InputStream is = getClass().getResourceAsStream("/fonts/visitor1.ttf");
+            Font visitorFont = Font.createFont(Font.TRUETYPE_FONT, is);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(visitorFont);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
 
 
 //        soundThrust = Sound.clipForLoopFactory("whitenoise.wav");
 //        soundBackground = Sound.clipForLoopFactory("music-background.wav");
-        soundBackground = Sound.clipForLoopFactory("Song/song_sneaky_driver.wav");
+//        soundBackground = Sound.clipForLoopFactory("Song/song_sneaky_driver.wav");
+        soundBackground = Sound.clipForLoopFactory("Song/song_rainonbrick.wav");
         soundBackground.loop(5);
         //fire up the animation thread
         animationThread = new Thread(this); // pass the animation thread a runnable object, the Game object
@@ -120,39 +159,50 @@ public class Game implements Runnable {
             switch (gameState) {
                 case START_MENU:
 //                    System.out.println("Current state: " + gameState + " Pre state: " + preGameState);
-//                    if (gameState != preGameState) {
-//                        startMenuPanel.repaint();
-//                    }
-//                    preGameState = GameState.START_MENU;
-//
-//                    startMenuPanel.update(startMenuPanel.getGraphics());
-//                    CommandCenter.getInstance().incrementFrame();
-//                    try {
-//                        // The total amount of time is guaranteed to be at least ANIMATION_DELAY long.  If processing (update)
-//                        // between frames takes longer than ANIMATION_DELAY, then the difference between startTime -
-//                        // System.currentTimeMillis() will be negative, then zero will be the sleep time
-//                        startTime += animationDelay;
-//
-//                        Thread.sleep(Math.max(0,
-//                                startTime - System.currentTimeMillis()));
-//                    } catch (InterruptedException e) {
-//                        // do nothing (bury the exception), and just continue, e.g. skip this frame -- no big deal
-//                    }
+                    if (gameState != preGameState) {
+
+                        startMenuPanel.repaint();
+                        startMenuPanel.setFocusable(true);
+                    }
+                    preGameState = GameState.START_MENU;
+
+                    startMenuPanel.update(startMenuPanel.getGraphics());
+                    CommandCenter.getInstance().incrementFrame();
+                    try {
+                        // The total amount of time is guaranteed to be at least ANIMATION_DELAY long.  If processing (update)
+                        // between frames takes longer than ANIMATION_DELAY, then the difference between startTime -
+                        // System.currentTimeMillis() will be negative, then zero will be the sleep time
+                        startTime += animationDelay;
+
+                        Thread.sleep(Math.max(0,
+                                startTime - System.currentTimeMillis()));
+                    } catch (InterruptedException e) {
+                        // do nothing (bury the exception), and just continue, e.g. skip this frame -- no big deal
+                    }
                     break;
                 case GAME_PLAY:
 //                    System.out.println("Current state: " + gameState + " Pre state: " + preGameState);
 
-//                    if (gameState != preGameState) {
-//                        gamePanel.repaint();
-//                        gamePanel.requestFocus();
-//                    }
+                    if (gameState != preGameState) {
+                        gamePanel.repaint();
+                        gamePanel.setFocusable(true);
+                        gameFrame.getContentPane().removeAll();
+                        gameFrame.getContentPane().add(gamePanel);
+                        gamePanel.requestFocusInWindow();
+                        gameFrame.revalidate();
+                        gameFrame.repaint();
+                        CommandCenter.getInstance().initGame();
+                        CommandCenter.getInstance().setGameOver(false);
+                    }
                     preGameState = gameState;
                     gamePanel.update(gamePanel.getGraphics());
-                    CollisionDetection.checkAllCollisions();
-                    processGameOpsQueue();
-                    checkNewLevel();
+                    if (!CommandCenter.getInstance().isPaused()) {
+                        CollisionDetection.checkAllCollisions();
+                        processGameOpsQueue();
+                        checkNewLevel();
+                        CommandCenter.getInstance().incrementFrame();
+                    }
                     //keep track of the frame for development purposes
-                    CommandCenter.getInstance().incrementFrame();
 
                     // surround the sleep() in a try/catch block
                     // this simply controls delay time between

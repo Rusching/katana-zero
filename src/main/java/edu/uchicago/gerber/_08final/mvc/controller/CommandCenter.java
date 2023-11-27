@@ -23,6 +23,16 @@ public class CommandCenter {
 	private int numFalcons;
 	private int level;
 	private long score;
+
+	public static int currentScene = 0;
+	public static int totalScene = 4;
+	/*
+	scene 0:
+	 */
+
+	public static int currentLevel;
+	public static int totalLevels;
+
 	private boolean paused;
 	private boolean muted;
 	private boolean isSlowMotion = false;

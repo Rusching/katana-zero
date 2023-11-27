@@ -21,7 +21,7 @@ public class StartMenuPanel extends Panel {
     // ==============================================================
     // FIELDS
     // ==============================================================
-    private final Font fontNormal = new Font("SansSerif", Font.BOLD, 12);
+    private final Font fontNormal = new Font("Visitor TT1 BRK", Font.BOLD, 25);
     private final Font fontBig = new Font("SansSerif", Font.BOLD + Font.ITALIC, 36);
     private FontMetrics fontMetrics;
     private int fontWidth;
@@ -31,35 +31,47 @@ public class StartMenuPanel extends Panel {
     private Image imgOff;
     private Graphics grpOff;
 
+    BufferedImage titleImage = loadGraphic("/imgs/Menu/title.jpg");
+    BufferedImage grassImage = loadGraphic("/imgs/Menu/title_grass.png");
+    BufferedImage titleKatanaImage = loadGraphic("/imgs/Menu/title_katana.png");
+    BufferedImage lightImage0 = loadGraphic("/imgs/Menu/light_0.png");
+    BufferedImage lightImage1 = loadGraphic("/imgs/Menu/light_1.png");
+    BufferedImage lightImage2 = loadGraphic("/imgs/Menu/light_2.png");
 
+    ArrayList<BufferedImage> plantPics = new ArrayList<>();
+    private int currentPicIdx = 0;
     // ==============================================================
     // CONSTRUCTOR
     // ==============================================================
 
-    public StartMenuPanel(Dimension dim) {
-
-        GameFrame gameFrame = new GameFrame();
-
-        gameFrame.getContentPane().add(this);
-
-        gameFrame.pack();
-        initFontInfo();
-        gameFrame.setSize(dim);
-        //change the name of the game-frame to your game name
-        gameFrame.setTitle("Game Base");
-        gameFrame.setResizable(false);
-        gameFrame.setVisible(true);
-
-        setFocusable(true);
-
-        Cursor customCursor = null;
-        BufferedImage cursorImage = Utils.loadGraphic("/imgs/Cursor/0.png");
-        if (cursorImage != null) {
-            Toolkit toolkit = Toolkit.getDefaultToolkit();
-            Point hotSpot = new Point(0, 0);
-            customCursor = toolkit.createCustomCursor(cursorImage, hotSpot, "Custom Cursor");
+    public StartMenuPanel() {
+        for (int i = 0; i < 12; i++) {
+            plantPics.add(loadGraphic(String.format("/imgs/Menu/plant_%d.png", i)));
         }
-        gameFrame.setCursor(customCursor);
+
+//        initFontInfo();
+        //        GameFrame gameFrame = new GameFrame();
+//
+//        gameFrame.getContentPane().add(this);
+//
+//        gameFrame.pack();
+//        initFontInfo();
+//        gameFrame.setSize(dim);
+//        //change the name of the game-frame to your game name
+//        gameFrame.setTitle("Game Base");
+//        gameFrame.setResizable(false);
+//        gameFrame.setVisible(true);
+//
+//        setFocusable(true);
+//
+//        Cursor customCursor = null;
+//        BufferedImage cursorImage = Utils.loadGraphic("/imgs/Cursor/0.png");
+//        if (cursorImage != null) {
+//            Toolkit toolkit = Toolkit.getDefaultToolkit();
+//            Point hotSpot = new Point(0, 0);
+//            customCursor = toolkit.createCustomCursor(cursorImage, hotSpot, "Custom Cursor");
+//        }
+//        gameFrame.setCursor(customCursor);
     }
 
 
@@ -78,8 +90,34 @@ public class StartMenuPanel extends Panel {
         //after drawing all the movables or text on the offscreen-image, copy it in one fell-swoop to graphics context
         // of the game panel, and show it for ~40ms. If you attempt to draw sprites directly on the gamePanel, e.g.
         // without the use of a double-buffered off-screen image, you will see flickering.
-        BufferedImage titleImg = loadGraphic("/imgs/Menu/title.jpg");
-        g.drawImage(titleImg, 0, 0, this);
+        g.drawImage(titleImage, 0, 0, this);
+
+        g.drawImage(lightImage0, 0, 0, this);
+
+        if (CommandCenter.getInstance().getFrame() % 6 != 0) {
+            g.drawImage(lightImage1, 0, 0, this);
+        }
+
+        if (CommandCenter.getInstance().getFrame() % 10 < 5) {
+            g.drawImage(lightImage2, 0, 0, this);
+        }
+
+
+        g.drawImage(titleKatanaImage, 0, 0, this);
+
+        g.drawImage(grassImage, 0, 0, this);
+
+        if (CommandCenter.getInstance().getFrame() % 5 == 0) {
+            currentPicIdx += 1;
+            if (currentPicIdx == plantPics.size()) {
+                currentPicIdx = 0;
+            }
+        }
+
+        g.drawImage(plantPics.get(currentPicIdx), 0, 254, this);
+
+
+//        ArrayList<BufferedImage> plantPics =
     }
 
 

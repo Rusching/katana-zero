@@ -23,7 +23,7 @@ public class GamePanel extends Panel {
     // ==============================================================
     // FIELDS
     // ==============================================================
-    private final Font fontNormal = new Font("SansSerif", Font.BOLD, 12);
+    private final Font fontNormal = new Font("Visitor TT1 BRK", Font.BOLD, 25);
     private final Font fontBig = new Font("SansSerif", Font.BOLD + Font.ITALIC, 36);
     private FontMetrics fontMetrics;
     private int fontWidth;
@@ -38,30 +38,33 @@ public class GamePanel extends Panel {
     // CONSTRUCTOR
     // ==============================================================
 
-    public GamePanel(Dimension dim) {
+    public GamePanel() {
 
-        GameFrame gameFrame = new GameFrame();
+//        GameFrame gameFrame = new GameFrame();
+//
+//        gameFrame.getContentPane().add(this);
+//
+//        gameFrame.pack();
 
-        gameFrame.getContentPane().add(this);
 
-        gameFrame.pack();
-        initFontInfo();
-        gameFrame.setSize(dim);
-        //change the name of the game-frame to your game name
-        gameFrame.setTitle("Game Base");
-        gameFrame.setResizable(false);
-        gameFrame.setVisible(true);
-//        gameFram
-        setFocusable(true);
+//        initFontInfo();
 
-        Cursor customCursor = null;
-        BufferedImage cursorImage = Utils.loadGraphic("/imgs/Cursor/0.png");
-        if (cursorImage != null) {
-            Toolkit toolkit = Toolkit.getDefaultToolkit();
-            Point hotSpot = new Point(0, 0);
-            customCursor = toolkit.createCustomCursor(cursorImage, hotSpot, "Custom Cursor");
-        }
-        gameFrame.setCursor(customCursor);
+//        gameFrame.setSize(dim);
+//        //change the name of the game-frame to your game name
+//        gameFrame.setTitle("Game Base");
+//        gameFrame.setResizable(false);
+//        gameFrame.setVisible(true);
+////        gameFram
+//        setFocusable(true);
+
+//        Cursor customCursor = null;
+//        BufferedImage cursorImage = Utils.loadGraphic("/imgs/Cursor/0.png");
+//        if (cursorImage != null) {
+//            Toolkit toolkit = Toolkit.getDefaultToolkit();
+//            Point hotSpot = new Point(0, 0);
+//            customCursor = toolkit.createCustomCursor(cursorImage, hotSpot, "Custom Cursor");
+//        }
+//        gameFrame.setCursor(customCursor);
     }
 
 
@@ -133,15 +136,18 @@ public class GamePanel extends Panel {
 
     public void update(Graphics g) {
 
+
         // The following "off" vars are used for the off-screen double-buffered image.
         imgOff = createImage(Game.DIM.width, Game.DIM.height);
         //get its graphics context
         grpOff = imgOff.getGraphics();
 
         //Fill the off-screen image background with black.
-        grpOff.setColor(Color.WHITE);
+        grpOff.setColor(Color.BLACK);
         grpOff.fillRect(0, 0, Game.DIM.width, Game.DIM.height);
-
+        if (fontMetrics == null) {
+            initFontInfo();
+        }
         //this is used for development, you may remove drawNumFrame() in your final game.
         drawNumFrame(grpOff);
 
@@ -156,11 +162,17 @@ public class GamePanel extends Panel {
 //                    "'M' to toggle music"
 //
 //            );
-//        } else if (CommandCenter.getInstance().isPaused()) {
-//
-//            displayTextOnScreen(grpOff, "Game Paused");
-//
-//        }
+        if (CommandCenter.getInstance().isPaused()) {
+
+            displayTextOnScreen(grpOff,
+                "Game Paused",
+                        "'P' to continue",
+                        "'S' to reStart this level",
+                        "'L' to go back to Level selection panel",
+                        "'Q' to Quit game"
+                    );
+
+        } else {
 
         //playing and not paused!
 //        else {
@@ -182,7 +194,7 @@ public class GamePanel extends Panel {
 //            drawFalconStatus(grpOff);
 
 
-//        }
+        }
 
         //after drawing all the movables or text on the offscreen-image, copy it in one fell-swoop to graphics context
         // of the game panel, and show it for ~40ms. If you attempt to draw sprites directly on the gamePanel, e.g.
@@ -222,6 +234,7 @@ public class GamePanel extends Panel {
     // This method draws some text to the middle of the screen
     private void displayTextOnScreen(final Graphics graphics, String... lines) {
 
+        graphics.setColor(Color.WHITE);
         //AtomicInteger is safe to pass into a stream
         final AtomicInteger spacer = new AtomicInteger(0);
         Arrays.stream(lines)

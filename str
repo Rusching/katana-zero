@@ -1,0 +1,12 @@
+magick 0.png -resize 1080x430\! plant_0.png
+magick 1.png -resize 1080x430\! plant_1.png
+magick 2.png -resize 1080x430\! plant_2.png
+magick 3.png -resize 1080x430\! plant_3.png
+magick 4.png -resize 1080x430\! plant_4.png
+magick 5.png -resize 1080x430\! plant_5.png
+magick 6.png -resize 1080x430\! plant_6.png
+magick 7.png -resize 1080x430\! plant_7.png
+magick 8.png -resize 1080x430\! plant_8.png
+magick 9.png -resize 1080x430\! plant_9.png
+magick 10.png -resize 1080x430\! plant_10.png
+magick 11.png -resize 1080x430\! plant_11.png

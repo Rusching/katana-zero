@@ -58,8 +58,6 @@ public class GamePanelListener implements KeyListener, MouseListener {
 
         if (keyCode == START && CommandCenter.getInstance().isGameOver()) {
             CommandCenter.getInstance().initGame();
-//            Sound.playSound("Song/song_sneaky_driver.wav");
-//            Sound.clipForLoopFactory("Song/song_sneaky_driver.wav");
             CommandCenter.getInstance().setGameOver(false);
             return;
         }
@@ -67,7 +65,7 @@ public class GamePanelListener implements KeyListener, MouseListener {
 
         switch (keyCode) {
             case PAUSE:
-//                CommandCenter.getInstance().setPaused(!CommandCenter.getInstance().isPaused());
+                CommandCenter.getInstance().setPaused(!CommandCenter.getInstance().isPaused());
 //                if (CommandCenter.getInstance().isPaused()) stopLoopingSounds(soundBackground, soundThrust);
                 break;
             case QUIT:
