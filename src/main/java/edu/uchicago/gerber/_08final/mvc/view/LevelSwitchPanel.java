@@ -6,6 +6,7 @@ import edu.uchicago.gerber._08final.mvc.model.Movable;
 import edu.uchicago.gerber._08final.mvc.model.Sprite;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -30,47 +31,110 @@ public class LevelSwitchPanel extends Panel {
     private Image imgOff;
     private Graphics grpOff;
 
-    BufferedImage titleImage = loadGraphic("/imgs/Menu/title.jpg");
-    BufferedImage grassImage = loadGraphic("/imgs/Menu/title_grass.png");
-    BufferedImage titleKatanaImage = loadGraphic("/imgs/Menu/title_katana.png");
-    BufferedImage lightImage0 = loadGraphic("/imgs/Menu/light_0.png");
-    BufferedImage lightImage1 = loadGraphic("/imgs/Menu/light_1.png");
-    BufferedImage lightImage2 = loadGraphic("/imgs/Menu/light_2.png");
+    BufferedImage levelIcon0 = loadGraphic("/imgs/Levels/0.png");
+    BufferedImage levelIcon1 = loadGraphic("/imgs/Levels/1.png");
+    BufferedImage levelIcon2 = loadGraphic("/imgs/Levels/2.png");
+    BufferedImage levelIcon3 = loadGraphic("/imgs/Levels/3.png");
+    BufferedImage levelIcon4 = loadGraphic("/imgs/Levels/4.png");
+
+
 
     ArrayList<BufferedImage> plantPics = new ArrayList<>();
-    private int currentPicIdx = 0;
     // ==============================================================
     // CONSTRUCTOR
     // ==============================================================
 
+    public static int currentSelection = 0;
+
+    private static final List<JButton> levelButtons = new ArrayList<>();
+
     public LevelSwitchPanel() {
-        for (int i = 0; i < 12; i++) {
-            plantPics.add(loadGraphic(String.format("/imgs/Menu/plant_%d.png", i)));
+        setLayout(new GridLayout(3, 1)); // 3 rows
+        setBackground(Color.BLACK);
+        // First two rows with 4 columns each
+        for (int i = 0; i < 2; i++) {
+            JPanel rowPanel = new JPanel(new GridLayout(1, 4));
+            rowPanel.setBackground(Color.BLACK);
+            for (int j = 0; j < 4; j++) {
+                addButton(rowPanel, i * 4 + j);
+            }
+            add(rowPanel);
         }
 
-//        initFontInfo();
-        //        GameFrame gameFrame = new GameFrame();
-//
-//        gameFrame.getContentPane().add(this);
-//
-//        gameFrame.pack();
-//        initFontInfo();
-//        gameFrame.setSize(dim);
-//        //change the name of the game-frame to your game name
-//        gameFrame.setTitle("Game Base");
-//        gameFrame.setResizable(false);
-//        gameFrame.setVisible(true);
-//
-//        setFocusable(true);
-//
-//        Cursor customCursor = null;
-//        BufferedImage cursorImage = Utils.loadGraphic("/imgs/Cursor/0.png");
-//        if (cursorImage != null) {
-//            Toolkit toolkit = Toolkit.getDefaultToolkit();
-//            Point hotSpot = new Point(0, 0);
-//            customCursor = toolkit.createCustomCursor(cursorImage, hotSpot, "Custom Cursor");
-//        }
-//        gameFrame.setCursor(customCursor);
+        // Last row with 1 column
+        JPanel lastRowPanel = new JPanel(new GridLayout(1, 1));
+        lastRowPanel.setBackground(Color.BLACK);
+        addButton(lastRowPanel, 8);
+        add(lastRowPanel);
+
+        updateButtonSelection();
+    }
+
+    private void addButton(JPanel panel, int level) {
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        buttonPanel.setPreferredSize(new Dimension(200, 150));
+        buttonPanel.setBackground(Color.BLACK);
+
+        JButton button = new JButton();
+        button.setPreferredSize(new Dimension(200, 150));
+
+        ImageIcon icon = null;
+        switch (level / 2) {
+            case 0:
+                icon = new ImageIcon(levelIcon0);
+                break;
+            case 1:
+                icon = new ImageIcon(levelIcon1);
+                break;
+            case 2:
+                icon = new ImageIcon(levelIcon2);
+                break;
+            case 3:
+                icon = new ImageIcon(levelIcon3);
+                break;
+            case 4:
+                icon = new ImageIcon(levelIcon4);
+                break;
+
+        }
+        button.setIcon(icon);
+
+        // Create the label
+        JLabel label = new JLabel("Level " + (level + 1), SwingConstants.CENTER);
+        label.setForeground(Color.WHITE); // Set label text color
+        label.setFont(fontNormal); // Set label font
+        label.setBounds(0, 0, 200, 150);  // Same bounds as button
+
+        button.setBorder(BorderFactory.createEmptyBorder());
+        button.setContentAreaFilled(false);
+        buttonPanel.add(button);
+        buttonPanel.add(label);
+        panel.add(buttonPanel);
+        levelButtons.add(button);
+    }
+
+
+
+    public static void moveSelection(int delta) {
+        currentSelection = (currentSelection + delta + levelButtons.size()) % levelButtons.size();
+        updateButtonSelection();
+    }
+
+    public static void updateButtonSelection() {
+        for (int i = 0; i < levelButtons.size(); i++) {
+            levelButtons.get(i).setBorder(i == currentSelection ?
+                    BorderFactory.createLineBorder(Color.WHITE, 3) :
+                    BorderFactory.createEmptyBorder());
+        }
+    }
+
+    public static void selectLevel() {
+        // Logic to start the game at the selected level
+        System.out.println("Selected Level: " + (currentSelection + 1));
+        Game.gameState = Game.GameState.GAME_PLAY;
+        CommandCenter.getInstance().currentLevel = currentSelection;
+        // Change game state to GAME_PLAY and load the selected level
     }
 
 
@@ -89,34 +153,7 @@ public class LevelSwitchPanel extends Panel {
         //after drawing all the movables or text on the offscreen-image, copy it in one fell-swoop to graphics context
         // of the game panel, and show it for ~40ms. If you attempt to draw sprites directly on the gamePanel, e.g.
         // without the use of a double-buffered off-screen image, you will see flickering.
-        g.drawImage(titleImage, 0, 0, this);
-
-        g.drawImage(lightImage0, 0, 0, this);
-
-        if (CommandCenter.getInstance().getFrame() % 6 != 0) {
-            g.drawImage(lightImage1, 0, 0, this);
-        }
-
-        if (CommandCenter.getInstance().getFrame() % 10 < 5) {
-            g.drawImage(lightImage2, 0, 0, this);
-        }
-
-
-        g.drawImage(titleKatanaImage, 0, 0, this);
-
-        g.drawImage(grassImage, 0, 0, this);
-
-        if (CommandCenter.getInstance().getFrame() % 5 == 0) {
-            currentPicIdx += 1;
-            if (currentPicIdx == plantPics.size()) {
-                currentPicIdx = 0;
-            }
-        }
-
-        g.drawImage(plantPics.get(currentPicIdx), 0, 254, this);
-
-
-//        ArrayList<BufferedImage> plantPics =
+        updateButtonSelection();
     }
 
 

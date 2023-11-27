@@ -40,6 +40,7 @@ public class CollisionDetection {
                         ((Character) enemy).getHurt(currentKatana);
                         Sound.playSound(String.format("Enemy/sound_enemy_death_sword_0%d.wav", Game.R.nextInt(2) + 1));
                         Sound.playSound("Enemy/sound_enemy_death_generic.wav");
+                        CommandCenter.getInstance().enemyNums -= 1;
                     }
                 }
             }
@@ -87,6 +88,7 @@ public class CollisionDetection {
                             ((Character) enemy).getHurt(bulletObj);
                             Sound.playSound("Bullet/sound_enemy_death_bullet.wav");
                             Sound.playSound("Enemy/sound_enemy_death_generic.wav");
+                            CommandCenter.getInstance().enemyNums -= 1;
                         }
                     }
                 }

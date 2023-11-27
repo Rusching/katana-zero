@@ -54,7 +54,14 @@ public class StartMenuPanelListener implements KeyListener {
     public void keyPressed(KeyEvent e) {
 //        Falcon falcon = CommandCenter.getInstance().getFalcon();
         int keyCode = e.getKeyCode();
-        Game.gameState = Game.GameState.GAME_PLAY;
+        switch (keyCode) {
+            case ENTER:
+                Game.gameState = Game.GameState.LEVEL_SWITCH;
+                break;
+            case QUIT:
+                System.exit(0);
+                break;
+        }
 
     }
 

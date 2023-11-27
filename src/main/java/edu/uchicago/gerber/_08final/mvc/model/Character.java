@@ -68,7 +68,7 @@ public class Character extends Sprite{
     // hurt
     protected boolean isHurtGround = false;
     protected int hurtGroundFrames = 16;
-    protected int currentHurtGroundIdx = 0;
+    public int currentHurtGroundIdx = 0;
 
     // slow motion
     protected boolean isSlowMotion = false;

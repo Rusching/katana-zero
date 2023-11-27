@@ -162,10 +162,34 @@ public class GamePanel extends Panel {
 //                    "'M' to toggle music"
 //
 //            );
-        if (CommandCenter.getInstance().isPaused()) {
+        if (CommandCenter.getInstance().getZero().isProtected()) {
+            displayTextOnScreen(grpOff,
+                    "No... That won't work",
+                    "",
+                    "",
+                    "",
+                    "'L' to go back to Level selection panel",
+                    "'S' to reStart this level",
+                    "'Q' to Quit game"
+            );
+        } else if (CommandCenter.getInstance().isLevelCleared()) {
+            displayTextOnScreen(grpOff,
+                    "Yes, that should work.",
+                    "",
+                    "",
+                    "",
+                    "'ENTER' to next level",
+                    "'L' to go back to Level selection panel",
+                    "'S' to reStart this level",
+                    "'Q' to Quit game"
+            );
+        } else if (CommandCenter.getInstance().isPaused()) {
 
             displayTextOnScreen(grpOff,
                 "Game Paused",
+                        "LEFT CLICK TO ATTACK",
+                        "'S' TO ROLL",
+                        "'W' TO JUMP",
                         "'P' to continue",
                         "'S' to reStart this level",
                         "'L' to go back to Level selection panel",

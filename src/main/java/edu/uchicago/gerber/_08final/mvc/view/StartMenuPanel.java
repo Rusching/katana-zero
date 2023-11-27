@@ -17,16 +17,6 @@ import java.util.function.BiConsumer;
 
 
 public class StartMenuPanel extends Panel {
-
-    // ==============================================================
-    // FIELDS
-    // ==============================================================
-    private final Font fontNormal = new Font("Visitor TT1 BRK", Font.BOLD, 25);
-    private final Font fontBig = new Font("SansSerif", Font.BOLD + Font.ITALIC, 36);
-    private FontMetrics fontMetrics;
-    private int fontWidth;
-    private int fontHeight;
-
     //used for double-buffering
     private Image imgOff;
     private Graphics grpOff;
@@ -37,6 +27,8 @@ public class StartMenuPanel extends Panel {
     BufferedImage lightImage0 = loadGraphic("/imgs/Menu/light_0.png");
     BufferedImage lightImage1 = loadGraphic("/imgs/Menu/light_1.png");
     BufferedImage lightImage2 = loadGraphic("/imgs/Menu/light_2.png");
+    BufferedImage fontImage = loadGraphic("/imgs/Menu/title_font.png");
+
 
     ArrayList<BufferedImage> plantPics = new ArrayList<>();
     private int currentPicIdx = 0;
@@ -48,30 +40,6 @@ public class StartMenuPanel extends Panel {
         for (int i = 0; i < 12; i++) {
             plantPics.add(loadGraphic(String.format("/imgs/Menu/plant_%d.png", i)));
         }
-
-//        initFontInfo();
-        //        GameFrame gameFrame = new GameFrame();
-//
-//        gameFrame.getContentPane().add(this);
-//
-//        gameFrame.pack();
-//        initFontInfo();
-//        gameFrame.setSize(dim);
-//        //change the name of the game-frame to your game name
-//        gameFrame.setTitle("Game Base");
-//        gameFrame.setResizable(false);
-//        gameFrame.setVisible(true);
-//
-//        setFocusable(true);
-//
-//        Cursor customCursor = null;
-//        BufferedImage cursorImage = Utils.loadGraphic("/imgs/Cursor/0.png");
-//        if (cursorImage != null) {
-//            Toolkit toolkit = Toolkit.getDefaultToolkit();
-//            Point hotSpot = new Point(0, 0);
-//            customCursor = toolkit.createCustomCursor(cursorImage, hotSpot, "Custom Cursor");
-//        }
-//        gameFrame.setCursor(customCursor);
     }
 
 
@@ -85,7 +53,6 @@ public class StartMenuPanel extends Panel {
         //Fill the off-screen image background with black.
         grpOff.setColor(Color.BLACK);
         grpOff.fillRect(0, 0, Game.DIM.width, Game.DIM.height);
-
 
         //after drawing all the movables or text on the offscreen-image, copy it in one fell-swoop to graphics context
         // of the game panel, and show it for ~40ms. If you attempt to draw sprites directly on the gamePanel, e.g.
@@ -115,9 +82,7 @@ public class StartMenuPanel extends Panel {
         }
 
         g.drawImage(plantPics.get(currentPicIdx), 0, 254, this);
-
-
-//        ArrayList<BufferedImage> plantPics =
+        g.drawImage(fontImage, 0, 0, this);
     }
 
 
@@ -150,30 +115,4 @@ public class StartMenuPanel extends Panel {
         }
         return bufferedImage;
     }
-    private void initFontInfo() {
-        Graphics g = getGraphics();            // get the graphics context for the panel
-        g.setFont(fontNormal);                        // take care of some simple font stuff
-        fontMetrics = g.getFontMetrics();
-        fontWidth = fontMetrics.getMaxAdvance();
-        fontHeight = fontMetrics.getHeight();
-        g.setFont(fontBig);                    // set font info
-    }
-
-
-    // This method draws some text to the middle of the screen
-    private void displayTextOnScreen(final Graphics graphics, String... lines) {
-
-        //AtomicInteger is safe to pass into a stream
-        final AtomicInteger spacer = new AtomicInteger(0);
-        Arrays.stream(lines)
-                .forEach(str ->
-                            graphics.drawString(str, (Game.DIM.width - fontMetrics.stringWidth(str)) / 2,
-                                    Game.DIM.height / 4 + fontHeight + spacer.getAndAdd(40))
-
-                );
-
-
-    }
-
-
 }

@@ -24,14 +24,13 @@ public class CommandCenter {
 	private int level;
 	private long score;
 
-	public static int currentScene = 0;
-	public static int totalScene = 4;
-	/*
-	scene 0:
-	 */
 
 	public static int currentLevel;
-	public static int totalLevels;
+	public static int totalLevels = 9;
+
+	public boolean levelInited = false;
+	public int enemyNums;
+	public boolean levelCleared = false;
 
 	private boolean paused;
 	private boolean muted;
@@ -108,14 +107,15 @@ public class CommandCenter {
 //		opsQueue.enqueue(falcon, GameOp.Action.ADD);
 		Floor f = new Floor();
 		f.loadLevelAndCreateFloors(1, 0);
-
+		zero.setCenter(new Point(300, 240));
 		opsQueue.enqueue(zero, GameOp.Action.ADD);
 //		opsQueue.enqueue(new ShieldCop(new Point(500, 240)), GameOp.Action.ADD);
 		opsQueue.enqueue(new Grunt(new Point(600, 240)), GameOp.Action.ADD);
+		enemyNums += 3;
 		opsQueue.enqueue(new Grunt(new Point(700, 240)), GameOp.Action.ADD);
 //		opsQueue.enqueue(new Grunt(new Point(800, 240)), GameOp.Action.ADD);
 		opsQueue.enqueue(new Grunt(new Point(900, 240)), GameOp.Action.ADD);
-
+		levelInited = true;
 
 	}
 

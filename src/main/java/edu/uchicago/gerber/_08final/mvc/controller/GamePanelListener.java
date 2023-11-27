@@ -42,6 +42,7 @@ public class GamePanelListener implements KeyListener, MouseListener {
             RIGHT = 68, // D
             UP = 87, //  W
             DOWN = 83, //s
+            LEVEL_SWITCH = 76,
             SHIFT = 16, // shift
             START = 83, // s key
             FIRE = 32, // space key
@@ -56,7 +57,7 @@ public class GamePanelListener implements KeyListener, MouseListener {
         Zero zero = CommandCenter.getInstance().getZero();
         int keyCode = e.getKeyCode();
 
-        if (keyCode == START && CommandCenter.getInstance().isGameOver()) {
+        if (keyCode == START && !CommandCenter.getInstance().levelInited) {
             CommandCenter.getInstance().initGame();
             CommandCenter.getInstance().setGameOver(false);
             return;
@@ -70,6 +71,18 @@ public class GamePanelListener implements KeyListener, MouseListener {
                 break;
             case QUIT:
                 System.exit(0);
+                break;
+            case LEVEL_SWITCH:
+                if (CommandCenter.getInstance().getZero().isProtected() || CommandCenter.getInstance().isPaused() || CommandCenter.getInstance().isLevelCleared()) {
+                    CommandCenter.getInstance().getZero().setProtected(false);
+                    CommandCenter.getInstance().getZero().setHurtGround(false);
+                    CommandCenter.getInstance().getZero().setCurrentHurtGroundIdx(0);
+                    CommandCenter.getInstance().getZero().setDeathSoundPlayed(false);
+                    CommandCenter.getInstance().levelInited = false;
+                    CommandCenter.getInstance().levelCleared = false;
+                    CommandCenter.getInstance().setGameOver(true);
+                    Game.gameState = Game.GameState.LEVEL_SWITCH;
+                }
                 break;
             case UP: case UP_ARROW:
                 if (zero.isOnPlatform() && !zero.isRolling()) {
@@ -100,7 +113,17 @@ public class GamePanelListener implements KeyListener, MouseListener {
                 }
                 break;
             case DOWN: case DOWN_ARROW:
-                if (zero.isOnPlatform()) {
+                if (CommandCenter.getInstance().getZero().isProtected() || CommandCenter.getInstance().isPaused() || CommandCenter.getInstance().isLevelCleared()) {
+                    CommandCenter.getInstance().getZero().setProtected(false);
+                    CommandCenter.getInstance().getZero().setHurtGround(false);
+                    CommandCenter.getInstance().getZero().setCurrentHurtGroundIdx(0);
+                    CommandCenter.getInstance().getZero().setDeathSoundPlayed(false);
+                    CommandCenter.getInstance().levelInited = false;
+                    CommandCenter.getInstance().levelCleared = false;
+                    CommandCenter.getInstance().setGameOver(true);
+                    CommandCenter.getInstance().initGame();
+                    CommandCenter.getInstance().setGameOver(false);
+                } else if (zero.isOnPlatform()) {
                     if (!zero.isRolling()) {
                         zero.setRolling(true);
                         Sound.playSound("Zero/player_roll.wav");

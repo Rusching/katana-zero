@@ -5,6 +5,7 @@ import edu.uchicago.gerber._08final.mvc.model.Character;
 import edu.uchicago.gerber._08final.mvc.model.Zero;
 import edu.uchicago.gerber._08final.mvc.view.GameFrame;
 import edu.uchicago.gerber._08final.mvc.view.GamePanel;
+import edu.uchicago.gerber._08final.mvc.view.LevelSwitchPanel;
 import edu.uchicago.gerber._08final.mvc.view.StartMenuPanel;
 
 
@@ -16,10 +17,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 
 // ===============================================
@@ -39,6 +37,8 @@ public class Game implements Runnable {
     public static final Dimension DIM = new Dimension(dimensionWidth, dimensionHeight); //the dimension of the game.
     public final GamePanel gamePanel;
     public final StartMenuPanel startMenuPanel;
+    public final LevelSwitchPanel levelSwitchPanel;
+
 
     //this is used throughout many classes.
     public static final Random R = new Random();
@@ -65,6 +65,11 @@ public class Game implements Runnable {
 
 //    private final Clip soundThrust;
     public GameFrame gameFrame;
+
+    public HashMap<Integer, String> songMap;
+    {
+
+    }
     private final Clip soundBackground;
 
 
@@ -75,12 +80,19 @@ public class Game implements Runnable {
 
     public Game() {
 
+        // game play panel
         gamePanel = new GamePanel();
         gamePanel.addKeyListener(GamePanelListener.getInstance()); //Game object implements KeyListener
         gamePanel.addMouseListener(GamePanelListener.getInstance());
 
+        // start menu panel
         startMenuPanel = new StartMenuPanel();
         startMenuPanel.addKeyListener(StartMenuPanelListener.getInstance());
+
+        // level switch panel
+        levelSwitchPanel = new LevelSwitchPanel();
+        levelSwitchPanel.addKeyListener(LevelSwitchPanelListener.getInstance());
+
 
         gameFrame = new GameFrame();
 
@@ -158,27 +170,19 @@ public class Game implements Runnable {
 
             switch (gameState) {
                 case START_MENU:
-//                    System.out.println("Current state: " + gameState + " Pre state: " + preGameState);
                     if (gameState != preGameState) {
-
                         startMenuPanel.repaint();
                         startMenuPanel.setFocusable(true);
                     }
-                    preGameState = GameState.START_MENU;
+                    preGameState = gameState;
 
                     startMenuPanel.update(startMenuPanel.getGraphics());
                     CommandCenter.getInstance().incrementFrame();
                     try {
-                        // The total amount of time is guaranteed to be at least ANIMATION_DELAY long.  If processing (update)
-                        // between frames takes longer than ANIMATION_DELAY, then the difference between startTime -
-                        // System.currentTimeMillis() will be negative, then zero will be the sleep time
                         startTime += animationDelay;
-
                         Thread.sleep(Math.max(0,
                                 startTime - System.currentTimeMillis()));
-                    } catch (InterruptedException e) {
-                        // do nothing (bury the exception), and just continue, e.g. skip this frame -- no big deal
-                    }
+                    } catch (InterruptedException e) {}
                     break;
                 case GAME_PLAY:
 //                    System.out.println("Current state: " + gameState + " Pre state: " + preGameState);
@@ -221,6 +225,25 @@ public class Game implements Runnable {
 
                     break;
                 case LEVEL_SWITCH:
+                    if (gameState != preGameState) {
+                        System.out.println("Enter repaint");
+                        levelSwitchPanel.repaint();
+                        levelSwitchPanel.setFocusable(true);
+                        gameFrame.getContentPane().removeAll();
+                        gameFrame.getContentPane().add(levelSwitchPanel);
+                        levelSwitchPanel.requestFocusInWindow();
+                        gameFrame.revalidate();
+                        gameFrame.repaint();
+                    }
+                    preGameState = gameState;
+
+                    levelSwitchPanel.update(levelSwitchPanel.getGraphics());
+                    CommandCenter.getInstance().incrementFrame();
+                    try {
+                        startTime += animationDelay;
+                        Thread.sleep(Math.max(0,
+                                startTime - System.currentTimeMillis()));
+                    } catch (InterruptedException e) {}
                     break;
                 case LEVEL_CLEAR:
                     break;
@@ -433,24 +456,30 @@ public class Game implements Runnable {
     }
 
     private void checkNewLevel() {
-
-        if (isLevelClear()) {
-            //currentLevel will be zero at beginning of game
-            int level = CommandCenter.getInstance().getLevel();
-            //award some points for having cleared the previous level
-            CommandCenter.getInstance().setScore(CommandCenter.getInstance().getScore() + (10_000L * level));
-            //bump the level up
-            level = level + 1;
-            CommandCenter.getInstance().setLevel(level);
-            //spawn some big new asteroids
-//            spawnBigAsteroids(level);
-            //make falcon invincible momentarily in case new asteroids spawn on top of him, and give player
-            //time to adjust to new asteroids in game space.
-            CommandCenter.getInstance().getFalcon().setShield(Falcon.INITIAL_SPAWN_TIME);
-            //show "Level X" in middle of screen
-            CommandCenter.getInstance().getFalcon().setShowLevel(Falcon.INITIAL_SPAWN_TIME);
-
+        if (CommandCenter.getInstance().getFrame() % 100 == 0) {
+            if (CommandCenter.getInstance().levelInited && CommandCenter.getInstance().enemyNums == 0 && CommandCenter.getInstance().currentLevel != 8) {
+                System.out.println("Cleared");
+                CommandCenter.getInstance().setLevelCleared(true);
+            }
         }
+
+//        if (isLevelClear()) {
+//            //currentLevel will be zero at beginning of game
+//            int level = CommandCenter.getInstance().getLevel();
+//            //award some points for having cleared the previous level
+//            CommandCenter.getInstance().setScore(CommandCenter.getInstance().getScore() + (10_000L * level));
+//            //bump the level up
+//            level = level + 1;
+//            CommandCenter.getInstance().setLevel(level);
+//            //spawn some big new asteroids
+////            spawnBigAsteroids(level);
+//            //make falcon invincible momentarily in case new asteroids spawn on top of him, and give player
+//            //time to adjust to new asteroids in game space.
+//            CommandCenter.getInstance().getFalcon().setShield(Falcon.INITIAL_SPAWN_TIME);
+//            //show "Level X" in middle of screen
+//            CommandCenter.getInstance().getFalcon().setShowLevel(Falcon.INITIAL_SPAWN_TIME);
+//
+//        }
     }
 
 
