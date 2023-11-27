@@ -97,21 +97,18 @@ public class CommandCenter {
 
 	public void initGame(){
 		clearAll();
-		setLevel(0);
 		setScore(0);
 		setPaused(false);
-		//set to one greater than number of falcons lives in your game as initFalconAndDecrementNum() also decrements
-		setNumFalcons(4);
-		initFalconAndDecrementFalconNum();
-		//add the falcon to the movFriends list
-//		opsQueue.enqueue(falcon, GameOp.Action.ADD);
+
 		Floor f = new Floor();
 		f.loadLevelAndCreateFloors(1, 0);
+
 		zero.setCenter(new Point(300, 240));
+
 		opsQueue.enqueue(zero, GameOp.Action.ADD);
 //		opsQueue.enqueue(new ShieldCop(new Point(500, 240)), GameOp.Action.ADD);
 		opsQueue.enqueue(new Grunt(new Point(600, 240)), GameOp.Action.ADD);
-		enemyNums += 3;
+		enemyNums = 3;
 		opsQueue.enqueue(new Grunt(new Point(700, 240)), GameOp.Action.ADD);
 //		opsQueue.enqueue(new Grunt(new Point(800, 240)), GameOp.Action.ADD);
 		opsQueue.enqueue(new Grunt(new Point(900, 240)), GameOp.Action.ADD);

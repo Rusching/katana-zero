@@ -68,9 +68,15 @@ public class Game implements Runnable {
 
     public HashMap<Integer, String> songMap;
     {
-
+        songMap = new HashMap<>();
+        songMap.put(0, "Song/song_sneaky_driver.wav");
+        songMap.put(1, "Song/song_slaughterhouse.wav");
+        songMap.put(2, "Song/song_chinatown.wav");
+        songMap.put(3, "Song/song_thirddistrict.wav");
+        songMap.put(4, "Song/song_dragon.wav");
+        songMap.put(5, "Song/song_rainonbrick.wav");
     }
-    private final Clip soundBackground;
+    private static Clip soundBackground = null;
 
 
 
@@ -135,8 +141,12 @@ public class Game implements Runnable {
 //        soundThrust = Sound.clipForLoopFactory("whitenoise.wav");
 //        soundBackground = Sound.clipForLoopFactory("music-background.wav");
 //        soundBackground = Sound.clipForLoopFactory("Song/song_sneaky_driver.wav");
-        soundBackground = Sound.clipForLoopFactory("Song/song_rainonbrick.wav");
-        soundBackground.loop(5);
+
+        soundBackground = Sound.clipForLoopFactory(songMap.get(5));
+        soundBackground.loop(50);
+
+        // play background sound
+
         //fire up the animation thread
         animationThread = new Thread(this); // pass the animation thread a runnable object, the Game object
         animationThread.start();
@@ -197,6 +207,10 @@ public class Game implements Runnable {
                         gameFrame.repaint();
                         CommandCenter.getInstance().initGame();
                         CommandCenter.getInstance().setGameOver(false);
+
+                        soundBackground.stop();
+                        soundBackground = Sound.clipForLoopFactory(songMap.get(CommandCenter.getInstance().currentLevel / 2));
+                        soundBackground.loop(50);
                     }
                     preGameState = gameState;
                     gamePanel.update(gamePanel.getGraphics());
@@ -234,6 +248,10 @@ public class Game implements Runnable {
                         levelSwitchPanel.requestFocusInWindow();
                         gameFrame.revalidate();
                         gameFrame.repaint();
+
+                        soundBackground.stop();
+                        soundBackground = Sound.clipForLoopFactory(songMap.get(5));
+                        soundBackground.loop(50);
                     }
                     preGameState = gameState;
 
@@ -456,7 +474,7 @@ public class Game implements Runnable {
     }
 
     private void checkNewLevel() {
-        if (CommandCenter.getInstance().getFrame() % 100 == 0) {
+        if (CommandCenter.getInstance().getFrame() % 150 == 0) {
             if (CommandCenter.getInstance().levelInited && CommandCenter.getInstance().enemyNums == 0 && CommandCenter.getInstance().currentLevel != 8) {
                 System.out.println("Cleared");
                 CommandCenter.getInstance().setLevelCleared(true);

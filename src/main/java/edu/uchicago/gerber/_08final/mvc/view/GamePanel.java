@@ -162,7 +162,7 @@ public class GamePanel extends Panel {
 //                    "'M' to toggle music"
 //
 //            );
-        if (CommandCenter.getInstance().getZero().isProtected()) {
+        if (CommandCenter.getInstance().getZero().deathSoundPlayed) {
             displayTextOnScreen(grpOff,
                     "No... That won't work",
                     "",
@@ -187,9 +187,12 @@ public class GamePanel extends Panel {
 
             displayTextOnScreen(grpOff,
                 "Game Paused",
+                        "",
+                        "",
                         "LEFT CLICK TO ATTACK",
                         "'S' TO ROLL",
                         "'W' TO JUMP",
+                        "SHIFT TO ENTER SLOW MOTION",
                         "'P' to continue",
                         "'S' to reStart this level",
                         "'L' to go back to Level selection panel",

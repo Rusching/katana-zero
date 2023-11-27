@@ -73,7 +73,7 @@ public class GamePanelListener implements KeyListener, MouseListener {
                 System.exit(0);
                 break;
             case LEVEL_SWITCH:
-                if (CommandCenter.getInstance().getZero().isProtected() || CommandCenter.getInstance().isPaused() || CommandCenter.getInstance().isLevelCleared()) {
+                if (CommandCenter.getInstance().getZero().deathSoundPlayed || CommandCenter.getInstance().isPaused() || CommandCenter.getInstance().isLevelCleared()) {
                     CommandCenter.getInstance().getZero().setProtected(false);
                     CommandCenter.getInstance().getZero().setHurtGround(false);
                     CommandCenter.getInstance().getZero().setCurrentHurtGroundIdx(0);
@@ -113,14 +113,14 @@ public class GamePanelListener implements KeyListener, MouseListener {
                 }
                 break;
             case DOWN: case DOWN_ARROW:
-                if (CommandCenter.getInstance().getZero().isProtected() || CommandCenter.getInstance().isPaused() || CommandCenter.getInstance().isLevelCleared()) {
+                if (CommandCenter.getInstance().getZero().deathSoundPlayed || CommandCenter.getInstance().isPaused() || CommandCenter.getInstance().isLevelCleared()) {
                     CommandCenter.getInstance().getZero().setProtected(false);
                     CommandCenter.getInstance().getZero().setHurtGround(false);
                     CommandCenter.getInstance().getZero().setCurrentHurtGroundIdx(0);
                     CommandCenter.getInstance().getZero().setDeathSoundPlayed(false);
                     CommandCenter.getInstance().levelInited = false;
                     CommandCenter.getInstance().levelCleared = false;
-                    CommandCenter.getInstance().setGameOver(true);
+//                    CommandCenter.getInstance().setGameOver(true);
                     CommandCenter.getInstance().initGame();
                     CommandCenter.getInstance().setGameOver(false);
                 } else if (zero.isOnPlatform()) {
@@ -166,8 +166,9 @@ public class GamePanelListener implements KeyListener, MouseListener {
                 }
                 break;
             case SHIFT:
-                startSlowMotion();
-
+                if (!(CommandCenter.getInstance().isPaused() || CommandCenter.getInstance().getZero().deathSoundPlayed || CommandCenter.getInstance().levelCleared)) {
+                    startSlowMotion();
+                }
                 break;
             // possible future use
             // case KILL:
@@ -220,8 +221,9 @@ public class GamePanelListener implements KeyListener, MouseListener {
             case UP:
                 break;
             case SHIFT:
-
-                endSlowMotion();
+                if (!(CommandCenter.getInstance().isPaused() || CommandCenter.getInstance().getZero().deathSoundPlayed || CommandCenter.getInstance().levelCleared)) {
+                    endSlowMotion();
+                }
                 break;
 
             case MUTE:

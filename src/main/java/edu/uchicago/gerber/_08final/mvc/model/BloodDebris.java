@@ -115,7 +115,6 @@ public class BloodDebris extends Sprite {
         splatterIdx3 = Game.R.nextInt(BLOOD_SPLATTER_DIRS);
         splatterIdx4 = Game.R.nextInt(BLOOD_SPLATTER_DIRS);
         splatterIdx5 = Game.R.nextInt(BLOOD_SPLATTER_DIRS);
-        System.out.println("Splatter idx: " + splatterIdx0);
     }
     @Override
     public void draw(Graphics g) {
@@ -149,7 +148,6 @@ public class BloodDebris extends Sprite {
                 renderRasterScale((Graphics2D) g, splatter_pics_3.get(currentPicIdx), 3, 3);
                 renderRasterScale((Graphics2D) g, splatter_pics_4.get(currentPicIdx), 3, 3);
                 renderRasterScale((Graphics2D) g, splatter_pics_5.get(currentPicIdx), 3, 3);
-                System.out.println("Should render here " + currentPicIdx);
                 System.out.println();
             } else {
                 isSplatter = false;

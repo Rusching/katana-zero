@@ -50,7 +50,7 @@ public class Character extends Sprite{
     public BloodDebris bloodDebris = null;
 
     // view (enemy)
-    public int viewRadius = 600;
+    public int viewRadius = 350;
     public boolean isNoticed = false;
     public boolean atLeft = false;
     public boolean isChasing = false;

@@ -65,9 +65,11 @@ public class CollisionDetection {
         Zero zero = CommandCenter.getInstance().getZero();
 
         // check if player is hit by punch
-        for (Movable punch: CommandCenter.getInstance().getMovPunches()) {
-            if (punch.getCenter().distance(zero.getCenter()) < (punch.getRadius() + zero.getRadius())) {
-                zero.getHurt((Punch) punch);
+        if (!zero.isProtected()) {
+            for (Movable punch: CommandCenter.getInstance().getMovPunches()) {
+                if (punch.getCenter().distance(zero.getCenter()) < (punch.getRadius() + zero.getRadius())) {
+                    zero.getHurt((Punch) punch);
+                }
             }
         }
 
@@ -75,9 +77,11 @@ public class CollisionDetection {
         for (Movable bullet: CommandCenter.getInstance().getMovBullets()) {
             Bullet bulletObj = (Bullet) bullet;
             if (!bulletObj.isReflected) {
-                if (bulletObj.getCenter().distance(zero.getCenter()) < (bulletObj.getRadius() + zero.getRadius())) {
-                    zero.getHurt(bulletObj);
-                    CommandCenter.getInstance().getOpsQueue().enqueue(bullet, GameOp.Action.REMOVE);
+                if (!zero.isProtected()) {
+                    if (bulletObj.getCenter().distance(zero.getCenter()) < (bulletObj.getRadius() + zero.getRadius())) {
+                        zero.getHurt(bulletObj);
+                        CommandCenter.getInstance().getOpsQueue().enqueue(bullet, GameOp.Action.REMOVE);
+                    }
                 }
             } else {
                 // it is a reflected bullet that should check collision with enemies
