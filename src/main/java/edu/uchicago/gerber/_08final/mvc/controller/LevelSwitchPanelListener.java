@@ -50,9 +50,11 @@ public class LevelSwitchPanelListener implements KeyListener {
         switch (keyCode) {
             case LEFT: case LEFT_ARROW:
                 LevelSwitchPanel.moveSelection(-1);
+                Sound.playSound("Menu/pause.wav");
                 break;
             case RIGHT: case RIGHT_ARROW:
                 LevelSwitchPanel.moveSelection(1);
+                Sound.playSound("Menu/pause.wav");
                 break;
             case UP: case UP_ARROW:
                 if (LevelSwitchPanel.currentSelection > 3 && LevelSwitchPanel.currentSelection < 8) {
@@ -64,6 +66,7 @@ public class LevelSwitchPanelListener implements KeyListener {
                     LevelSwitchPanel.currentSelection = 4;
                     LevelSwitchPanel.updateButtonSelection();
                 }
+                Sound.playSound("Menu/pause.wav");
                 break;
             case DOWN: case DOWN_ARROW:
                 if (LevelSwitchPanel.currentSelection >= 0 && LevelSwitchPanel.currentSelection < 5) {
@@ -75,9 +78,11 @@ public class LevelSwitchPanelListener implements KeyListener {
                     LevelSwitchPanel.currentSelection = 0;
                     LevelSwitchPanel.updateButtonSelection();
                 }
+                Sound.playSound("Menu/pause.wav");
                 break;
             case ENTER:
                 LevelSwitchPanel.selectLevel();
+                Sound.playSound("Menu/rewind.wav");
                 break;
             case QUIT:
                 System.exit(0);

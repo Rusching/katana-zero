@@ -57,6 +57,7 @@ public class StartMenuPanelListener implements KeyListener {
         switch (keyCode) {
             case ENTER:
                 Game.gameState = Game.GameState.LEVEL_SWITCH;
+                Sound.playSound("Menu/sound_transition_begin.wav");
                 break;
             case QUIT:
                 System.exit(0);

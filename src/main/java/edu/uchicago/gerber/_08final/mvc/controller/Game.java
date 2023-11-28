@@ -250,10 +250,11 @@ public class Game implements Runnable {
                         levelSwitchPanel.requestFocusInWindow();
                         gameFrame.revalidate();
                         gameFrame.repaint();
-
-                        soundBackground.stop();
-                        soundBackground = Sound.clipForLoopFactory(songMap.get(5));
-                        soundBackground.loop(50);
+                        if (preGameState != GameState.START_MENU) {
+                            soundBackground.stop();
+                            soundBackground = Sound.clipForLoopFactory(songMap.get(5));
+                            soundBackground.loop(50);
+                        }
                     }
                     preGameState = gameState;
 
