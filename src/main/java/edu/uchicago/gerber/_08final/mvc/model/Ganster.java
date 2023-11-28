@@ -20,7 +20,7 @@ public class Ganster extends Character {
     // image path
     private static String gangsterImgPathPrefix = "Gangster/";
 
-    public enum enemyActions {
+    private enum enemyActions {
         ATTACK,
         HURT_GROUND,
         IDLE,
@@ -28,22 +28,10 @@ public class Ganster extends Character {
         RUN
     }
 
-    public enemyActions action = enemyActions.IDLE;
+    private enemyActions action = enemyActions.IDLE;
+    protected static Map<?, ArrayList<BufferedImage>> rasterPicMaps;
 
-
-    public Ganster(Point center) {
-        setTeam(Team.ENEMY);
-        setRadius(MIN_RADIUS);
-        setCenter(center);
-        setBoundingType(BoundingType.RECTANGLE);
-
-        setHurtGroundFrames(14);
-        setMaxXVelocity(15);
-        setAttackRadius(300);
-        setTotalPreAttackFrames(10);
-
-        setBoundingBox(new Rectangle(getCenter().x - BLOCK_SIZE / 2, getCenter().y - BLOCK_SIZE / 2, BLOCK_SIZE, BLOCK_SIZE));
-
+    static {
         Map<enemyActions, ArrayList<BufferedImage>> rasterMaps = new HashMap<>();
 
         ArrayList<BufferedImage> rasterMapIdle = new ArrayList<>();
@@ -62,7 +50,24 @@ public class Ganster extends Character {
         for (int i = 0; i < 10; i++) {rasterMapRun.add(loadGraphic(imgPathPrefix + gangsterImgPathPrefix + String.format("spr_gangster_run/%d.png", i)));}
         rasterMaps.put(enemyActions.RUN, rasterMapRun);
 
-        setRasterMaps(rasterMaps);
+        rasterPicMaps = rasterMaps;
+    }
+    public static boolean loadResources() {
+        return true;
+    }
+
+    public Ganster(Point center) {
+        setTeam(Team.ENEMY);
+        setRadius(MIN_RADIUS);
+        setCenter(center);
+        setBoundingType(BoundingType.RECTANGLE);
+
+        setHurtGroundFrames(14);
+        setMaxXVelocity(15);
+        setAttackRadius(300);
+        setTotalPreAttackFrames(10);
+
+        setBoundingBox(new Rectangle(getCenter().x - BLOCK_SIZE / 2, getCenter().y - BLOCK_SIZE / 2, BLOCK_SIZE, BLOCK_SIZE));
     }
 
     @Override
@@ -88,20 +93,20 @@ public class Ganster extends Character {
 
         switch (action) {
             case IDLE:
-                pics = getRasterMaps().get(enemyActions.IDLE);
+                pics = rasterPicMaps.get(enemyActions.IDLE);
                 offsetY = -13;
                 break;
             case RUN:
-                pics = getRasterMaps().get(enemyActions.RUN);
+                pics = rasterPicMaps.get(enemyActions.RUN);
                 break;
             case WALK:
-                pics = getRasterMaps().get(enemyActions.WALK);
+                pics = rasterPicMaps.get(enemyActions.WALK);
                 break;
             case ATTACK:
-                pics = getRasterMaps().get(enemyActions.ATTACK);
+                pics = rasterPicMaps.get(enemyActions.ATTACK);
                 break;
             case HURT_GROUND:
-                pics = getRasterMaps().get(enemyActions.HURT_GROUND);
+                pics = rasterPicMaps.get(enemyActions.HURT_GROUND);
                 offsetY = 5;
                 break;
         }

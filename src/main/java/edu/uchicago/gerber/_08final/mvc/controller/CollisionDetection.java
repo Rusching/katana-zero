@@ -48,13 +48,13 @@ public class CollisionDetection {
             // detect if there are collision between katana and bullets
             for (Movable bullet: CommandCenter.getInstance().getMovBullets()) {
                 Bullet bulletObj = (Bullet) bullet;
-                if (!bulletObj.isReflected) {
+                if (!bulletObj.isReflected()) {
                     if (currentKatana.getCenter().distance(bullet.getCenter()) < (katanaRadius + bullet.getRadius())) {
                         // detect a collision
                         Sound.playSound("Bullet/slash_bullet.wav");
                         bulletObj.setReflected(true);
                         bulletObj.setYVelocity(-bulletObj.getYVelocity());
-                        bulletObj.setXVelocity(-bulletObj.getXVelocity());
+                        bulletObj.setXVelocity(-bulletObj.getXVelocity() * 3);
                     }
                 }
             }
@@ -76,7 +76,7 @@ public class CollisionDetection {
         // check if player is hit by bullet
         for (Movable bullet: CommandCenter.getInstance().getMovBullets()) {
             Bullet bulletObj = (Bullet) bullet;
-            if (!bulletObj.isReflected) {
+            if (!bulletObj.isReflected()) {
                 if (!zero.isProtected()) {
                     if (bulletObj.getCenter().distance(zero.getCenter()) < (bulletObj.getRadius() + zero.getRadius())) {
                         zero.getHurt(bulletObj);

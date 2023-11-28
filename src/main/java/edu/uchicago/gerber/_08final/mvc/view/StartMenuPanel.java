@@ -21,25 +21,28 @@ public class StartMenuPanel extends Panel {
     private Image imgOff;
     private Graphics grpOff;
 
-    BufferedImage titleImage = loadGraphic("/imgs/Menu/title.jpg");
-    BufferedImage grassImage = loadGraphic("/imgs/Menu/title_grass.png");
-    BufferedImage titleKatanaImage = loadGraphic("/imgs/Menu/title_katana.png");
-    BufferedImage lightImage0 = loadGraphic("/imgs/Menu/light_0.png");
-    BufferedImage lightImage1 = loadGraphic("/imgs/Menu/light_1.png");
-    BufferedImage lightImage2 = loadGraphic("/imgs/Menu/light_2.png");
-    BufferedImage fontImage = loadGraphic("/imgs/Menu/title_font.png");
+    private static BufferedImage titleImage = loadGraphic("/imgs/Menu/title.jpg");
+    private static BufferedImage grassImage = loadGraphic("/imgs/Menu/title_grass.png");
+    private static BufferedImage titleKatanaImage = loadGraphic("/imgs/Menu/title_katana.png");
+    private static BufferedImage lightImage0 = loadGraphic("/imgs/Menu/light_0.png");
+    private static BufferedImage lightImage1 = loadGraphic("/imgs/Menu/light_1.png");
+    private static BufferedImage lightImage2 = loadGraphic("/imgs/Menu/light_2.png");
+    private static BufferedImage fontImage = loadGraphic("/imgs/Menu/title_font.png");
 
 
-    ArrayList<BufferedImage> plantPics = new ArrayList<>();
+    private static ArrayList<BufferedImage> plantPics = new ArrayList<>();
+    static {
+        for (int i = 0; i < 12; i++) {
+            plantPics.add(loadGraphic(String.format("/imgs/Menu/plant_%d.png", i)));
+        }
+    }
     private int currentPicIdx = 0;
     // ==============================================================
     // CONSTRUCTOR
     // ==============================================================
 
     public StartMenuPanel() {
-        for (int i = 0; i < 12; i++) {
-            plantPics.add(loadGraphic(String.format("/imgs/Menu/plant_%d.png", i)));
-        }
+
     }
 
 
@@ -104,7 +107,7 @@ public class StartMenuPanel extends Panel {
 
     }
 
-    protected BufferedImage loadGraphic(String imagePath) {
+    static protected BufferedImage loadGraphic(String imagePath) {
         BufferedImage bufferedImage;
         try {
             bufferedImage = ImageIO.read(Objects.requireNonNull(Sprite.class.getResourceAsStream(imagePath)));

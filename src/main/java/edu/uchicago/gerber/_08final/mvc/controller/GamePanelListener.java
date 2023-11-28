@@ -221,9 +221,9 @@ public class GamePanelListener implements KeyListener, MouseListener {
             case UP:
                 break;
             case SHIFT:
-                if (!(CommandCenter.getInstance().isPaused() || CommandCenter.getInstance().getZero().isDeathSoundPlayed() || CommandCenter.getInstance().levelCleared)) {
-                    endSlowMotion();
-                }
+//                if (!(CommandCenter.getInstance().isPaused() || CommandCenter.getInstance().getZero().isDeathSoundPlayed() || CommandCenter.getInstance().levelCleared)) {
+                endSlowMotion();
+//                }
                 break;
 
             case MUTE:

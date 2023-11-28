@@ -32,19 +32,9 @@ public class Grunt extends Character {
     }
 
     private enemyActions action = enemyActions.IDLE;
+    protected static Map<?, ArrayList<BufferedImage>> rasterPicMaps;
 
-
-    public Grunt(Point center) {
-        setTeam(Team.ENEMY);
-        setRadius(MIN_RADIUS);
-        setCenter(center);
-        setBoundingType(BoundingType.RECTANGLE);
-
-        setHurtGroundFrames(16);
-        setMaxXVelocity(15);
-
-        setBoundingBox(new Rectangle(getCenter().x - BLOCK_SIZE / 2, getCenter().y - BLOCK_SIZE / 2, BLOCK_SIZE, BLOCK_SIZE));
-
+    static {
         Map<enemyActions, ArrayList<BufferedImage>> rasterMaps = new HashMap<>();
 
         ArrayList<BufferedImage> rasterMapIdle = new ArrayList<>();
@@ -77,7 +67,21 @@ public class Grunt extends Character {
 
         attackFrames = rasterMapAttack.size();
 
-        setRasterMaps(rasterMaps);
+        rasterPicMaps = rasterMaps;
+    }
+    public static boolean loadResources() {
+        return true;
+    }
+    public Grunt(Point center) {
+        setTeam(Team.ENEMY);
+        setRadius(MIN_RADIUS);
+        setCenter(center);
+        setBoundingType(BoundingType.RECTANGLE);
+
+        setHurtGroundFrames(16);
+        setMaxXVelocity(15);
+
+        setBoundingBox(new Rectangle(getCenter().x - BLOCK_SIZE / 2, getCenter().y - BLOCK_SIZE / 2, BLOCK_SIZE, BLOCK_SIZE));
     }
 
     @Override
@@ -103,19 +107,19 @@ public class Grunt extends Character {
 
         switch (action) {
             case IDLE:
-                pics = getRasterMaps().get(enemyActions.IDLE);
+                pics = rasterPicMaps.get(enemyActions.IDLE);
                 break;
             case RUN:
-                pics = getRasterMaps().get(enemyActions.RUN);
+                pics = rasterPicMaps.get(enemyActions.RUN);
                 break;
             case WALK:
-                pics = getRasterMaps().get(enemyActions.WALK);
+                pics = rasterPicMaps.get(enemyActions.WALK);
                 break;
             case ATTACK:
-                pics = getRasterMaps().get(enemyActions.ATTACK);
+                pics = rasterPicMaps.get(enemyActions.ATTACK);
                 break;
             case HURT_GROUND:
-                pics = getRasterMaps().get(enemyActions.HURT_GROUND);
+                pics = rasterPicMaps.get(enemyActions.HURT_GROUND);
                 break;
         }
 
@@ -150,9 +154,9 @@ public class Grunt extends Character {
         } else {
             renderRasterFromRect((Graphics2D) g, pics.get(currentPicIdx), offsetX, offsetY);
         }
-        g.setColor(Color.RED);
-        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getRadius() - CommandCenter.getInstance().getViewY(), getRadius() *2, getRadius() *2);
-        g.drawOval(getCenter().x - getViewRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getViewRadius() - CommandCenter.getInstance().getViewY(), getViewRadius() *2, getViewRadius() *2);
+//        g.setColor(Color.RED);
+//        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getRadius() - CommandCenter.getInstance().getViewY(), getRadius() *2, getRadius() *2);
+//        g.drawOval(getCenter().x - getViewRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getViewRadius() - CommandCenter.getInstance().getViewY(), getViewRadius() *2, getViewRadius() *2);
     }
     @Override
     public void getHurt(Sprite obj) {

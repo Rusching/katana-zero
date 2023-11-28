@@ -57,7 +57,8 @@ public class Falcon extends Sprite {
 	// ==============================================================
 	// CONSTRUCTOR
 	// ==============================================================
-	
+	protected static Map<?, BufferedImage> rasterPicMap;
+
 	public Falcon() {
 
 		setTeam(Team.FRIEND);
@@ -75,7 +76,7 @@ public class Falcon extends Sprite {
 		rasterMap.put(ImageState.FALCON_PRO, loadGraphic("/imgs/fal/falcon125_PRO.png") ); //protected ship (green)
 		rasterMap.put(ImageState.FALCON_PRO_THR, loadGraphic("/imgs/fal/falcon125_PRO_thr.png") ); //green thrusting
 
-		setRasterMap(rasterMap);
+		rasterPicMap = rasterMap;
 
 
 	}
@@ -171,7 +172,7 @@ public class Falcon extends Sprite {
 
 		//down-cast (widen the aperture of) the graphics object to gain access to methods of Graphics2D
 		//and render the raster image according to the image-state
-		renderRaster((Graphics2D) g, getRasterMap().get(imageState));
+		renderRaster((Graphics2D) g, rasterPicMap.get(imageState));
 
 	}
 

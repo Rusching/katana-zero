@@ -20,6 +20,33 @@ public class ShieldCop extends Character {
     // image path
     private static String gangsterImgPathPrefix = "ShieldCop/";
 
+    protected static Map<?, ArrayList<BufferedImage>> rasterPicMaps;
+
+    static {
+        Map<enemyActions, ArrayList<BufferedImage>> rasterMaps = new HashMap<>();
+
+        ArrayList<BufferedImage> rasterMapIdle = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {rasterMapIdle.add(loadGraphic(imgPathPrefix + gangsterImgPathPrefix + String.format("spr_shieldcop_idle/%d.png", i)));}
+        rasterMaps.put(enemyActions.IDLE, rasterMapIdle);
+
+        ArrayList<BufferedImage> rasterMapHurtGround = new ArrayList<>();
+        for (int i = 0; i < 15; i++) {rasterMapHurtGround.add(loadGraphic(imgPathPrefix + gangsterImgPathPrefix + String.format("spr_shieldcop_hurtground/%d.png", i)));}
+        rasterMaps.put(enemyActions.HURT_GROUND, rasterMapHurtGround);
+
+        ArrayList<BufferedImage> rasterMapWalk = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {rasterMapWalk.add(loadGraphic(imgPathPrefix + gangsterImgPathPrefix + String.format("spr_shieldcop_walk/%d.png", i)));}
+        rasterMaps.put(enemyActions.WALK, rasterMapWalk);
+
+        ArrayList<BufferedImage> rasterMapRun = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {rasterMapRun.add(loadGraphic(imgPathPrefix + gangsterImgPathPrefix + String.format("spr_shieldcop_run/%d.png", i)));}
+        rasterMaps.put(enemyActions.RUN, rasterMapRun);
+
+        rasterPicMaps = rasterMaps;
+        System.out.println("Shield Cop texture loaded");
+    }
+    public static boolean loadResources() {
+        return true;
+    }
     public enum enemyActions {
         ATTACK,
         HURT_GROUND,
@@ -43,26 +70,6 @@ public class ShieldCop extends Character {
         setTotalPreAttackFrames(10);
 
         setBoundingBox(new Rectangle(getCenter().x - BLOCK_SIZE / 2, getCenter().y - BLOCK_SIZE / 2, BLOCK_SIZE, BLOCK_SIZE));
-
-        Map<enemyActions, ArrayList<BufferedImage>> rasterMaps = new HashMap<>();
-
-        ArrayList<BufferedImage> rasterMapIdle = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {rasterMapIdle.add(loadGraphic(imgPathPrefix + gangsterImgPathPrefix + String.format("spr_shieldcop_idle/%d.png", i)));}
-        rasterMaps.put(enemyActions.IDLE, rasterMapIdle);
-
-        ArrayList<BufferedImage> rasterMapHurtGround = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {rasterMapHurtGround.add(loadGraphic(imgPathPrefix + gangsterImgPathPrefix + String.format("spr_shieldcop_hurtground/%d.png", i)));}
-        rasterMaps.put(enemyActions.HURT_GROUND, rasterMapHurtGround);
-
-        ArrayList<BufferedImage> rasterMapWalk = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {rasterMapWalk.add(loadGraphic(imgPathPrefix + gangsterImgPathPrefix + String.format("spr_shieldcop_walk/%d.png", i)));}
-        rasterMaps.put(enemyActions.WALK, rasterMapWalk);
-
-        ArrayList<BufferedImage> rasterMapRun = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {rasterMapRun.add(loadGraphic(imgPathPrefix + gangsterImgPathPrefix + String.format("spr_shieldcop_run/%d.png", i)));}
-        rasterMaps.put(enemyActions.RUN, rasterMapRun);
-
-        setRasterMaps(rasterMaps);
     }
 
     @Override
@@ -88,19 +95,19 @@ public class ShieldCop extends Character {
 
         switch (action) {
             case IDLE:
-                pics = getRasterMaps().get(enemyActions.IDLE);
+                pics = rasterPicMaps.get(enemyActions.IDLE);
                 break;
             case RUN:
-                pics = getRasterMaps().get(enemyActions.RUN);
+                pics = rasterPicMaps.get(enemyActions.RUN);
                 break;
             case WALK:
-                pics = getRasterMaps().get(enemyActions.WALK);
+                pics = rasterPicMaps.get(enemyActions.WALK);
                 break;
             case ATTACK:
-                pics = getRasterMaps().get(enemyActions.ATTACK);
+                pics = rasterPicMaps.get(enemyActions.ATTACK);
                 break;
             case HURT_GROUND:
-                pics = getRasterMaps().get(enemyActions.HURT_GROUND);
+                pics = rasterPicMaps.get(enemyActions.HURT_GROUND);
                 break;
         }
 
@@ -139,11 +146,11 @@ public class ShieldCop extends Character {
         } else {
             renderRasterFromRect((Graphics2D) g, pics.get(currentPicIdx), offsetX, offsetY);
         }
-        g.setColor(Color.RED);
-        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getRadius() - CommandCenter.getInstance().getViewY(), getRadius() *2, getRadius() *2);
-        g.drawOval(getCenter().x - getViewRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getViewRadius() - CommandCenter.getInstance().getViewY(), getViewRadius() *2, getViewRadius() *2);
-        g.setColor(Color.GREEN);
-        g.drawOval(getCenter().x - getAttackRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getAttackRadius() - CommandCenter.getInstance().getViewY(), getAttackRadius() *2, getAttackRadius() *2);
+//        g.setColor(Color.RED);
+//        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getRadius() - CommandCenter.getInstance().getViewY(), getRadius() *2, getRadius() *2);
+//        g.drawOval(getCenter().x - getViewRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getViewRadius() - CommandCenter.getInstance().getViewY(), getViewRadius() *2, getViewRadius() *2);
+//        g.setColor(Color.GREEN);
+//        g.drawOval(getCenter().x - getAttackRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getAttackRadius() - CommandCenter.getInstance().getViewY(), getAttackRadius() *2, getAttackRadius() *2);
     }
     @Override
 

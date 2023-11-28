@@ -15,18 +15,24 @@ public class NormalSlashDebris extends Sprite{
     private int index = 0;
 
     private static String zeroImgPathPrefix = "ZeroSprites/";
+    protected static Map<?, BufferedImage> rasterPicMap;
 
+    static {
+        Map<Integer, BufferedImage> rasterMap = new HashMap<>();
+        for (int i = 0; i < 5; i++) {rasterMap.put(i, loadGraphic(imgPathPrefix + zeroImgPathPrefix + String.format("normalSlash/spr_slash_%d.png", i)));}
+        rasterPicMap = rasterMap;
+    }
+
+    public static boolean loadResources() {
+        return true;
+    }
     public NormalSlashDebris(int attachX, int attachY, Point charCenter, Rectangle charRect) {
 
         //DEBRIS means that this sprite is inert, and does not interact with other teams.
         setTeam(Team.DEBRIS);
 
-        Map<Integer, BufferedImage> rasterMap = new HashMap<>();
-        for (int i = 0; i < 5; i++) {rasterMap.put(i, loadGraphic(imgPathPrefix + zeroImgPathPrefix + String.format("normalSlash/spr_slash_%d.png", i)));}
-        setRasterMap(rasterMap);
-
         //expire it out after it has done its animation. Multiply by 2 to slow down the animation
-        setExpiry(rasterMap.size());
+        setExpiry(rasterPicMap.size());
 
         // calculate the orientation
         int diffX = attachX - (charCenter.x - CommandCenter.getInstance().getViewX());
@@ -112,7 +118,7 @@ public class NormalSlashDebris extends Sprite{
     public void draw(Graphics g) {
 
 
-        renderRaster((Graphics2D) g, getRasterMap().get(index));
+        renderRaster((Graphics2D) g, rasterPicMap.get(index));
         //hold the image for two frames to slow down the dust cloud animation
         //we already have a simple decrement-to-zero counter with expiry; see move() method of Sprite.
         index++;

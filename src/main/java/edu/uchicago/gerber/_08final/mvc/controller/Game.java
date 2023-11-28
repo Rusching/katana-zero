@@ -124,6 +124,8 @@ public class Game implements Runnable {
         }
         gameFrame.setCursor(customCursor);
 
+        loadAllResources();
+
         try {
 
             InputStream is = getClass().getResourceAsStream("/fonts/visitor1.ttf");
@@ -500,6 +502,18 @@ public class Game implements Runnable {
 //        }
     }
 
+    private static void loadAllResources() {
+        BloodDebris.loadResources();
+        Brick.loadResources();
+        Bullet.loadResources();
+        Ganster.loadResources();
+        Grunt.loadResources();
+        JumpDebris.loadResources();
+        NormalSlashDebris.loadResources();
+        Pomp.loadResources();
+        ShieldCop.loadResources();
+        Zero.loadResources();
+    }
 
     // Varargs for stopping looping-music-clips
     private static void stopLoopingSounds(Clip... clpClips) {

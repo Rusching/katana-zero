@@ -38,7 +38,7 @@ public class WhiteCloudDebris extends Sprite{
         rasterMap.put(9, loadGraphic("/imgs/ZeroSprites/idle/spr_casual_idle_9.png") );
         rasterMap.put(10, loadGraphic("/imgs/ZeroSprites/idle/spr_casual_idle_10.png") );
 
-        setRasterMap(rasterMap);
+//        setRasterMap(rasterMap);
 
         //expire it out after it has done its animation. Multiply by 2 to slow down the animation
         setExpiry(rasterMap.size() * 2);
@@ -61,10 +61,10 @@ public class WhiteCloudDebris extends Sprite{
     public void draw(Graphics g) {
 
 
-        renderRaster((Graphics2D) g, getRasterMap().get(index));
-        //hold the image for two frames to slow down the dust cloud animation
-        //we already have a simple decrement-to-zero counter with expiry; see move() method of Sprite.
-        if (getExpiry() % 2 == 0) index++;
+//        renderRaster((Graphics2D) g, getRasterMap().get(index));
+//        //hold the image for two frames to slow down the dust cloud animation
+//        //we already have a simple decrement-to-zero counter with expiry; see move() method of Sprite.
+//        if (getExpiry() % 2 == 0) index++;
 
 
     }

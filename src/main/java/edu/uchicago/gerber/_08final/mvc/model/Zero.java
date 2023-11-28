@@ -52,15 +52,9 @@ public class Zero extends Character {
         THROW_SWORD,
         WALK
     }
+    protected static Map<?, ArrayList<BufferedImage>> rasterPicMaps;
 
-    public Zero(Point center) {
-        setCenter(center);
-        setTeam(Team.FRIEND);
-        setRadius(MIN_RADIUS);
-        setBoundingType(BoundingType.RECTANGLE);
-        setBoundingBox(new Rectangle(getCenter().x - BLOCK_SIZE / 2, getCenter().y - BLOCK_SIZE / 2, BLOCK_SIZE, BLOCK_SIZE));
-
-        setHurtGroundFrames(6);
+    static {
         Map<Actions, ArrayList<BufferedImage>> rasterMaps = new HashMap<>();
 
         ArrayList<BufferedImage> rasterMapIdle = new ArrayList<>();
@@ -103,7 +97,21 @@ public class Zero extends Character {
         for (int i = 0; i < 6; i++) {rasterMapHurt.add(loadGraphic(imgPathPrefix + zeroImgPathPrefix + String.format("hurt/spr_hurtground_%d.png", i)));}
         rasterMaps.put(Actions.HURT, rasterMapHurt);
 
-        setRasterMaps(rasterMaps);
+        rasterPicMaps = rasterMaps;
+        System.out.println("Zero textures loaded");
+    }
+    public static boolean loadResources() {
+        return true;
+    }
+    public Zero(Point center) {
+        setCenter(center);
+        setTeam(Team.FRIEND);
+        setRadius(MIN_RADIUS);
+        setBoundingType(BoundingType.RECTANGLE);
+        setBoundingBox(new Rectangle(getCenter().x - BLOCK_SIZE / 2, getCenter().y - BLOCK_SIZE / 2, BLOCK_SIZE, BLOCK_SIZE));
+
+        setHurtGroundFrames(6);
+
     }
 
 
@@ -135,45 +143,45 @@ public class Zero extends Character {
         int offsetX = 0, offsetY = 0;
         if (isHurtGround) {
             // hurt ground
-            pics = getRasterMaps().get(Actions.HURT);
+            pics = rasterPicMaps.get(Actions.HURT);
         } else if (isAttack) {
             // attack
-            pics = getRasterMaps().get(Actions.ATTACK);
+            pics = rasterPicMaps.get(Actions.ATTACK);
         } else if (isRolling) {
             // roll
-            pics = getRasterMaps().get(Actions.ROLL);
+            pics = rasterPicMaps.get(Actions.ROLL);
             offsetY = 1;
         } else if (isFlipping) {
             if ((isOnLeftWall() || isOnRightWall()) && currentFlipIdx != 0) {
                 // flip terminate to wall slide
-                pics = getRasterMaps().get(Actions.WALL_SLIDE);
+                pics = rasterPicMaps.get(Actions.WALL_SLIDE);
                 offsetX = 20;
             } else {
                 // flip
-                pics = getRasterMaps().get(Actions.FLIP);
+                pics = rasterPicMaps.get(Actions.FLIP);
             }
         } else if ((isOnLeftWall() || isOnRightWall()) && isRunning && !isOnPlatform()) {
             // wall slide
-            pics = getRasterMaps().get(Actions.WALL_SLIDE);
+            pics = rasterPicMaps.get(Actions.WALL_SLIDE);
             offsetX = 20;
         } else if (isOnPlatform()) {
             if (isRunning) {
                 // run
-                pics = getRasterMaps().get(Actions.RUN);
+                pics = rasterPicMaps.get(Actions.RUN);
                 offsetY = 1;
             } else {
                 // stand
-                pics = getRasterMaps().get(Actions.STAND);
+                pics = rasterPicMaps.get(Actions.STAND);
                 offsetY = 1;
             }
         } else {
             // in air
             if (getDeltaY() <= 0) {
                 // up
-                pics = getRasterMaps().get(Actions.JUMP);
+                pics = rasterPicMaps.get(Actions.JUMP);
             } else {
                 // down
-                pics = getRasterMaps().get(Actions.FALL);
+                pics = rasterPicMaps.get(Actions.FALL);
             }
         }
 
@@ -235,8 +243,8 @@ public class Zero extends Character {
         } else {
             renderRasterFromRect((Graphics2D) g, pics.get(currentPicIdx), offsetX, offsetY);
         }
-        g.setColor(Color.RED);
-        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getRadius() - CommandCenter.getInstance().getViewY(), getRadius() *2, getRadius() *2);
+//        g.setColor(Color.RED);
+//        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getRadius() - CommandCenter.getInstance().getViewY(), getRadius() *2, getRadius() *2);
 
     }
 

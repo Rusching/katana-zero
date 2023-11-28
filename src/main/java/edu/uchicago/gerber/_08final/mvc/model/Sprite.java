@@ -64,11 +64,11 @@ public abstract class Sprite implements Movable {
 
     //Either you use the cartesian points and color above (vector), or you can use the BufferedImages here (raster).
     //Keys in this map can be any object (?) you want. See Falcon and WhiteCloudDebris for example implementations.
-    private Map<?, BufferedImage> rasterMap;
+//    protected static Map<?, BufferedImage> rasterPicMap;
 
     // If the sprite has many different states, and each state has many frames to display, use
     // this map to store the animation.
-    private Map<?, ArrayList<BufferedImage>> rasterMaps;
+//    protected static Map<?, ArrayList<BufferedImage>> rasterPicMaps;
 
     //constructor
     public Sprite() {
@@ -167,7 +167,7 @@ public abstract class Sprite implements Movable {
 
 
     //used to load raster graphics
-    protected BufferedImage loadGraphic(String imagePath) {
+    protected static BufferedImage loadGraphic(String imagePath) {
         BufferedImage bufferedImage;
         try {
             bufferedImage = ImageIO.read(Objects.requireNonNull(Sprite.class.getResourceAsStream(imagePath)));

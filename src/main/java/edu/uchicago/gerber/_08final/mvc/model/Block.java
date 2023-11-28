@@ -12,6 +12,16 @@ public class Block extends Sprite {
 	public int blockRadius = 36;
 	//The size of this brick is always square!
 	//we use upperLeftCorner because that is the origin when drawing graphics in Java
+
+	protected static Map<?, BufferedImage> rasterPicMap;
+
+	static {
+		Map<Integer, BufferedImage> rasterMap = new HashMap<>();
+		//brick from Mario Bros
+		rasterMap.put(0, loadGraphic("/imgs/Bricks/floor/102.png") );
+		rasterPicMap = rasterMap;
+	}
+
 	public Block(Point upperLeftCorner, int size) {
 
 		//you can shoot to destroy the wall which yields big points
@@ -27,19 +37,17 @@ public class Block extends Sprite {
 		//As this sprite does not animate or change state, we could just store a BufferedImage as a member, but
 		//since we already have a rasterMap in the Sprite class, we might as well be consistent for all raster sprites
 		// and use it.
-    	Map<Integer, BufferedImage> rasterMap = new HashMap<>();
-		//brick from Mario Bros
-		rasterMap.put(0, loadGraphic("/imgs/Bricks/floor/102.png") );
 
-		setRasterMap(rasterMap);
+
+//		setRasterMap(rasterMap);
 
 
 	}
 
 	@Override
 	public void draw(Graphics g) {
-		renderRaster((Graphics2D) g, getRasterMap().get(0));
-		//if you uncomment these, you can see how collision works. Feel free to remove these two lines.
+		renderRaster((Graphics2D) g, rasterPicMap.get(0));
+//		if you uncomment these, you can see how collision works. Feel free to remove these two lines.
 //		g.setColor(Color.LIGHT_GRAY);
 //		g.drawOval(getCenter().x - getRadius(), getCenter().y - getRadius(), getRadius() *2, getRadius() *2);
 	}

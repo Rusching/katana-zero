@@ -26,7 +26,7 @@ public class Character extends Sprite{
 
     // attack
     protected boolean isAttack = false;
-    protected int attackFrames = 7;
+    protected static int attackFrames = 7;
     protected int currentAttackIdx = 0;
 
     // flip
