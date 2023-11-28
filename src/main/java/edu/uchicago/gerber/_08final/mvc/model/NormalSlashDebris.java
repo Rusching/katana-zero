@@ -41,7 +41,7 @@ public class NormalSlashDebris extends Sprite{
         double angle = Math.toDegrees(Math.atan2(diffY, diffX));
         setOrientation((int) angle);
 
-        System.out.println(String.format("Slash angle: %.2f", angle));
+//        System.out.println(String.format("Slash angle: %.2f", angle));
         // calculate the center
 //        setCenter(charCenter);
         Point virtualCenter = getLineRectangleIntersection(new Line2D.Float(attachX, attachY, charCenter.x, charCenter.y), charRect);

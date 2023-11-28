@@ -66,7 +66,8 @@ public class ShieldCop extends Character {
 
         setHurtGroundFrames(15);
 //        setMaxXVelocity(15);
-        setAttackRadius(300);
+        setViewRadius(600);
+        setAttackRadius(500);
         setTotalPreAttackFrames(10);
 
         setBoundingBox(new Rectangle(getCenter().x - BLOCK_SIZE / 2, getCenter().y - BLOCK_SIZE / 2, BLOCK_SIZE, BLOCK_SIZE));

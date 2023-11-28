@@ -37,6 +37,14 @@ public class CollisionDetection {
             for (Movable enemy: CommandCenter.getInstance().getMovEnemies()) {
                 if (currentKatana.getCenter().distance(enemy.getCenter()) < (katanaRadius + enemyRadius)) {
                     if (!enemy.isProtected()) {
+                        if (currentKatana.getHitSlashDebris() == null) {
+                            HitSlashDebris hitSlashDebris = new HitSlashDebris(currentKatana.getCenter(), enemy.getCenter());
+                            currentKatana.setHitSlashDebris(hitSlashDebris);
+                            CommandCenter.getInstance().getOpsQueue().enqueue(
+                                    hitSlashDebris,
+                                    GameOp.Action.ADD
+                            );
+                        }
                         ((Character) enemy).getHurt(currentKatana);
                         Sound.playSound(String.format("Enemy/sound_enemy_death_sword_0%d.wav", Game.R.nextInt(2) + 1));
                         Sound.playSound("Enemy/sound_enemy_death_generic.wav");
@@ -51,6 +59,14 @@ public class CollisionDetection {
                 if (!bulletObj.isReflected()) {
                     if (currentKatana.getCenter().distance(bullet.getCenter()) < (katanaRadius + bullet.getRadius())) {
                         // detect a collision
+                        if (currentKatana.getBulletReflectionDebris() == null) {
+                            BulletReflectionDebris bulletReflectionDebris = new BulletReflectionDebris(currentKatana.getCenter());
+                            currentKatana.setBulletReflectionDebris(bulletReflectionDebris);
+                            CommandCenter.getInstance().getOpsQueue().enqueue(
+                                    bulletReflectionDebris,
+                                    GameOp.Action.ADD
+                            );
+                        }
                         Sound.playSound("Bullet/slash_bullet.wav");
                         bulletObj.setReflected(true);
                         bulletObj.setYVelocity(-bulletObj.getYVelocity());

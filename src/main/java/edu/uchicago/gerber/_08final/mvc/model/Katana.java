@@ -11,9 +11,12 @@ import java.util.ArrayList;
 @Data
 public class Katana extends Sprite {
 
-    public static int katanaRadius = 36;
+    private static int katanaRadius = 36;
 
-    public double theta;
+    private double theta;
+
+    private HitSlashDebris hitSlashDebris = null;
+    private BulletReflectionDebris bulletReflectionDebris = null;
     public Katana(int attackX, int attackY, Point zeroCenter, int zeroRadius) {
 
         setTeam(Team.KATANA);

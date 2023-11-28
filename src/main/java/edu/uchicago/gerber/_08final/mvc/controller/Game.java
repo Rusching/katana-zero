@@ -506,8 +506,10 @@ public class Game implements Runnable {
         BloodDebris.loadResources();
         Brick.loadResources();
         Bullet.loadResources();
+        BulletReflectionDebris.loadResources();
         Ganster.loadResources();
         Grunt.loadResources();
+        HitSlashDebris.loadResources();
         JumpDebris.loadResources();
         NormalSlashDebris.loadResources();
         Pomp.loadResources();
