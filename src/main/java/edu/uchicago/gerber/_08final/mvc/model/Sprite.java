@@ -211,7 +211,7 @@ public abstract class Sprite implements Movable {
             }
             AffineTransform affineTransform = new AffineTransform( oldTransform );
             if ( centerX != 0 || centerY != 0 ) {
-                affineTransform.translate( centerX - CommandCenter.getInstance().viewX, centerY - CommandCenter.getInstance().viewY);
+                affineTransform.translate( centerX - CommandCenter.getInstance().getViewX(), centerY - CommandCenter.getInstance().getViewY());
             }
             affineTransform.scale( 2, 2 );
             if ( angleRadians != 0 ) {
@@ -248,7 +248,7 @@ public abstract class Sprite implements Movable {
             }
             AffineTransform affineTransform = new AffineTransform( oldTransform );
             if ( centerX != 0 || centerY != 0 ) {
-                affineTransform.translate( centerX - CommandCenter.getInstance().viewX, centerY - CommandCenter.getInstance().viewY);
+                affineTransform.translate( centerX - CommandCenter.getInstance().getViewX(), centerY - CommandCenter.getInstance().getViewY());
             }
             affineTransform.scale( scaleX, scaleY );
             if ( angleRadians != 0 ) {
@@ -281,7 +281,7 @@ public abstract class Sprite implements Movable {
 
             AffineTransform affineTransform = new AffineTransform( oldTransform );
             if ( centerX != 0 || centerY != 0 ) {
-                affineTransform.translate( centerX - CommandCenter.getInstance().viewX, centerY - CommandCenter.getInstance().viewY);
+                affineTransform.translate( centerX - CommandCenter.getInstance().getViewX(), centerY - CommandCenter.getInstance().getViewY());
             }
 //            affineTransform.scale( -scaleX, scaleY );
             affineTransform.scale( -1, 1 );
@@ -319,7 +319,7 @@ public abstract class Sprite implements Movable {
 
             AffineTransform affineTransform = new AffineTransform( oldTransform );
             if ( centerX != 0 || centerY != 0 ) {
-                affineTransform.translate( centerX - CommandCenter.getInstance().viewX, centerY - CommandCenter.getInstance().viewY);
+                affineTransform.translate( centerX - CommandCenter.getInstance().getViewX(), centerY - CommandCenter.getInstance().getViewY());
             }
             affineTransform.scale( 2, 2 );
             if ( angleRadians != 0 ) {
@@ -355,7 +355,7 @@ public abstract class Sprite implements Movable {
 
             AffineTransform affineTransform = new AffineTransform( oldTransform );
             if ( centerX != 0 || centerY != 0 ) {
-                affineTransform.translate( centerX - CommandCenter.getInstance().viewX + offsetX, centerY - CommandCenter.getInstance().viewY + offsetY);
+                affineTransform.translate( centerX - CommandCenter.getInstance().getViewX() + offsetX, centerY - CommandCenter.getInstance().getViewY() + offsetY);
             }
             affineTransform.scale( 2, 2 );
             if ( angleRadians != 0 ) {
@@ -391,7 +391,7 @@ public abstract class Sprite implements Movable {
 
             AffineTransform affineTransform = new AffineTransform( oldTransform );
             if ( centerX != 0 || centerY != 0 ) {
-                affineTransform.translate( centerX - CommandCenter.getInstance().viewX, centerY - CommandCenter.getInstance().viewY);
+                affineTransform.translate( centerX - CommandCenter.getInstance().getViewX(), centerY - CommandCenter.getInstance().getViewY());
             }
 //            affineTransform.scale( -scaleX, scaleY );
             affineTransform.scale( -2, 2 );
@@ -428,7 +428,7 @@ public abstract class Sprite implements Movable {
 
             AffineTransform affineTransform = new AffineTransform( oldTransform );
             if ( centerX != 0 || centerY != 0 ) {
-                affineTransform.translate( centerX - CommandCenter.getInstance().viewX - offsetX, centerY - CommandCenter.getInstance().viewY + offsetY);
+                affineTransform.translate( centerX - CommandCenter.getInstance().getViewX() - offsetX, centerY - CommandCenter.getInstance().getViewY() + offsetY);
             }
 //            affineTransform.scale( -scaleX, scaleY );
             affineTransform.scale( -2, 2 );

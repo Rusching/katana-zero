@@ -1,7 +1,6 @@
 package edu.uchicago.gerber._08final.mvc.model;
 
 import edu.uchicago.gerber._08final.mvc.controller.CommandCenter;
-import edu.uchicago.gerber._08final.mvc.controller.Game;
 import edu.uchicago.gerber._08final.mvc.controller.GameOp;
 import edu.uchicago.gerber._08final.mvc.controller.Sound;
 import lombok.Data;
@@ -21,7 +20,7 @@ public class Ganster extends Character {
     // image path
     private static String gangsterImgPathPrefix = "Gangster/";
 
-    public enum gruntActions {
+    public enum enemyActions {
         ATTACK,
         HURT_GROUND,
         IDLE,
@@ -29,7 +28,7 @@ public class Ganster extends Character {
         RUN
     }
 
-    public gruntActions action = gruntActions.IDLE;
+    public enemyActions action = enemyActions.IDLE;
 
 
     public Ganster(Point center) {
@@ -45,23 +44,23 @@ public class Ganster extends Character {
 
         setBoundingBox(new Rectangle(getCenter().x - BLOCK_SIZE / 2, getCenter().y - BLOCK_SIZE / 2, BLOCK_SIZE, BLOCK_SIZE));
 
-        Map<gruntActions, ArrayList<BufferedImage>> rasterMaps = new HashMap<>();
+        Map<enemyActions, ArrayList<BufferedImage>> rasterMaps = new HashMap<>();
 
         ArrayList<BufferedImage> rasterMapIdle = new ArrayList<>();
         for (int i = 0; i < 8; i++) {rasterMapIdle.add(loadGraphic(imgPathPrefix + gangsterImgPathPrefix + String.format("spr_gangster_idle/%d.png", i)));}
-        rasterMaps.put(gruntActions.IDLE, rasterMapIdle);
+        rasterMaps.put(enemyActions.IDLE, rasterMapIdle);
 
         ArrayList<BufferedImage> rasterMapHurtGround = new ArrayList<>();
         for (int i = 0; i < 14; i++) {rasterMapHurtGround.add(loadGraphic(imgPathPrefix + gangsterImgPathPrefix + String.format("spr_gangster_hurtground/%d.png", i)));}
-        rasterMaps.put(gruntActions.HURT_GROUND, rasterMapHurtGround);
+        rasterMaps.put(enemyActions.HURT_GROUND, rasterMapHurtGround);
 
         ArrayList<BufferedImage> rasterMapWalk = new ArrayList<>();
         for (int i = 0; i < 8; i++) {rasterMapWalk.add(loadGraphic(imgPathPrefix + gangsterImgPathPrefix + String.format("spr_gangster_walk/%d.png", i)));}
-        rasterMaps.put(gruntActions.WALK, rasterMapWalk);
+        rasterMaps.put(enemyActions.WALK, rasterMapWalk);
 
         ArrayList<BufferedImage> rasterMapRun = new ArrayList<>();
         for (int i = 0; i < 10; i++) {rasterMapRun.add(loadGraphic(imgPathPrefix + gangsterImgPathPrefix + String.format("spr_gangster_run/%d.png", i)));}
-        rasterMaps.put(gruntActions.RUN, rasterMapRun);
+        rasterMaps.put(enemyActions.RUN, rasterMapRun);
 
         setRasterMaps(rasterMaps);
     }
@@ -75,9 +74,9 @@ public class Ganster extends Character {
         isChasing = state;
         if (!isProtected && !isAttack) {
             if (state) {
-                action = gruntActions.RUN;
+                action = enemyActions.RUN;
             } else {
-                action = gruntActions.IDLE;
+                action = enemyActions.IDLE;
             }
         }
     }
@@ -89,20 +88,20 @@ public class Ganster extends Character {
 
         switch (action) {
             case IDLE:
-                pics = getRasterMaps().get(gruntActions.IDLE);
+                pics = getRasterMaps().get(enemyActions.IDLE);
                 offsetY = -13;
                 break;
             case RUN:
-                pics = getRasterMaps().get(gruntActions.RUN);
+                pics = getRasterMaps().get(enemyActions.RUN);
                 break;
             case WALK:
-                pics = getRasterMaps().get(gruntActions.WALK);
+                pics = getRasterMaps().get(enemyActions.WALK);
                 break;
             case ATTACK:
-                pics = getRasterMaps().get(gruntActions.ATTACK);
+                pics = getRasterMaps().get(enemyActions.ATTACK);
                 break;
             case HURT_GROUND:
-                pics = getRasterMaps().get(gruntActions.HURT_GROUND);
+                pics = getRasterMaps().get(enemyActions.HURT_GROUND);
                 offsetY = 5;
                 break;
         }
@@ -137,17 +136,17 @@ public class Ganster extends Character {
             renderRasterFromRect((Graphics2D) g, pics.get(currentPicIdx), offsetX, offsetY);
         }
         g.setColor(Color.RED);
-        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().viewX, getCenter().y - getRadius() - CommandCenter.getInstance().viewY, getRadius() *2, getRadius() *2);
-        g.drawOval(getCenter().x - getViewRadius() - CommandCenter.getInstance().viewX, getCenter().y - getViewRadius() - CommandCenter.getInstance().viewY, getViewRadius() *2, getViewRadius() *2);
+        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getRadius() - CommandCenter.getInstance().getViewY(), getRadius() *2, getRadius() *2);
+        g.drawOval(getCenter().x - getViewRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getViewRadius() - CommandCenter.getInstance().getViewY(), getViewRadius() *2, getViewRadius() *2);
         g.setColor(Color.GREEN);
-        g.drawOval(getCenter().x - getAttackRadius() - CommandCenter.getInstance().viewX, getCenter().y - getAttackRadius() - CommandCenter.getInstance().viewY, getAttackRadius() *2, getAttackRadius() *2);
+        g.drawOval(getCenter().x - getAttackRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getAttackRadius() - CommandCenter.getInstance().getViewY(), getAttackRadius() *2, getAttackRadius() *2);
     }
     @Override
 
     public void getHurt(Sprite obj) {
         setDeltaX((getCenter().x - obj.getCenter().x) * 2);
         setDeltaY(getCenter().y - obj.getCenter().y);
-        action = Ganster.gruntActions.HURT_GROUND;
+        action = enemyActions.HURT_GROUND;
         setProtected(true);
         setHurtGround(true);
 

@@ -114,7 +114,7 @@ public class CollisionDetection {
         for (Movable enemy: CommandCenter.getInstance().getMovEnemies()) {
             Character charEnemy = (Character) enemy;
             if (!enemy.isProtected() && !zero.isProtected()) {
-                if (zero.getCenter().distance(charEnemy.getCenter()) < (zero.getRadius() + charEnemy.viewRadius)) {
+                if (zero.getCenter().distance(charEnemy.getCenter()) < (zero.getRadius() + charEnemy.getViewRadius())) {
                     if (zero.getCenter().distance(charEnemy.getCenter()) < (zero.getRadius() + charEnemy.getAttackRadius())) {
                         // if body circle overlap, enter attack mode
                         charEnemy.setChasing(false);

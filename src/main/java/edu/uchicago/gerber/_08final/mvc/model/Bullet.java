@@ -52,7 +52,7 @@ public class Bullet extends Sprite {
     public void draw(Graphics g) {
         renderRaster((Graphics2D) g, getRasterMap().get(0));
         g.setColor(Color.ORANGE);
-        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().viewX, getCenter().y - getRadius() - CommandCenter.getInstance().viewY, getRadius() *2, getRadius() *2);
+        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getRadius() - CommandCenter.getInstance().getViewY(), getRadius() *2, getRadius() *2);
 
     }
 }

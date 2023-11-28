@@ -1,5 +1,6 @@
 package edu.uchicago.gerber._08final.mvc.model;
 
+import edu.uchicago.gerber._08final.mvc.controller.CollisionDetection;
 import edu.uchicago.gerber._08final.mvc.controller.CommandCenter;
 import edu.uchicago.gerber._08final.mvc.controller.Sound;
 import lombok.Data;
@@ -47,28 +48,28 @@ public class Character extends Sprite{
     // blood effect
     protected boolean isProtected = false;
 
-    public BloodDebris bloodDebris = null;
+    protected BloodDebris bloodDebris = null;
 
     // view (enemy)
-    public int viewRadius = 350;
-    public boolean isNoticed = false;
-    public boolean atLeft = false;
-    public boolean isChasing = false;
+    protected int viewRadius = 350;
+    protected boolean isNoticed = false;
+    protected boolean atLeft = false;
+    protected boolean isChasing = false;
 
 
     // attack (enemy)
-    public int attackRadius = 36;
+    protected int attackRadius = 36;
 
-    public boolean canAttack = false;
-    public int totalPreAttackFrames = 5;
-    public int currentPreAttackFrame = 0;
-    public int totalAttackIntervalFrames = 15;
-    public int currentAttackIntervalFrame = 0;
+    protected boolean canAttack = false;
+    protected int totalPreAttackFrames = 5;
+    protected int currentPreAttackFrame = 0;
+    protected int totalAttackIntervalFrames = 15;
+    protected int currentAttackIntervalFrame = 0;
 
     // hurt
     protected boolean isHurtGround = false;
     protected int hurtGroundFrames = 16;
-    public int currentHurtGroundIdx = 0;
+    protected int currentHurtGroundIdx = 0;
 
     // slow motion
     protected boolean isSlowMotion = false;
@@ -87,7 +88,7 @@ public class Character extends Sprite{
     protected double maxYVelocity = 30;
 
     protected  final double initialYVelocity = -24;
-    public final double gravityG = -1.6;
+    protected final double gravityG = -1.6;
 
     public boolean isOnLeftWall() {
         setCenterX(center.x - 2);

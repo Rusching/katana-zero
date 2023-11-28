@@ -16,14 +16,14 @@ import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
 @Data
-public class Zero extends Character{
+public class Zero extends Character {
 
 
     // image path
     private static String zeroImgPathPrefix = "ZeroSprites/";
 
-    public Katana katana = null;
-    public boolean deathSoundPlayed = false;
+    private Katana katana = null;
+    private boolean deathSoundPlayed = false;
     enum Actions {
         ATTACK,
         BIG_SLASH,
@@ -236,29 +236,29 @@ public class Zero extends Character{
             renderRasterFromRect((Graphics2D) g, pics.get(currentPicIdx), offsetX, offsetY);
         }
         g.setColor(Color.RED);
-        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().viewX, getCenter().y - getRadius() - CommandCenter.getInstance().viewY, getRadius() *2, getRadius() *2);
+        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getRadius() - CommandCenter.getInstance().getViewY(), getRadius() *2, getRadius() *2);
 
     }
 
     public void scrollMap() {
-        int leftBoundary = CommandCenter.getInstance().viewX + CommandCenter.getInstance().leftMargin;
+        int leftBoundary = CommandCenter.getInstance().getViewX() + CommandCenter.getInstance().getLeftMargin();
         if (boundingBox.x < leftBoundary) {
-            CommandCenter.getInstance().viewX -= (leftBoundary - boundingBox.x);
+            CommandCenter.getInstance().setViewX(CommandCenter.getInstance().getViewX() - (leftBoundary - boundingBox.x));
         }
 
-        int rightBoundary = CommandCenter.getInstance().viewX + Game.dimensionWidth - CommandCenter.getInstance().rightMargin;
+        int rightBoundary = CommandCenter.getInstance().getViewX() + Game.dimensionWidth - CommandCenter.getInstance().getRightMargin();
         if (boundingBox.x + boundingBox.width > rightBoundary) {
-            CommandCenter.getInstance().viewX += (boundingBox.x + boundingBox.width - rightBoundary);
+            CommandCenter.getInstance().setViewX(CommandCenter.getInstance().getViewX() + (boundingBox.x + boundingBox.width - rightBoundary));
         }
 
-        int topBoundary = CommandCenter.getInstance().viewY + CommandCenter.getInstance().verticalMargin;
+        int topBoundary = CommandCenter.getInstance().getViewY() + CommandCenter.getInstance().getVerticalMargin();
         if (boundingBox.y < topBoundary) {
-            CommandCenter.getInstance().viewY -= (topBoundary - boundingBox.y);
+            CommandCenter.getInstance().setViewY(CommandCenter.getInstance().getViewY() - (topBoundary - boundingBox.y));
         }
 
-        int bottomBoundary = CommandCenter.getInstance().viewY + Game.dimensionHeight - CommandCenter.getInstance().verticalMargin;
+        int bottomBoundary = CommandCenter.getInstance().getViewY() + Game.dimensionHeight - CommandCenter.getInstance().getVerticalMargin();
         if (boundingBox.y + boundingBox.height > bottomBoundary) {
-            CommandCenter.getInstance().viewY += (boundingBox.y + boundingBox.height - bottomBoundary);
+            CommandCenter.getInstance().setViewY(CommandCenter.getInstance().getViewY() + (boundingBox.y + boundingBox.height - bottomBoundary));
         }
     }
 

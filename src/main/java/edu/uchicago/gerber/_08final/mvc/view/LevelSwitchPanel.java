@@ -38,8 +38,7 @@ public class LevelSwitchPanel extends Panel {
     BufferedImage levelIcon4 = loadGraphic("/imgs/Levels/4.png");
 
 
-
-    ArrayList<BufferedImage> plantPics = new ArrayList<>();
+    ArrayList<String> levelNames = new ArrayList<>();
     // ==============================================================
     // CONSTRUCTOR
     // ==============================================================
@@ -51,6 +50,18 @@ public class LevelSwitchPanel extends Panel {
     public LevelSwitchPanel() {
         setLayout(new GridLayout(3, 1)); // 3 rows
         setBackground(Color.BLACK);
+
+        // update the level names
+        levelNames.add("Factory 1");
+        levelNames.add("Factory 2");
+        levelNames.add("Studio 1");
+        levelNames.add("Studio 2");
+        levelNames.add("Chinatown 1");
+        levelNames.add("Chinatown 2");
+        levelNames.add("Motel 1");
+        levelNames.add("Motel 2");
+        levelNames.add("Infinite");
+
         // First two rows with 4 columns each
         for (int i = 0; i < 2; i++) {
             JPanel rowPanel = new JPanel(new GridLayout(1, 4));
@@ -96,12 +107,11 @@ public class LevelSwitchPanel extends Panel {
             case 4:
                 icon = new ImageIcon(levelIcon4);
                 break;
-
         }
         button.setIcon(icon);
 
         // Create the label
-        JLabel label = new JLabel("Level " + (level + 1), SwingConstants.CENTER);
+        JLabel label = new JLabel(levelNames.get(level), SwingConstants.CENTER);
         label.setForeground(Color.WHITE); // Set label text color
         label.setFont(fontNormal); // Set label font
         label.setBounds(0, 0, 200, 150);  // Same bounds as button

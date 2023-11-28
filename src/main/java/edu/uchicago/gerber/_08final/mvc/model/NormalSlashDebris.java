@@ -29,8 +29,8 @@ public class NormalSlashDebris extends Sprite{
         setExpiry(rasterMap.size());
 
         // calculate the orientation
-        int diffX = attachX - (charCenter.x - CommandCenter.getInstance().viewX);
-        int diffY = attachY - (charCenter.y - CommandCenter.getInstance().viewY);
+        int diffX = attachX - (charCenter.x - CommandCenter.getInstance().getViewX());
+        int diffY = attachY - (charCenter.y - CommandCenter.getInstance().getViewY());
         System.out.println(Math.atan2(diffY, diffX));
         double angle = Math.toDegrees(Math.atan2(diffY, diffX));
         setOrientation((int) angle);

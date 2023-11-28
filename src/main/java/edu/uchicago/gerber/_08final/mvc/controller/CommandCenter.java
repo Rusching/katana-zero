@@ -36,7 +36,7 @@ public class CommandCenter {
 	private boolean muted;
 	private boolean isSlowMotion = false;
 
-	public boolean isGameOver = true;
+	private boolean isGameOver = true;
 
 //	public boolean isPaused = false;
 
@@ -44,13 +44,13 @@ public class CommandCenter {
 	private long frame;
 
 	// values used to scroll map
-	public int viewX = 0;
-	public int viewY = 0;
+	private int viewX = 0;
+	private int viewY = 0;
 
 	// margins between four bounds
-	public int verticalMargin = 150;
-	public int leftMargin = 300;
-	public int rightMargin = 300;
+	private int verticalMargin = 150;
+	private int leftMargin = 300;
+	private int rightMargin = 300;
 
 	//the falcon is located in the movFriends list, but since we use this reference a lot, we keep track of it in a
 	//separate reference. Use final to ensure that the falcon ref always points to the single falcon object on heap.
@@ -106,10 +106,10 @@ public class CommandCenter {
 		zero.setCenter(new Point(300, 240));
 
 		opsQueue.enqueue(zero, GameOp.Action.ADD);
-//		opsQueue.enqueue(new ShieldCop(new Point(500, 240)), GameOp.Action.ADD);
+		opsQueue.enqueue(new ShieldCop(new Point(500, 240)), GameOp.Action.ADD);
 		opsQueue.enqueue(new Grunt(new Point(600, 240)), GameOp.Action.ADD);
 		enemyNums = 3;
-		opsQueue.enqueue(new Grunt(new Point(700, 240)), GameOp.Action.ADD);
+//		opsQueue.enqueue(new Grunt(new Point(700, 240)), GameOp.Action.ADD);
 //		opsQueue.enqueue(new Grunt(new Point(800, 240)), GameOp.Action.ADD);
 		opsQueue.enqueue(new Grunt(new Point(900, 240)), GameOp.Action.ADD);
 		levelInited = true;

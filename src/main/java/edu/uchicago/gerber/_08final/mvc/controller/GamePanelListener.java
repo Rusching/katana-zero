@@ -73,7 +73,7 @@ public class GamePanelListener implements KeyListener, MouseListener {
                 System.exit(0);
                 break;
             case LEVEL_SWITCH:
-                if (CommandCenter.getInstance().getZero().deathSoundPlayed || CommandCenter.getInstance().isPaused() || CommandCenter.getInstance().isLevelCleared()) {
+                if (CommandCenter.getInstance().getZero().isDeathSoundPlayed() || CommandCenter.getInstance().isPaused() || CommandCenter.getInstance().isLevelCleared()) {
                     CommandCenter.getInstance().getZero().setProtected(false);
                     CommandCenter.getInstance().getZero().setHurtGround(false);
                     CommandCenter.getInstance().getZero().setCurrentHurtGroundIdx(0);
@@ -113,7 +113,7 @@ public class GamePanelListener implements KeyListener, MouseListener {
                 }
                 break;
             case DOWN: case DOWN_ARROW:
-                if (CommandCenter.getInstance().getZero().deathSoundPlayed || CommandCenter.getInstance().isPaused() || CommandCenter.getInstance().isLevelCleared()) {
+                if (CommandCenter.getInstance().getZero().isDeathSoundPlayed() || CommandCenter.getInstance().isPaused() || CommandCenter.getInstance().isLevelCleared()) {
                     CommandCenter.getInstance().getZero().setProtected(false);
                     CommandCenter.getInstance().getZero().setHurtGround(false);
                     CommandCenter.getInstance().getZero().setCurrentHurtGroundIdx(0);
@@ -166,7 +166,7 @@ public class GamePanelListener implements KeyListener, MouseListener {
                 }
                 break;
             case SHIFT:
-                if (!(CommandCenter.getInstance().isPaused() || CommandCenter.getInstance().getZero().deathSoundPlayed || CommandCenter.getInstance().levelCleared)) {
+                if (!(CommandCenter.getInstance().isPaused() || CommandCenter.getInstance().getZero().isDeathSoundPlayed() || CommandCenter.getInstance().levelCleared)) {
                     startSlowMotion();
                 }
                 break;
@@ -221,7 +221,7 @@ public class GamePanelListener implements KeyListener, MouseListener {
             case UP:
                 break;
             case SHIFT:
-                if (!(CommandCenter.getInstance().isPaused() || CommandCenter.getInstance().getZero().deathSoundPlayed || CommandCenter.getInstance().levelCleared)) {
+                if (!(CommandCenter.getInstance().isPaused() || CommandCenter.getInstance().getZero().isDeathSoundPlayed() || CommandCenter.getInstance().levelCleared)) {
                     endSlowMotion();
                 }
                 break;
@@ -293,15 +293,15 @@ public class GamePanelListener implements KeyListener, MouseListener {
             // add katana
             Katana currentKatana = new Katana(attackX, attackY, zero.getCenter(), zero.getRadius());
             CommandCenter.getInstance().getOpsQueue().enqueue(currentKatana, GameOp.Action.ADD);
-            zero.katana = currentKatana;
+            zero.setKatana(currentKatana);
             zero.setAttack(true);
 
             // set attack impact
-            if (attackY < zero.getCenter().y - CommandCenter.getInstance().viewY) {
+            if (attackY < zero.getCenter().y - CommandCenter.getInstance().getViewY()) {
                 zero.setYVelocity(-zero.getMaxYVelocity() / 2);
                 zero.setDeltaY(zero.getDeltaY() - 7);
             }
-            if (attackX < zero.getCenter().x - CommandCenter.getInstance().viewX) {
+            if (attackX < zero.getCenter().x - CommandCenter.getInstance().getViewX()) {
                 zero.setFacingLeft(true);
                 zero.setXVelocity(-zero.getMaxXVelocity() * 2);
             } else {

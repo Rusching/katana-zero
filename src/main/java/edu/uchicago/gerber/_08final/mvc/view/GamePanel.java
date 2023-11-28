@@ -32,6 +32,7 @@ public class GamePanel extends Panel {
     //used for double-buffering
     private Image imgOff;
     private Graphics grpOff;
+    BufferedImage titleImage = loadGraphic("/imgs/Menu/title.jpg");
 
 
     // ==============================================================
@@ -162,7 +163,7 @@ public class GamePanel extends Panel {
 //                    "'M' to toggle music"
 //
 //            );
-        if (CommandCenter.getInstance().getZero().deathSoundPlayed) {
+        if (CommandCenter.getInstance().getZero().isDeathSoundPlayed()) {
             displayTextOnScreen(grpOff,
                     "No... That won't work",
                     "",
@@ -203,6 +204,9 @@ public class GamePanel extends Panel {
 
         //playing and not paused!
 //        else {
+
+            // can draw images here!
+//            grpOff.drawImage(titleImage, 0, 0, this);
             moveDrawMovables(grpOff,
                     CommandCenter.getInstance().getMovFloaters(),
                     CommandCenter.getInstance().getMovBloods(),
@@ -274,5 +278,15 @@ public class GamePanel extends Panel {
 
     }
 
-
+    protected BufferedImage loadGraphic(String imagePath) {
+        BufferedImage bufferedImage;
+        try {
+            bufferedImage = ImageIO.read(Objects.requireNonNull(Sprite.class.getResourceAsStream(imagePath)));
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            bufferedImage = null;
+        }
+        return bufferedImage;
+    }
 }

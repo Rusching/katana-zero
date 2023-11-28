@@ -17,7 +17,7 @@ public class Katana extends Sprite {
     public Katana(int attackX, int attackY, Point zeroCenter, int zeroRadius) {
 
         setTeam(Team.KATANA);
-        Point katanaCenter = findIntersection(zeroCenter, zeroRadius, attackX + CommandCenter.getInstance().viewX, attackY + CommandCenter.getInstance().viewY);
+        Point katanaCenter = findIntersection(zeroCenter, zeroRadius, attackX + CommandCenter.getInstance().getViewX(), attackY + CommandCenter.getInstance().getViewY());
 //        System.out.println("Click Position: " + (attackX + CommandCenter.getInstance().viewX) + " " + (attackY + CommandCenter.getInstance().viewY));
 //        System.out.println("Zero Position: " + (zeroCenter.x) + " " + (zeroCenter.y));
 //        System.out.println("Katana Position: " + katanaCenter.x + " " + katanaCenter.y);
@@ -51,6 +51,6 @@ public class Katana extends Sprite {
     @Override
     public void draw(Graphics g) {
         g.setColor(Color.RED);
-        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().viewX, getCenter().y - getRadius() - CommandCenter.getInstance().viewY, getRadius() *2, getRadius() *2);
+        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getRadius() - CommandCenter.getInstance().getViewY(), getRadius() *2, getRadius() *2);
     }
 }

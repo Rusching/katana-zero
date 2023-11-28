@@ -35,9 +35,9 @@ public class Game implements Runnable {
     public static int dimensionWidth = 1080;
     public static int dimensionHeight = 684;
     public static final Dimension DIM = new Dimension(dimensionWidth, dimensionHeight); //the dimension of the game.
-    public final GamePanel gamePanel;
-    public final StartMenuPanel startMenuPanel;
-    public final LevelSwitchPanel levelSwitchPanel;
+    private final GamePanel gamePanel;
+    private final StartMenuPanel startMenuPanel;
+    private final LevelSwitchPanel levelSwitchPanel;
 
 
     //this is used throughout many classes.

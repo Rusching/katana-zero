@@ -8,9 +8,9 @@ import java.awt.*;
 @Data
 public class Punch extends Sprite {
 
-    public static int punchRadius = 36;
+    private static int punchRadius = 36;
 
-    public double theta;
+    private double theta;
     public Punch(Point punchCenter) {
 
         setTeam(Team.PUNCH);
@@ -22,6 +22,6 @@ public class Punch extends Sprite {
     @Override
     public void draw(Graphics g) {
         g.setColor(Color.BLUE);
-        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().viewX, getCenter().y - getRadius() - CommandCenter.getInstance().viewY, getRadius() *2, getRadius() *2);
+        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getRadius() - CommandCenter.getInstance().getViewY(), getRadius() *2, getRadius() *2);
     }
 }
