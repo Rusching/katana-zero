@@ -12,7 +12,7 @@ import java.util.Timer;
 import static java.lang.Math.abs;
 
 @Data
-public class Character extends Sprite{
+public abstract class Character extends Sprite{
 
 
     // jump is divided into 'up' and 'down' procedures. It is

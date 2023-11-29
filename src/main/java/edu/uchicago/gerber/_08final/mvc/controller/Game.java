@@ -219,7 +219,6 @@ public class Game implements Runnable {
                     if (!CommandCenter.getInstance().isPaused()) {
                         CollisionDetection.checkAllCollisions();
                         processGameOpsQueue();
-                        checkNewLevel();
                         CommandCenter.getInstance().incrementFrame();
                     }
                     //keep track of the frame for development purposes
@@ -279,12 +278,6 @@ public class Game implements Runnable {
         } // end while
     } // end run
 
-    private void checkFloaters() {
-        spawnNewWallFloater();
-        spawnShieldFloater();
-        spawnNukeFloater();
-    }
-
     //This method adds and removes movables to/from their respective linked-lists.
     //This method is being called by the animationThread. The entire method is locked on the intrinsic lock of this
     // Game object. The main (Swing) thread also has access to the GameOpsQueue via the
@@ -306,7 +299,6 @@ public class Game implements Runnable {
                         CommandCenter.getInstance().getMovFoes().add(mov);
                     } else { //GameOp.Operation.REMOVE
                         CommandCenter.getInstance().getMovFoes().remove(mov);
-                        if (mov instanceof Asteroid) spawnSmallerAsteroidsOrDebris((Asteroid) mov);
                     }
 
                     break;
@@ -321,11 +313,7 @@ public class Game implements Runnable {
                     if (action == GameOp.Action.ADD) {
                         CommandCenter.getInstance().getMovFriends().add(mov);
                     } else { //GameOp.Operation.REMOVE
-                        if (mov instanceof Falcon) {
-                            CommandCenter.getInstance().initFalconAndDecrementFalconNum();
-                        } else {
-                            CommandCenter.getInstance().getMovFriends().remove(mov);
-                        }
+                        CommandCenter.getInstance().getMovFriends().remove(mov);
                     }
                     break;
                 case ENEMY:
@@ -378,134 +366,14 @@ public class Game implements Runnable {
                         CommandCenter.getInstance().getMovDebris().remove(mov);
                     }
                     break;
-
-
             }
 
         }
-    }
-
-    //shows how to add walls or rectangular elements one brick at a time
-    private void buildWall() {
-        final int BRICK_SIZE = Game.DIM.width / 30, ROWS = 2, COLS = 20, X_OFFSET = BRICK_SIZE * 5, Y_OFFSET = 50;
-
-        for (int nCol = 0; nCol < COLS; nCol++) {
-            for (int nRow = 0; nRow < ROWS; nRow++) {
-                CommandCenter.getInstance().getOpsQueue().enqueue(
-                        new Brick(
-                                new Point(nCol * BRICK_SIZE + X_OFFSET, nRow * BRICK_SIZE + Y_OFFSET),
-                                BRICK_SIZE),
-                        GameOp.Action.ADD);
-
-            }
-        }
-    }
-
-
-    private void spawnNewWallFloater() {
-
-        if (CommandCenter.getInstance().getFrame() % NewWallFloater.SPAWN_NEW_WALL_FLOATER == 0 && isBrickFree()) {
-            CommandCenter.getInstance().getOpsQueue().enqueue(new NewWallFloater(), GameOp.Action.ADD);
-        }
-    }
-
-    private void spawnShieldFloater() {
-
-        if (CommandCenter.getInstance().getFrame() % ShieldFloater.SPAWN_SHIELD_FLOATER == 0) {
-            CommandCenter.getInstance().getOpsQueue().enqueue(new ShieldFloater(), GameOp.Action.ADD);
-        }
-    }
-
-    private void spawnNukeFloater() {
-
-        if (CommandCenter.getInstance().getFrame() % NukeFloater.SPAWN_NUKE_FLOATER == 0) {
-            CommandCenter.getInstance().getOpsQueue().enqueue(new NukeFloater(), GameOp.Action.ADD);
-        }
-    }
-
-
-    //this method spawns new Large (0) Asteroids
-    private void spawnBigAsteroids(int num) {
-        while (num-- > 0) {
-            //Asteroids with size of zero are big
-            CommandCenter.getInstance().getOpsQueue().enqueue(new Asteroid(0), GameOp.Action.ADD);
-
-        }
-    }
-
-    private void spawnSmallerAsteroidsOrDebris(Asteroid originalAsteroid) {
-
-        int size = originalAsteroid.getSize();
-        //small asteroids
-        if (size > 1) {
-            CommandCenter.getInstance().getOpsQueue().enqueue(new WhiteCloudDebris(originalAsteroid), GameOp.Action.ADD);
-        }
-        //med and large
-        else {
-            //for large (0) and medium (1) sized Asteroids only, spawn 2 or 3 smaller asteroids respectively
-            //We can use the existing variable (size) to do this
-            size += 2;
-            while (size-- > 0) {
-                CommandCenter.getInstance().getOpsQueue().enqueue(new Asteroid(originalAsteroid), GameOp.Action.ADD);
-            }
-        }
-
-    }
-
-    private boolean isBrickFree() {
-        //if there are no more Bricks on the screen
-        boolean brickFree = true;
-        for (Movable movFoe : CommandCenter.getInstance().getMovFoes()) {
-            if (movFoe instanceof Brick) {
-                brickFree = false;
-                break;
-            }
-        }
-        return brickFree;
-    }
-
-    private boolean isLevelClear() {
-        //if there are no more Asteroids on the screen
-        boolean asteroidFree = true;
-        for (Movable movFoe : CommandCenter.getInstance().getMovFoes()) {
-            if (movFoe instanceof Asteroid) {
-                asteroidFree = false;
-                break;
-            }
-        }
-        return asteroidFree;
-    }
-
-    private void checkNewLevel() {
-        if (CommandCenter.getInstance().getFrame() % 150 == 0) {
-            if (CommandCenter.getInstance().levelInited && CommandCenter.getInstance().enemyNums == 0 && CommandCenter.getInstance().currentLevel != 8) {
-                System.out.println("Cleared");
-                CommandCenter.getInstance().setLevelCleared(true);
-            }
-        }
-
-//        if (isLevelClear()) {
-//            //currentLevel will be zero at beginning of game
-//            int level = CommandCenter.getInstance().getLevel();
-//            //award some points for having cleared the previous level
-//            CommandCenter.getInstance().setScore(CommandCenter.getInstance().getScore() + (10_000L * level));
-//            //bump the level up
-//            level = level + 1;
-//            CommandCenter.getInstance().setLevel(level);
-//            //spawn some big new asteroids
-////            spawnBigAsteroids(level);
-//            //make falcon invincible momentarily in case new asteroids spawn on top of him, and give player
-//            //time to adjust to new asteroids in game space.
-//            CommandCenter.getInstance().getFalcon().setShield(Falcon.INITIAL_SPAWN_TIME);
-//            //show "Level X" in middle of screen
-//            CommandCenter.getInstance().getFalcon().setShowLevel(Falcon.INITIAL_SPAWN_TIME);
-//
-//        }
     }
 
     private static void loadAllResources() {
         BloodDebris.loadResources();
-        Brick.loadResources();
+        Block.loadResources();
         Bullet.loadResources();
         BulletReflectionDebris.loadResources();
         Ganster.loadResources();

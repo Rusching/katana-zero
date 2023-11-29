@@ -19,10 +19,6 @@ import java.util.function.Function;
 
 
 public class GamePanel extends Panel {
-
-    // ==============================================================
-    // FIELDS
-    // ==============================================================
     private final Font fontNormal = new Font("Visitor TT1 BRK", Font.BOLD, 25);
     private final Font fontBig = new Font("SansSerif", Font.BOLD + Font.ITALIC, 36);
     private FontMetrics fontMetrics;
@@ -40,69 +36,33 @@ public class GamePanel extends Panel {
             bgImageList.add(loadGraphic(String.format("/maps/imgs/%d.jpg", i)));
         }
     }
-    // ==============================================================
-    // CONSTRUCTOR
-    // ==============================================================
 
     public GamePanel() {
-
-//        GameFrame gameFrame = new GameFrame();
-//
-//        gameFrame.getContentPane().add(this);
-//
-//        gameFrame.pack();
-
-
-//        initFontInfo();
-
-//        gameFrame.setSize(dim);
-//        //change the name of the game-frame to your game name
-//        gameFrame.setTitle("Game Base");
-//        gameFrame.setResizable(false);
-//        gameFrame.setVisible(true);
-////        gameFram
-//        setFocusable(true);
-
-//        Cursor customCursor = null;
-//        BufferedImage cursorImage = Utils.loadGraphic("/imgs/Cursor/0.png");
-//        if (cursorImage != null) {
-//            Toolkit toolkit = Toolkit.getDefaultToolkit();
-//            Point hotSpot = new Point(0, 0);
-//            customCursor = toolkit.createCustomCursor(cursorImage, hotSpot, "Custom Cursor");
-//        }
-//        gameFrame.setCursor(customCursor);
     }
 
 
-    // ==============================================================
-    // METHODS
-    // ==============================================================
-
-    private void drawFalconStatus(final Graphics graphics){
-
-        graphics.setColor(Color.white);
-        graphics.setFont(fontNormal);
-
-        //draw score always
-        graphics.drawString("Score :  " + CommandCenter.getInstance().getScore(), fontWidth, fontHeight);
-
-        //draw the level upper-left corner always
-        String levelText = "Level: " + CommandCenter.getInstance().getLevel();
-        graphics.drawString(levelText, 20, 30); //upper-left corner
-
-        //build the status string array with possible messages in middle of screen
-        List<String> statusArray = new ArrayList<>();
-        if (CommandCenter.getInstance().getFalcon().getShowLevel() > 0) statusArray.add(levelText);
-        if (CommandCenter.getInstance().getFalcon().isMaxSpeedAttained()) statusArray.add("WARNING - SLOW DOWN");
-        if (CommandCenter.getInstance().getFalcon().getNukeMeter() > 0) statusArray.add("PRESS N for NUKE");
-
-        //draw the statusArray strings to middle of screen
-        if (statusArray.size() > 0)
-            displayTextOnScreen(graphics, statusArray.toArray(new String[0]));
-
-
-
-    }
+//    private void drawFalconStatus(final Graphics graphics){
+//
+//        graphics.setColor(Color.white);
+//        graphics.setFont(fontNormal);
+//
+//        //draw score always
+//        graphics.drawString("Score :  " + CommandCenter.getInstance().getScore(), fontWidth, fontHeight);
+//
+//        //draw the level upper-left corner always
+//        String levelText = "Level: " + CommandCenter.getInstance().getLevel();
+//        graphics.drawString(levelText, 20, 30); //upper-left corner
+//
+//        //build the status string array with possible messages in middle of screen
+//        List<String> statusArray = new ArrayList<>();
+//        if (CommandCenter.getInstance().getFalcon().getShowLevel() > 0) statusArray.add(levelText);
+//        if (CommandCenter.getInstance().getFalcon().isMaxSpeedAttained()) statusArray.add("WARNING - SLOW DOWN");
+//        if (CommandCenter.getInstance().getFalcon().getNukeMeter() > 0) statusArray.add("PRESS N for NUKE");
+//
+//        //draw the statusArray strings to middle of screen
+//        if (statusArray.size() > 0)
+//            displayTextOnScreen(graphics, statusArray.toArray(new String[0]));
+//    }
 
     //this is used for development, you can remove it from your final game
     private void drawNumFrame(Graphics g) {
@@ -113,17 +73,17 @@ public class GamePanel extends Panel {
 
     }
 
-    private void drawMeters(Graphics g){
-
-        //will be a number between 0-100 inclusive
-        int shieldValue =   CommandCenter.getInstance().getFalcon().getShield() / 2;
-        int nukeValue = CommandCenter.getInstance().getFalcon().getNukeMeter() /6;
-
-        drawOneMeter(g, Color.CYAN, 1, shieldValue);
-        drawOneMeter(g, Color.YELLOW, 2, nukeValue);
-
-
-    }
+//    private void drawMeters(Graphics g){
+//
+//        //will be a number between 0-100 inclusive
+//        int shieldValue =   CommandCenter.getInstance().getFalcon().getShield() / 2;
+//        int nukeValue = CommandCenter.getInstance().getFalcon().getNukeMeter() /6;
+//
+//        drawOneMeter(g, Color.CYAN, 1, shieldValue);
+//        drawOneMeter(g, Color.YELLOW, 2, nukeValue);
+//
+//
+//    }
 
     private void drawOneMeter(Graphics g, Color color, int offSet, int percent) {
 
@@ -156,18 +116,6 @@ public class GamePanel extends Panel {
         }
         //this is used for development, you may remove drawNumFrame() in your final game.
         drawNumFrame(grpOff);
-
-//        if (CommandCenter.getInstance().isGameOver()) {
-//            displayTextOnScreen(grpOff,
-//                    "GAME OVER",
-//                    "use the arrow keys to turn and thrust",
-//                    "use the space bar to fire",
-//                    "'S' to Start",
-//                    "'P' to Pause",
-//                    "'Q' to Quit",
-//                    "'M' to toggle music"
-//
-//            );
         if (CommandCenter.getInstance().getZero().isDeathSoundPlayed()) {
             displayTextOnScreen(grpOff,
                     "No... That won't work",
@@ -206,30 +154,18 @@ public class GamePanel extends Panel {
                     );
 
         } else {
-
-        //playing and not paused!
-//        else {
-
-//             can draw images here!
             grpOff.drawImage(bgImageList.get(CommandCenter.getInstance().currentLevel), 0, 0, this);
             moveDrawMovables(grpOff,
-                    CommandCenter.getInstance().getMovFloaters(),
-                    CommandCenter.getInstance().getMovBloods(),
-                    CommandCenter.getInstance().getMovFoes(),
-                    CommandCenter.getInstance().getMovFloors(),
-                    CommandCenter.getInstance().getMovEnemies(),
-                    CommandCenter.getInstance().getMovFriends(),
-                    CommandCenter.getInstance().getMovKatanas(),
-                    CommandCenter.getInstance().getMovPunches(),
-                    CommandCenter.getInstance().getMovBullets(),
-                    CommandCenter.getInstance().getMovDebris());
-
-
-//            drawNumberShipsRemaining(grpOff);
-//            drawMeters(grpOff);
-//            drawFalconStatus(grpOff);
-
-
+                CommandCenter.getInstance().getMovFloaters(),
+                CommandCenter.getInstance().getMovBloods(),
+                CommandCenter.getInstance().getMovFoes(),
+                CommandCenter.getInstance().getMovFloors(),
+                CommandCenter.getInstance().getMovEnemies(),
+                CommandCenter.getInstance().getMovFriends(),
+                CommandCenter.getInstance().getMovKatanas(),
+                CommandCenter.getInstance().getMovPunches(),
+                CommandCenter.getInstance().getMovBullets(),
+                CommandCenter.getInstance().getMovDebris());
         }
 
         //after drawing all the movables or text on the offscreen-image, copy it in one fell-swoop to graphics context

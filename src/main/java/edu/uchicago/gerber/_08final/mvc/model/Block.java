@@ -21,7 +21,9 @@ public class Block extends Sprite {
 		rasterMap.put(0, loadGraphic("/imgs/Bricks/floor/102.png") );
 		rasterPicMap = rasterMap;
 	}
-
+	public static boolean loadResources() {
+		return true;
+	}
 	public Block(Point upperLeftCorner, int size) {
 
 		//you can shoot to destroy the wall which yields big points

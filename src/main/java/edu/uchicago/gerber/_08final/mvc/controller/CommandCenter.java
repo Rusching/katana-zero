@@ -48,7 +48,6 @@ public class CommandCenter {
 	//the falcon is located in the movFriends list, but since we use this reference a lot, we keep track of it in a
 	//separate reference. Use final to ensure that the falcon ref always points to the single falcon object on heap.
 	//Lombok will not provide setter methods on final members
-	private final Falcon falcon  = new Falcon();
 	private final Zero zero = new Zero(new Point(300, 240));
 	//lists containing our movables subdivided by team
 	private final List<Movable> movDebris = new LinkedList<>();
