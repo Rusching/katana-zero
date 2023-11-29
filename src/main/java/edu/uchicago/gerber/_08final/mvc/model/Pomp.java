@@ -146,9 +146,9 @@ public class Pomp extends Character {
         } else {
             renderRasterFromRect((Graphics2D) g, pics.get(currentPicIdx), offsetX, offsetY);
         }
-        g.setColor(Color.RED);
-        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getRadius() - CommandCenter.getInstance().getViewY(), getRadius() *2, getRadius() *2);
-        g.drawOval(getCenter().x - getViewRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getViewRadius() - CommandCenter.getInstance().getViewY(), getViewRadius() *2, getViewRadius() *2);
+//        g.setColor(Color.RED);
+//        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getRadius() - CommandCenter.getInstance().getViewY(), getRadius() *2, getRadius() *2);
+//        g.drawOval(getCenter().x - getViewRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getViewRadius() - CommandCenter.getInstance().getViewY(), getViewRadius() *2, getViewRadius() *2);
     }
 
     public void getHurt(Sprite obj) {

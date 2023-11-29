@@ -47,7 +47,7 @@ public class Game implements Runnable {
 
     private final Thread animationThread;
 
-    public static enum GameState {
+    public enum GameState {
         GAME_PLAY,
         START_MENU,
         LEVEL_SWITCH,

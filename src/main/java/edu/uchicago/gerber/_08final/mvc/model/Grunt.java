@@ -120,6 +120,7 @@ public class Grunt extends Character {
                 break;
             case HURT_GROUND:
                 pics = rasterPicMaps.get(enemyActions.HURT_GROUND);
+                offsetY = -3;
                 break;
         }
 

@@ -31,28 +31,24 @@ public class StartMenuPanelListener implements KeyListener {
     }
 
     private static final int
-            ENTER = 10,
-            UP_ARROW = 30,
-            DOWN_ARROW = 40,
-            LEFT_ARROW = 37,
-            RIGHT_ARROW = 39,
-            PAUSE = 80, // p key
-            QUIT = 81, // q key
-            LEFT = 65, //  A
-            RIGHT = 68, // D
-            UP = 87, //  W
-            DOWN = 83, //s
-            SHIFT = 16, // shift
-            START = 83, // s key
-            FIRE = 32, // space key
-            MUTE = 77, // m-key mute
+        ENTER = 10,
+        UP_ARROW = 30,
+        DOWN_ARROW = 40,
+        LEFT_ARROW = 37,
+        RIGHT_ARROW = 39,
+        PAUSE = 80, // p key
+        QUIT = 81, // q key
+        LEFT = 65, //  A
+        RIGHT = 68, // D
+        UP = 87, //  W
+        DOWN = 83, //s
+        SHIFT = 16, // shift
+        START = 83; // s key
 
-    NUKE = 78; // n-key mute
 
 
     @Override
     public void keyPressed(KeyEvent e) {
-//        Falcon falcon = CommandCenter.getInstance().getFalcon();
         int keyCode = e.getKeyCode();
         switch (keyCode) {
             case ENTER:
@@ -75,5 +71,4 @@ public class StartMenuPanelListener implements KeyListener {
     // does nothing, but we need it b/c of KeyListener contract
     public void keyTyped(KeyEvent e) {
     }
-
 }

@@ -4,6 +4,7 @@ import edu.uchicago.gerber._08final.mvc.controller.CommandCenter;
 import edu.uchicago.gerber._08final.mvc.controller.Game;
 import edu.uchicago.gerber._08final.mvc.model.Movable;
 import edu.uchicago.gerber._08final.mvc.model.Sprite;
+import lombok.Data;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -15,7 +16,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 
-
+@Data
 public class LevelSwitchPanel extends Panel {
 
     // ==============================================================

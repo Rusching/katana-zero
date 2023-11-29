@@ -84,6 +84,19 @@ public class GamePanelListener implements KeyListener, MouseListener {
                     Game.gameState = Game.GameState.LEVEL_SWITCH;
                 }
                 break;
+            case ENTER:
+                if (CommandCenter.getInstance().isLevelCleared() && CommandCenter.getInstance().currentLevel < 8) {
+                    CommandCenter.getInstance().currentLevel += 1;
+                    CommandCenter.getInstance().getZero().setProtected(false);
+                    CommandCenter.getInstance().getZero().setHurtGround(false);
+                    CommandCenter.getInstance().getZero().setCurrentHurtGroundIdx(0);
+                    CommandCenter.getInstance().getZero().setDeathSoundPlayed(false);
+                    CommandCenter.getInstance().levelInited = false;
+                    CommandCenter.getInstance().levelCleared = false;
+                    CommandCenter.getInstance().initGame();
+                    CommandCenter.getInstance().setGameOver(false);
+                }
+                break;
             case UP: case UP_ARROW:
                 if (zero.isOnPlatform() && !zero.isRolling()) {
                     if (zero.isRunning() && (zero.isOnLeftWall() || zero.isOnRightWall())) {
@@ -120,7 +133,6 @@ public class GamePanelListener implements KeyListener, MouseListener {
                     CommandCenter.getInstance().getZero().setDeathSoundPlayed(false);
                     CommandCenter.getInstance().levelInited = false;
                     CommandCenter.getInstance().levelCleared = false;
-//                    CommandCenter.getInstance().setGameOver(true);
                     CommandCenter.getInstance().initGame();
                     CommandCenter.getInstance().setGameOver(false);
                 } else if (zero.isOnPlatform()) {

@@ -32,9 +32,14 @@ public class GamePanel extends Panel {
     //used for double-buffering
     private Image imgOff;
     private Graphics grpOff;
-    BufferedImage titleImage = loadGraphic("/imgs/Menu/title.jpg");
+    private static ArrayList<BufferedImage> bgImageList;
 
-
+    static {
+        bgImageList = new ArrayList<>();
+        for (int i = 0; i < 9; i++) {
+            bgImageList.add(loadGraphic(String.format("/maps/imgs/%d.jpg", i)));
+        }
+    }
     // ==============================================================
     // CONSTRUCTOR
     // ==============================================================
@@ -205,8 +210,8 @@ public class GamePanel extends Panel {
         //playing and not paused!
 //        else {
 
-            // can draw images here!
-//            grpOff.drawImage(titleImage, 0, 0, this);
+//             can draw images here!
+            grpOff.drawImage(bgImageList.get(CommandCenter.getInstance().currentLevel), 0, 0, this);
             moveDrawMovables(grpOff,
                     CommandCenter.getInstance().getMovFloaters(),
                     CommandCenter.getInstance().getMovBloods(),
@@ -278,7 +283,7 @@ public class GamePanel extends Panel {
 
     }
 
-    protected BufferedImage loadGraphic(String imagePath) {
+    protected static BufferedImage loadGraphic(String imagePath) {
         BufferedImage bufferedImage;
         try {
             bufferedImage = ImageIO.read(Objects.requireNonNull(Sprite.class.getResourceAsStream(imagePath)));

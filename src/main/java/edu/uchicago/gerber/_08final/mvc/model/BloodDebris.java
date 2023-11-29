@@ -80,7 +80,6 @@ public class BloodDebris extends Sprite {
 
     public void setSplatterIdx() {
         double degree = Math.toDegrees(theta);
-
         if (degree <= 0 && degree > -22.5) {
             splatterIdx0 = 0;
         } else if (degree <= -22.5 && degree > -45) {
