@@ -197,8 +197,6 @@ public abstract class Sprite implements Movable {
 
         int centerX = getCenter().x;
         int centerY = getCenter().y;
-        int width = getRadius() * 2;
-        int height = getRadius() * 2;
         double angleRadians = Math.toRadians(getOrientation());
 
         AffineTransform oldTransform = g2d.getTransform();

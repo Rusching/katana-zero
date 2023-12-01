@@ -33,7 +33,7 @@ public class GamePanel extends Panel {
     static {
         bgImageList = new ArrayList<>();
         for (int i = 0; i < 9; i++) {
-            bgImageList.add(loadGraphic(String.format("/maps/imgs/%d.jpg", i)));
+            bgImageList.add(loadGraphic(String.format("/imgs/Levels/bgs/%d.jpg", i)));
         }
     }
 
@@ -116,16 +116,28 @@ public class GamePanel extends Panel {
         }
         //this is used for development, you may remove drawNumFrame() in your final game.
         drawNumFrame(grpOff);
-        if (CommandCenter.getInstance().getZero().isDeathSoundPlayed()) {
-            displayTextOnScreen(grpOff,
-                    "No... That won't work",
-                    "",
-                    "",
-                    "",
-                    "'L' to go back to Level selection panel",
-                    "'S' to reStart this level",
-                    "'Q' to Quit game"
-            );
+        if (CommandCenter.getInstance().getZero().isDeathSoundPlayed()
+                && CommandCenter.getInstance().getZero().getCurrentHurtGroundIdx() == CommandCenter.getInstance().getZero().getHurtGroundFrames() - 1) {
+            if (CommandCenter.getInstance().currentLevel == 8) {
+                displayTextOnScreen(grpOff,
+                        "No... That won't work",
+                        "",
+                        "Score: " + CommandCenter.getInstance().getScore(),
+                        "",
+                        "'L' to go back to Level selection panel",
+                        "'S' to reStart this level",
+                        "'Q' to Quit game"
+                );
+            } else {
+                displayTextOnScreen(grpOff,
+                        "No... That won't work",
+                        "",
+                        "",
+                        "",
+                        "'L' to go back to Level selection panel",
+                        "'S' to reStart this level",
+                        "'Q' to Quit game");
+            }
         } else if (CommandCenter.getInstance().isLevelCleared()) {
             displayTextOnScreen(grpOff,
                     "Yes, that should work.",
@@ -156,7 +168,7 @@ public class GamePanel extends Panel {
         } else {
             grpOff.drawImage(bgImageList.get(CommandCenter.getInstance().currentLevel), 0, 0, this);
             moveDrawMovables(grpOff,
-                CommandCenter.getInstance().getMovFloaters(),
+                CommandCenter.getInstance().getMovBackground(),
                 CommandCenter.getInstance().getMovBloods(),
                 CommandCenter.getInstance().getMovFoes(),
                 CommandCenter.getInstance().getMovFloors(),

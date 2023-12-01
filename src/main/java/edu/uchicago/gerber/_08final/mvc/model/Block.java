@@ -9,7 +9,7 @@ public class Block extends Sprite {
 
 	private final int BLOCK_SIZE = 72;
 
-	public int blockRadius = 36;
+	private int blockRadius = 36;
 	//The size of this brick is always square!
 	//we use upperLeftCorner because that is the origin when drawing graphics in Java
 

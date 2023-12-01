@@ -45,79 +45,105 @@ public class Level {
                 String[] values = line.split(",");
                 colN = 0;
                 for (String value: values) {
-                    switch (Integer.parseInt(value)) {
-                        case -1:
-                            // air
-                            break;
-                        case 0:
+                    if (!value.isEmpty()) {
+                        switch (Integer.parseInt(value)) {
+                            case -1:
+                                // air
+                                break;
+                            case 0:
 //                            // zero, our player
 //
-                            CommandCenter.getInstance().getZero().setCenter(new Point(
-                                    colN * BLOCK_SIZE + BLOCK_SIZE / 2,
-                                    rowN * BLOCK_SIZE + BLOCK_SIZE / 2
-                                    ));
-                            System.out.println("Zero position: " + (int) (colN + 0.5) * BLOCK_SIZE + (int) (rowN + 0.5) * BLOCK_SIZE);
-                            System.out.println(CommandCenter.getInstance().getZero().getCenter());
-                            System.out.println("Zero position set");
-                            break;
-                        case 1:
-                            // grunt, enemy
+                                CommandCenter.getInstance().getZero().setCenter(new Point(
+                                        colN * BLOCK_SIZE + BLOCK_SIZE / 2,
+                                        rowN * BLOCK_SIZE + BLOCK_SIZE / 2
+                                ));
+                                System.out.println("Zero position: " + (int) (colN + 0.5) * BLOCK_SIZE + (int) (rowN + 0.5) * BLOCK_SIZE);
+                                System.out.println(CommandCenter.getInstance().getZero().getCenter());
+                                System.out.println("Zero position set");
+                                break;
+                            case 1:
+                                // grunt, enemy
 
-                            CommandCenter.getInstance().getOpsQueue().enqueue(
-                                    new Grunt(new Point(
-                                            colN * BLOCK_SIZE + BLOCK_SIZE / 2,
-                                            rowN * BLOCK_SIZE + BLOCK_SIZE / 2
-                                    )),
-                                    GameOp.Action.ADD
-                            );
-                            CommandCenter.getInstance().setEnemyNums(CommandCenter.getInstance().getEnemyNums() + 1);
-                            break;
-                        case 2:
-                            // pomp, enemy
+                                CommandCenter.getInstance().getOpsQueue().enqueue(
+                                        new Grunt(new Point(
+                                                colN * BLOCK_SIZE + BLOCK_SIZE / 2,
+                                                rowN * BLOCK_SIZE + BLOCK_SIZE / 2
+                                        )),
+                                        GameOp.Action.ADD
+                                );
+                                CommandCenter.getInstance().setEnemyNums(CommandCenter.getInstance().getEnemyNums() + 1);
+                                break;
+                            case 2:
+                                // pomp, enemy
 
-                            CommandCenter.getInstance().getOpsQueue().enqueue(
-                                    new Pomp(new Point(
-                                            colN * BLOCK_SIZE + BLOCK_SIZE / 2,
-                                            rowN * BLOCK_SIZE + BLOCK_SIZE / 2
-                                    )),
-                                    GameOp.Action.ADD
-                            );
-                            CommandCenter.getInstance().setEnemyNums(CommandCenter.getInstance().getEnemyNums() + 1);
-                            break;
-                        case 3:
-                            // gangster, enemy
+                                CommandCenter.getInstance().getOpsQueue().enqueue(
+                                        new Pomp(new Point(
+                                                colN * BLOCK_SIZE + BLOCK_SIZE / 2,
+                                                rowN * BLOCK_SIZE + BLOCK_SIZE / 2
+                                        )),
+                                        GameOp.Action.ADD
+                                );
+                                CommandCenter.getInstance().setEnemyNums(CommandCenter.getInstance().getEnemyNums() + 1);
+                                break;
+                            case 3:
+                                // gangster, enemy
 
-                            CommandCenter.getInstance().getOpsQueue().enqueue(
-                                    new Ganster(new Point(
-                                            colN * BLOCK_SIZE + BLOCK_SIZE / 2,
-                                            rowN * BLOCK_SIZE + BLOCK_SIZE / 2
-                                    )),
-                                    GameOp.Action.ADD
-                            );
-                            CommandCenter.getInstance().setEnemyNums(CommandCenter.getInstance().getEnemyNums() + 1);
-                            break;
-                        case 4:
-                            // shield cop, enemy
+                                CommandCenter.getInstance().getOpsQueue().enqueue(
+                                        new Ganster(new Point(
+                                                colN * BLOCK_SIZE + BLOCK_SIZE / 2,
+                                                rowN * BLOCK_SIZE + BLOCK_SIZE / 2
+                                        )),
+                                        GameOp.Action.ADD
+                                );
+                                CommandCenter.getInstance().setEnemyNums(CommandCenter.getInstance().getEnemyNums() + 1);
+                                break;
+                            case 4:
+                                // shield cop, enemy
 
-                            CommandCenter.getInstance().getOpsQueue().enqueue(
-                                    new ShieldCop(new Point(
-                                            colN * BLOCK_SIZE + BLOCK_SIZE / 2,
-                                            rowN * BLOCK_SIZE + BLOCK_SIZE / 2
-                                    )),
-                                    GameOp.Action.ADD
-                            );
-                            CommandCenter.getInstance().setEnemyNums(CommandCenter.getInstance().getEnemyNums() + 1);
-                            break;
-                        case 5:
-                            CommandCenter.getInstance().getOpsQueue().enqueue(
-                                    new Block(new Point(
-                                        colN * BLOCK_SIZE,
-                                        rowN * BLOCK_SIZE
-                                    ),
-                                    BLOCK_SIZE),
-                                    GameOp.Action.ADD
-                            );
-                            break;
+                                CommandCenter.getInstance().getOpsQueue().enqueue(
+                                        new ShieldCop(new Point(
+                                                colN * BLOCK_SIZE + BLOCK_SIZE / 2,
+                                                rowN * BLOCK_SIZE + BLOCK_SIZE / 2
+                                        )),
+                                        GameOp.Action.ADD
+                                );
+                                CommandCenter.getInstance().setEnemyNums(CommandCenter.getInstance().getEnemyNums() + 1);
+                                break;
+                            case 5:
+                                CommandCenter.getInstance().getOpsQueue().enqueue(
+                                        new Block(new Point(
+                                                colN * BLOCK_SIZE,
+                                                rowN * BLOCK_SIZE
+                                        ),
+                                                BLOCK_SIZE),
+                                        GameOp.Action.ADD
+                                );
+                                break;
+                            case 6:
+                                // door with limited enemy
+                                CommandCenter.getInstance().getOpsQueue().enqueue(
+                                        new Door(
+                                            new Point(
+                                                    colN * BLOCK_SIZE,
+                                                    rowN * BLOCK_SIZE),
+                                            false
+                                        ),
+                                        GameOp.Action.ADD
+                                );
+                                break;
+                            case 7:
+                                // door with infinite enemy
+                                CommandCenter.getInstance().getOpsQueue().enqueue(
+                                        new Door(
+                                                new Point(
+                                                        colN * BLOCK_SIZE,
+                                                        rowN * BLOCK_SIZE),
+                                                true
+                                        ),
+                                        GameOp.Action.ADD
+                                );
+                                break;
+                        }
                     }
                     colN += 1;
                 }

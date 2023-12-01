@@ -101,8 +101,7 @@ public class GamePanelListener implements KeyListener, MouseListener {
                 if (zero.isOnPlatform() && !zero.isRolling()) {
                     if (zero.isRunning() && (zero.isOnLeftWall() || zero.isOnRightWall())) {
                         Sound.playSound("Zero/player_jump.wav");
-                        zero.setYVelocity(-zero.getMaxYVelocity() * 3);
-//                        zero.setDeltaY(zero.getDeltaY() + 60);
+                        zero.setYVelocity(-zero.getMaxYVelocity() / 2);
                     } else {
                         Sound.playSound("Zero/player_jump.wav");
                         CommandCenter.getInstance().getOpsQueue().enqueue(new JumpDebris(zero.getCenter()), GameOp.Action.ADD);

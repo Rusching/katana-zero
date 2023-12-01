@@ -60,6 +60,7 @@ public class CommandCenter {
 	private final List<Movable> movKatanas = new LinkedList<>();
 	private final List<Movable> movPunches = new LinkedList<>();
 	private final List<Movable> movBullets = new LinkedList<>();
+	private final List<Movable> movBackground = new LinkedList<>();
 
 	private Level levelLoader = new Level();
 
@@ -111,5 +112,6 @@ public class CommandCenter {
 		movBullets.clear();
 		movKatanas.clear();
 		movPunches.clear();
+		movBackground.clear();
 	}
 }

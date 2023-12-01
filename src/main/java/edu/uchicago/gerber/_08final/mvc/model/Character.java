@@ -51,7 +51,7 @@ public abstract class Character extends Sprite{
     protected BloodDebris bloodDebris = null;
 
     // view (enemy)
-    protected int viewRadius = 350;
+    protected int viewRadius = 300;
     protected boolean isNoticed = false;
     protected boolean atLeft = false;
     protected boolean isChasing = false;

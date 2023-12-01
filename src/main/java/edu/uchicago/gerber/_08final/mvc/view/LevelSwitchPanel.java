@@ -32,12 +32,15 @@ public class LevelSwitchPanel extends Panel {
     private Image imgOff;
     private Graphics grpOff;
 
-    BufferedImage levelIcon0 = loadGraphic("/imgs/Levels/0.png");
-    BufferedImage levelIcon1 = loadGraphic("/imgs/Levels/1.png");
-    BufferedImage levelIcon2 = loadGraphic("/imgs/Levels/2.png");
-    BufferedImage levelIcon3 = loadGraphic("/imgs/Levels/3.png");
-    BufferedImage levelIcon4 = loadGraphic("/imgs/Levels/4.png");
-
+    BufferedImage levelIcon0 = loadGraphic("/imgs/Levels/covers/0.png");
+    BufferedImage levelIcon1 = loadGraphic("/imgs/Levels/covers/1.png");
+    BufferedImage levelIcon2 = loadGraphic("/imgs/Levels/covers/2.png");
+    BufferedImage levelIcon3 = loadGraphic("/imgs/Levels/covers/3.png");
+    BufferedImage levelIcon4 = loadGraphic("/imgs/Levels/covers/4.png");
+    BufferedImage levelIcon5 = loadGraphic("/imgs/Levels/covers/5.png");
+    BufferedImage levelIcon6 = loadGraphic("/imgs/Levels/covers/6.png");
+    BufferedImage levelIcon7 = loadGraphic("/imgs/Levels/covers/7.png");
+    BufferedImage levelIcon8 = loadGraphic("/imgs/Levels/covers/8.png");
 
     ArrayList<String> levelNames = new ArrayList<>();
     // ==============================================================
@@ -92,7 +95,7 @@ public class LevelSwitchPanel extends Panel {
         button.setPreferredSize(new Dimension(200, 150));
 
         ImageIcon icon = null;
-        switch (level / 2) {
+        switch (level) {
             case 0:
                 icon = new ImageIcon(levelIcon0);
                 break;
@@ -108,6 +111,19 @@ public class LevelSwitchPanel extends Panel {
             case 4:
                 icon = new ImageIcon(levelIcon4);
                 break;
+            case 5:
+                icon = new ImageIcon(levelIcon5);
+                break;
+            case 6:
+                icon = new ImageIcon(levelIcon6);
+                break;
+            case 7:
+                icon = new ImageIcon(levelIcon7);
+                break;
+            case 8:
+                icon = new ImageIcon(levelIcon8);
+                break;
+
         }
         button.setIcon(icon);
 

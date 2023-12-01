@@ -219,6 +219,7 @@ public class Game implements Runnable {
                     if (!CommandCenter.getInstance().isPaused()) {
                         CollisionDetection.checkAllCollisions();
                         processGameOpsQueue();
+                        checkNewLevel();
                         CommandCenter.getInstance().incrementFrame();
                     }
                     //keep track of the frame for development purposes
@@ -323,7 +324,12 @@ public class Game implements Runnable {
                         CommandCenter.getInstance().getMovEnemies().remove(mov);
                     }
                     break;
-
+                case BACKGROUND:
+                    if (action == GameOp.Action.ADD) {
+                        CommandCenter.getInstance().getMovBackground().add(mov);
+                    } else {
+                        CommandCenter.getInstance().getMovBackground().remove(mov);
+                    }
                 case FLOATER:
                     if (action == GameOp.Action.ADD) {
                         CommandCenter.getInstance().getMovFloaters().add(mov);
@@ -371,11 +377,21 @@ public class Game implements Runnable {
         }
     }
 
+    private void checkNewLevel() {
+        if (CommandCenter.getInstance().getFrame() % 150 == 0) {
+            if (CommandCenter.getInstance().levelInited && CommandCenter.getInstance().enemyNums == 0 && CommandCenter.getInstance().currentLevel != 8) {
+                System.out.println("Cleared");
+                CommandCenter.getInstance().setLevelCleared(true);
+            }
+        }
+    }
+
     private static void loadAllResources() {
         BloodDebris.loadResources();
         Block.loadResources();
         Bullet.loadResources();
         BulletReflectionDebris.loadResources();
+        Door.loadResources();
         Ganster.loadResources();
         Grunt.loadResources();
         HitSlashDebris.loadResources();

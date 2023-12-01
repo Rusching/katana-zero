@@ -49,6 +49,7 @@ public class CollisionDetection {
                         Sound.playSound(String.format("Enemy/sound_enemy_death_sword_0%d.wav", Game.R.nextInt(2) + 1));
                         Sound.playSound("Enemy/sound_enemy_death_generic.wav");
                         CommandCenter.getInstance().enemyNums -= 1;
+                        CommandCenter.getInstance().setScore(CommandCenter.getInstance().getScore() + 100);
                     }
                 }
             }
@@ -109,6 +110,7 @@ public class CollisionDetection {
                             Sound.playSound("Bullet/sound_enemy_death_bullet.wav");
                             Sound.playSound("Enemy/sound_enemy_death_generic.wav");
                             CommandCenter.getInstance().enemyNums -= 1;
+                            CommandCenter.getInstance().setScore(CommandCenter.getInstance().getScore() + 100);
                         }
                     }
                 }
