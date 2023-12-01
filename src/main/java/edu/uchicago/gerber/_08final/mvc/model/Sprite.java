@@ -5,97 +5,96 @@ import edu.uchicago.gerber._08final.mvc.controller.Game;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 
 import edu.uchicago.gerber._08final.mvc.controller.GameOp;
 import edu.uchicago.gerber._08final.mvc.controller.Utils;
 import lombok.Data;
-import lombok.experimental.Tolerate;
 
 import javax.imageio.ImageIO;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
-//the lombok @Data gives us automatic getters and setters on all members
-
-//A Sprite can be either vector or raster. We do not implement the draw(Graphics g) method, thereby forcing extending
-// classes to implement draw() depending on their graphics mode: vector or raster.  See Falcon, and WhiteCloudDebris
-// classes for raster implementation of draw(). See ShieldFloater, Bullet, or Asteroid for vector implementations of
-// draw().
 @Data
 public abstract class Sprite implements Movable {
+
     //the center-point of this sprite
-    private Point center;
+    protected Point center;
+
     //this causes movement; change-in-x and change-in-y
     private double deltaX, deltaY;
 
+    public final int BLOCK_SIZE = 72;
+
     //every sprite has a team: friend, foe, floater, or debris.
     private Team team;
+
     //the radius of circumscribing/inscribing circle
     private int radius;
 
-    //orientation from 0-359
+    // alternative bounding box for collision detection
+    enum BoundingType {CIRCLE, RECTANGLE};
+    protected BoundingType boundingType;
+    protected Rectangle boundingBox = null;
+
+    // orientation from 0-359 in degrees
     private int orientation;
-    //natural mortality (short-lived sprites only)
+
+    // record some orientation but in radius
+    public double theta;
+
+    // natural mortality (short-lived sprites only)
     private int expiry;
 
-    //some sprites spin, such as floaters and asteroids
+    // some sprites spin, such as floaters and asteroids
     private int spin;
+    public static String imgPathPrefix = "/imgs/";
 
-
-    //these are Cartesian points used to draw the polygon in vector mode.
-    //Once set, their values do not change. It's the job of the renderVector() method to adjust for orientation and
-    // location.
-    private Point[] cartesians;
-
-    //used for vector rendering
-    private Color color;
-
-    //Either you use the cartesian points and color above (vector), or you can use the BufferedImages here (raster).
-    //Keys in this map can be any object (?) you want. See Falcon and WhiteCloudDebris for example implementations.
-    private Map<?, BufferedImage> rasterMap;
-
-
-    //constructor
+    // constructor
     public Sprite() {
 
         //place the sprite at some random location in the game-space at instantiation
         setCenter(new Point(Game.R.nextInt(Game.DIM.width),
                 Game.R.nextInt(Game.DIM.height)));
-
-
     }
 
+    /**
+     * when setting center we should also set the bounding box if exists
+     * @param center
+     */
+    public void setCenter(Point center) {
+        this.center = center;
+        if (boundingBox != null) {
+            boundingBox.x = center.x - boundingBox.width / 2;
+            boundingBox.y = center.y - boundingBox.height / 2;
+        }
+    }
+
+    /**
+     * when setting center we should also set the bounding box if exists
+     * @param x
+     */
+    public void setCenterX(int x) {
+        this.center.x = x;
+        if (this.boundingBox != null) {boundingBox.x = x - boundingBox.width / 2;}
+    }
+
+    /**
+     * when setting center we should also set the bounding box if exists
+     * @param y
+     */
+    public void setCenterY(int y) {
+        this.center.y = y;
+        if (this.boundingBox != null) {boundingBox.y = y - boundingBox.height / 2;}
+    }
 
     @Override
     public void move() {
-
-        //The following code block just keeps the sprite inside the bounds of the frame.
-        //To ensure this behavior among all sprites in your game, make sure to call super.move() in extending classes
-        // where you need to override the move() method.
-
-        //right-bounds reached
-        if (center.x > Game.DIM.width) {
-            setCenter(new Point(1, center.y));
-        //left-bounds reached
-        } else if (center.x < 0) {
-            setCenter(new Point(Game.DIM.width - 1, center.y));
-        //bottom-bounds reached
-        } else if (center.y > Game.DIM.height) {
-            setCenter(new Point(center.x, 1));
-        //top-bounds reached
-        } else if (center.y < 0) {
-            setCenter(new Point(center.x, Game.DIM.height - 1));
-        //in-bounds
-        } else {
-            double newXPos = center.x + getDeltaX();
-            double newYPos = center.y + getDeltaY();
-            setCenter(new Point((int) newXPos, (int) newYPos));
-        }
+        double newXPos = center.x + getDeltaX();
+        double newYPos = center.y + getDeltaY();
+        setCenter(new Point((int) newXPos, (int) newYPos));
 
         //expire (decrement expiry) on short-lived objects only
         //the default value of expiry is zero, so this block will only apply to expiring sprites
@@ -105,7 +104,10 @@ public abstract class Sprite implements Movable {
         //the default value of spin is zero, therefore non-spinning objects will not call this block.
         if (spin != 0) orientation += spin;
 
-
+        if (boundingBox != null) {
+            boundingBox.x = center.x - boundingBox.width / 2;
+            boundingBox.y = center.y - boundingBox.height / 2;
+        }
     }
 
     private void expire() {
@@ -115,16 +117,10 @@ public abstract class Sprite implements Movable {
         if (expiry == 1) {
             CommandCenter.getInstance().getOpsQueue().enqueue(this, GameOp.Action.REMOVE);
         }
+
         //and then decrements in all cases
         expiry--;
 
-    }
-
-
-    //utility method used by extending (thus protected keyword) classes to produce random pos/neg values
-    protected int somePosNegValue(int seed) {
-        int randomNumber = Game.R.nextInt(seed);
-        return (randomNumber % 2 == 0) ? randomNumber : -randomNumber;
     }
 
     //A protected sprite will not be destroyed upon collision
@@ -136,7 +132,7 @@ public abstract class Sprite implements Movable {
 
 
     //used to load raster graphics
-    protected BufferedImage loadGraphic(String imagePath) {
+    protected static BufferedImage loadGraphic(String imagePath) {
         BufferedImage bufferedImage;
         try {
             bufferedImage = ImageIO.read(Objects.requireNonNull(Sprite.class.getResourceAsStream(imagePath)));
@@ -148,27 +144,65 @@ public abstract class Sprite implements Movable {
         return bufferedImage;
     }
 
+    private void applyFilter(Graphics2D g2d) {
+
+        // set the color to dark with some transparency
+        Color darkFilter = new Color(10, 10, 10, 15);
+        g2d.setColor(darkFilter);
+
+        // Draw the rectangle over the entire screen
+        g2d.fillRect(0, 0, Game.dimensionWidth, Game.dimensionHeight);
+    }
 
 
-    //https://www.tabnine.com/code/java/methods/java.awt.geom.AffineTransform/rotate
     protected void renderRaster(Graphics2D g2d, BufferedImage bufferedImage) {
 
         if (bufferedImage ==  null) return;
 
         int centerX = getCenter().x;
         int centerY = getCenter().y;
-        int width = getRadius() * 2;
-        int height = getRadius() * 2;
         double angleRadians = Math.toRadians(getOrientation());
 
         AffineTransform oldTransform = g2d.getTransform();
         try {
-            double scaleX = width * 1.0 / bufferedImage.getWidth();
-            double scaleY = height * 1.0 / bufferedImage.getHeight();
-
+            if (CommandCenter.getInstance().isSlowMotion()) {
+                applyFilter(g2d);
+            }
             AffineTransform affineTransform = new AffineTransform( oldTransform );
             if ( centerX != 0 || centerY != 0 ) {
-                affineTransform.translate( centerX, centerY );
+                affineTransform.translate( centerX - CommandCenter.getInstance().getViewX(), centerY - CommandCenter.getInstance().getViewY());
+            }
+            affineTransform.scale( 2, 2 );
+            if ( angleRadians != 0 ) {
+                affineTransform.rotate( angleRadians );
+            }
+            affineTransform.translate( -bufferedImage.getWidth() / 2.0, -bufferedImage.getHeight() / 2.0 );
+
+            g2d.setTransform( affineTransform );
+
+            g2d.drawImage( bufferedImage, 0, 0, bufferedImage.getWidth(), bufferedImage.getHeight(), null );
+        } finally {
+            g2d.setTransform( oldTransform );
+
+        }
+    }
+
+    protected void renderRasterScale(Graphics2D g2d, BufferedImage bufferedImage, int scaleX, int scaleY) {
+
+        if (bufferedImage ==  null) return;
+
+        int centerX = getCenter().x;
+        int centerY = getCenter().y;
+        double angleRadians = Math.toRadians(getOrientation());
+
+        AffineTransform oldTransform = g2d.getTransform();
+        try {
+            if (CommandCenter.getInstance().isSlowMotion()) {
+                applyFilter(g2d);
+            }
+            AffineTransform affineTransform = new AffineTransform( oldTransform );
+            if ( centerX != 0 || centerY != 0 ) {
+                affineTransform.translate( centerX - CommandCenter.getInstance().getViewX(), centerY - CommandCenter.getInstance().getViewY());
             }
             affineTransform.scale( scaleX, scaleY );
             if ( angleRadians != 0 ) {
@@ -184,72 +218,92 @@ public abstract class Sprite implements Movable {
 
         }
     }
+    protected void renderRasterFlip(Graphics2D g2d, BufferedImage bufferedImage) {
 
-    protected void renderVector(Graphics g) {
+        if (bufferedImage ==  null) return;
 
-        //set the graphics context color to the color of the sprite
-        g.setColor(color);
+        int centerX = getCenter().x;
+        int centerY = getCenter().y;
+        double angleRadians = Math.toRadians(getOrientation());
 
-        // To render this Sprite in vector mode, we need to, 1: convert raw cartesians to raw polars, 2: rotate polars
-        // for orientation of sprite. 3: Convert back to cartesians 4: adjust for center-point (location).
-        // and 5: pass the cartesian-x and cartesian-y coords as arrays, along with length, to g.drawPolygon().
+        AffineTransform oldTransform = g2d.getTransform();
+        try {
 
-        //1: convert raw cartesians to raw polars (used later in stream below).
-        //The reason we convert cartesian-points to polar-points is that it's much easier to rotate polar-points
-        List<PolarPoint> polars = Utils.cartesianToPolar(getCartesians());
+            AffineTransform affineTransform = new AffineTransform( oldTransform );
+            if ( centerX != 0 || centerY != 0 ) {
+                affineTransform.translate( centerX - CommandCenter.getInstance().getViewX(), centerY - CommandCenter.getInstance().getViewY());
+            }
+            affineTransform.scale( -1, 1 );
+            if ( angleRadians != 0 ) {
+                affineTransform.rotate( angleRadians );
+            }
+            affineTransform.translate( -bufferedImage.getWidth() / 2.0, -bufferedImage.getHeight() / 2.0 );
 
-        //2: rotate raw polars given the orientation of the sprite.
-        Function<PolarPoint, PolarPoint> rotatePolarByOrientation =
-                pp -> new PolarPoint(
-                        pp.getR(),
-                        pp.getTheta() + Math.toRadians(getOrientation()) //rotated Theta
-                );
+            g2d.setTransform( affineTransform );
 
-        //3: convert the rotated polars back to cartesians
-        Function<PolarPoint, Point> polarToCartesian =
-                pp -> new Point(
-                        (int)  (pp.getR() * getRadius() * Math.sin(pp.getTheta())),
-                        (int)  (pp.getR() * getRadius() * Math.cos(pp.getTheta())));
+            g2d.drawImage( bufferedImage, 0, 0, bufferedImage.getWidth(), bufferedImage.getHeight(), null );
+        } finally {
+            g2d.setTransform( oldTransform );
 
-        //4: adjust the cartesians for the location (center-point) of the sprite.
-        // the reason we subtract the y-value has to do with how Java plots the vertical axis for
-        // graphics (from top to bottom)
-        Function<Point, Point> adjustForLocation =
-                p -> new Point(
-                         getCenter().x + p.x,
-                         getCenter().y - p.y);
-
-
-
-
-        //5: draw the polygon using the List of raw polars from above, applying mapping transforms as required
-        g.drawPolygon(
-                polars.stream()
-                        .map(rotatePolarByOrientation)
-                        .map(polarToCartesian)
-                        .map(adjustForLocation)
-                        .map(pnt -> pnt.x)
-                        .mapToInt(Integer::intValue)
-                        .toArray(),
-
-                polars.stream()
-                        .map(rotatePolarByOrientation)
-                        .map(polarToCartesian)
-                        .map(adjustForLocation)
-                        .map(pnt -> pnt.y)
-                        .mapToInt(Integer::intValue)
-                        .toArray(),
-
-                polars.size());
-
-        //for debugging center-point and collision. Feel free to remove these three lines.
-        //#########################################
-        //g.setColor(Color.GRAY);
-        //g.fillOval(getCenter().x - 1, getCenter().y - 1, 2, 2);
-        //g.drawOval(getCenter().x - getRadius(), getCenter().y - getRadius(), getRadius() *2, getRadius() *2);
-        //#########################################
+        }
     }
 
+    protected void renderRasterFromRect(Graphics2D g2d, BufferedImage bufferedImage, int offsetX, int offsetY) {
 
+        if (bufferedImage ==  null) return;
+        Rectangle rect = getBoundingBox();
+        int centerX = rect.x + rect.width / 2;
+        int centerY = rect.y + rect.height / 2;
+        double angleRadians = Math.toRadians(getOrientation());
 
+        AffineTransform oldTransform = g2d.getTransform();
+        try {
+            AffineTransform affineTransform = new AffineTransform( oldTransform );
+            if ( centerX != 0 || centerY != 0 ) {
+                affineTransform.translate( centerX - CommandCenter.getInstance().getViewX() + offsetX, centerY - CommandCenter.getInstance().getViewY() + offsetY);
+            }
+            affineTransform.scale( 2, 2 );
+            if ( angleRadians != 0 ) {
+                affineTransform.rotate( angleRadians );
+            }
+            affineTransform.translate( -bufferedImage.getWidth() / 2.0, -bufferedImage.getHeight() / 2.0 );
+
+            g2d.setTransform( affineTransform );
+
+            g2d.drawImage( bufferedImage, 0, 0, bufferedImage.getWidth(), bufferedImage.getHeight(), null );
+        } finally {
+            g2d.setTransform( oldTransform );
+
+        }
+    }
+
+    protected void renderRasterFlipFromRect(Graphics2D g2d, BufferedImage bufferedImage, int offsetX, int offsetY) {
+
+        if (bufferedImage ==  null) return;
+
+        Rectangle rect = getBoundingBox();
+
+        int centerX = rect.x + rect.width / 2;
+        int centerY = rect.y + rect.height / 2;
+        double angleRadians = Math.toRadians(getOrientation());
+
+        AffineTransform oldTransform = g2d.getTransform();
+        try {
+            AffineTransform affineTransform = new AffineTransform( oldTransform );
+            if ( centerX != 0 || centerY != 0 ) {
+                affineTransform.translate( centerX - CommandCenter.getInstance().getViewX() - offsetX, centerY - CommandCenter.getInstance().getViewY() + offsetY);
+            }
+            affineTransform.scale( -2, 2 );
+            if ( angleRadians != 0 ) {
+                affineTransform.rotate( angleRadians );
+            }
+            affineTransform.translate( -bufferedImage.getWidth() / 2.0, -bufferedImage.getHeight() / 2.0 );
+
+            g2d.setTransform( affineTransform );
+
+            g2d.drawImage( bufferedImage, 0, 0, bufferedImage.getWidth(), bufferedImage.getHeight(), null );
+        } finally {
+            g2d.setTransform( oldTransform );
+        }
+    }
 }

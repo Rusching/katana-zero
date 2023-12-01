@@ -12,6 +12,8 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Sound {
 
+	public static Clip slowMotionClip = null;
+
 
 	//for individual wav sounds (not looped)
 	//http://stackoverflow.com/questions/26305/how-can-i-play-sound-in-java
@@ -33,9 +35,35 @@ public class Sound {
 				}
 			}
 		});
-
 	}
-	
+
+	public static void playSlowMotion() {
+		String wavPath = "/sounds/Zero/yxqr1-n8ca2.wav";
+		if (slowMotionClip != null && slowMotionClip.isRunning()) {
+			System.out.println("Slow motion is already playing");
+			return;
+		} else {
+			CommandCenter.getInstance().getSoundExecutor().execute(new Runnable() {
+				public void run() {
+					try {
+						slowMotionClip = AudioSystem.getClip();
+
+						InputStream audioSrc = Sound.class.getResourceAsStream(wavPath);
+						InputStream bufferedIn = new BufferedInputStream(audioSrc);
+						AudioInputStream aisStream = AudioSystem.getAudioInputStream(bufferedIn);
+
+						slowMotionClip.open(aisStream);
+						slowMotionClip.start();
+						System.out.println("Start slow motion sound");
+
+					} catch (Exception e) {
+						System.err.println(e.getMessage());
+					}
+				}
+			});
+		}
+	}
+
 	
 	//for looping wav clips
 	//http://stackoverflow.com/questions/4875080/music-loop-in-java
