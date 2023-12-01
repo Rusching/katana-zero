@@ -8,6 +8,13 @@ import java.awt.geom.Line2D;
 import java.nio.channels.Pipe;
 import java.util.ArrayList;
 
+/**
+ * Katana is an invisible class for collision detection between enemies and player. When
+ * mouse is clicked and player is not attacking, then the player would create a katana object
+ * and check the collision between katana and enemies and bullets. If there are overlapping
+ * then object is hit. After attacking the katana object is destroyed.
+ * See more details in Controller/CollisionDetection.java
+ */
 @Data
 public class Katana extends Sprite {
 
@@ -20,11 +27,9 @@ public class Katana extends Sprite {
     public Katana(int attackX, int attackY, Point zeroCenter, int zeroRadius) {
 
         setTeam(Team.KATANA);
-        Point katanaCenter = findIntersection(zeroCenter, zeroRadius, attackX + CommandCenter.getInstance().getViewX(), attackY + CommandCenter.getInstance().getViewY());
-//        System.out.println("Click Position: " + (attackX + CommandCenter.getInstance().viewX) + " " + (attackY + CommandCenter.getInstance().viewY));
-//        System.out.println("Zero Position: " + (zeroCenter.x) + " " + (zeroCenter.y));
-//        System.out.println("Katana Position: " + katanaCenter.x + " " + katanaCenter.y);
-
+        Point katanaCenter = findIntersection(zeroCenter, zeroRadius,
+                attackX + CommandCenter.getInstance().getViewX(),
+                attackY + CommandCenter.getInstance().getViewY());
         setCenter(katanaCenter);
         setRadius(katanaRadius);
     }
@@ -34,13 +39,16 @@ public class Katana extends Sprite {
         int y_c = circleCenter.y;
 
         if (x_c == x_p && y_c == y_p) {
+
             // exactly the same point
             return new Point(x_c, y_c);
         } else {
+
             // Calculate the angle theta
             double dx = x_p - x_c;
             double dy = y_p - y_c;
             double theta = Math.atan2(dy, dx);
+
             // this is radians;
             setTheta(theta);
 
@@ -53,7 +61,5 @@ public class Katana extends Sprite {
 
     @Override
     public void draw(Graphics g) {
-//        g.setColor(Color.RED);
-//        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getRadius() - CommandCenter.getInstance().getViewY(), getRadius() *2, getRadius() *2);
     }
 }

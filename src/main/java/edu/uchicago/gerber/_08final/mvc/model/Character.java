@@ -19,22 +19,20 @@ public abstract class Character extends Sprite{
     // distinguished by the 'isFalling' flag: true is up and false is down.
     protected boolean isFalling = false;
 
-    // rolling
+    // rolling related fields
     protected boolean isRolling = false;
     protected final int rollFrames = 7;
     protected int currentRollIdx = 0;
 
-    // attack
+    // attack related fields
     protected boolean isAttack = false;
     protected static int attackFrames = 7;
     protected int currentAttackIdx = 0;
 
-    // flip
+    // flip related fields
     protected boolean isFlipping = false;
     protected final int flipFrames = 11;
     protected int currentFlipIdx = 0;
-
-    protected boolean isWallSliding = false;
 
     // indicates if the left or right key are pressed
     protected boolean isRunning = false;
@@ -43,30 +41,14 @@ public abstract class Character extends Sprite{
     protected boolean isFacingLeft = false;
     protected int run2IdleFlag = 0;
 
+    // min radius
     public static final int MIN_RADIUS = 36;
 
     // blood effect
     protected boolean isProtected = false;
-
     protected BloodDebris bloodDebris = null;
 
-    // view (enemy)
-    protected int viewRadius = 300;
-    protected boolean isNoticed = false;
-    protected boolean atLeft = false;
-    protected boolean isChasing = false;
-
-
-    // attack (enemy)
-    protected int attackRadius = 36;
-
-    protected boolean canAttack = false;
-    protected int totalPreAttackFrames = 5;
-    protected int currentPreAttackFrame = 0;
-    protected int totalAttackIntervalFrames = 15;
-    protected int currentAttackIntervalFrame = 0;
-
-    // hurt
+    // hurt related fields
     protected boolean isHurtGround = false;
     protected int hurtGroundFrames = 16;
     protected int currentHurtGroundIdx = 0;
@@ -76,20 +58,41 @@ public abstract class Character extends Sprite{
     protected Timer slowMotionTimer = new Timer();
     protected int maxSlowMotionDuration = 5000;
 
-    protected double maximumJumpTime = 1000;
+    // view related fields (enemy)
+    protected int viewRadius = 300;
+    protected boolean isNoticed = false;
+    protected boolean atLeft = false;
+    protected boolean isChasing = false;
 
-    // velocity
+    // attack related fields (enemy)
+    protected int attackRadius = 36;
+    protected boolean canAttack = false;
+    protected int totalPreAttackFrames = 5;
+    protected int currentPreAttackFrame = 0;
+    protected int totalAttackIntervalFrames = 15;
+    protected int currentAttackIntervalFrame = 0;
+
+    // velocity related fields
+
+    // x-axis
     protected double xVelocity = 0;
     protected double xAccelerate = 1.4;
     protected double xSlowdownAccelerate = 10;
 
+    // y-axis
     protected double yVelocity = 0;
     protected double maxXVelocity = 18;
     protected double maxYVelocity = 30;
-
     protected  final double initialYVelocity = -24;
     protected final double gravityG = -1.6;
 
+    /**
+     * this method checks if a character is on the left wall. Firstly move the character
+     * left 2 pixels and find if there are collision between it and the walls. If we can
+     * find one then the character is on the left wall otherwise it is not. Then set back
+     * the x-axis position
+     * @return the indicator whether the character is on the left wall
+     */
     public boolean isOnLeftWall() {
         setCenterX(center.x - 2);
         Block block = findCollisionWall();
@@ -101,6 +104,10 @@ public abstract class Character extends Sprite{
         }
     }
 
+    /**
+     * the similar to the isOnLeftWall()
+     * @return the indicator whether the character is on the right wall
+     */
     public boolean isOnRightWall() {
         setCenterX(center.x + 2);
         Block block = findCollisionWall();
@@ -112,6 +119,13 @@ public abstract class Character extends Sprite{
         }
     }
 
+    /**
+     * this method checks if a character is on the platform. Firstly move the character
+     * down 2 pixels and find if there are collision between it and the walls. If we can
+     * find one then the character is on the platform otherwise it is not. Then set back
+     * the y-axis position
+     * @return the indicator whether the character is on the platform
+     */
     public boolean isOnPlatform() {
         setCenterY(center.y + 2);
         Block block = findCollisionWall();
@@ -123,17 +137,18 @@ public abstract class Character extends Sprite{
         }
     }
     @Override
-    public void draw(Graphics g) {
-
-    }
-
-    public void getHurt(Sprite obj) {
-
-    }
+    public void draw(Graphics g) {}
+    abstract public void getHurt(Sprite obj);
     @Override
     public boolean isProtected() {
         return isProtected;
     }
+
+    /**
+     * This method finds and returns the first wall that collides with the character
+     * to help to address the collision and set all characters on the platform
+     * @return the block the first collides with the character. If none return null
+     */
     public Block findCollisionWall() {
         List<Movable> blocks = CommandCenter.getInstance().getMovFloors();
         for (Movable block: blocks) {
@@ -151,57 +166,47 @@ public abstract class Character extends Sprite{
     public void attack() {}
     @Override
     public void move() {
-        //right-bounds reached
-//        if (center.x > Game.DIM.width) {
-//            setCenter(new Point(1, center.y));
-//            //left-bounds reached
-//        } else if (center.x < 0) {
-//            setCenter(new Point(Game.DIM.width - 1, center.y));
-//            //bottom-bounds reached
-//        } else if (center.y > Game.DIM.height) {
-//            setCenter(new Point(center.x, 1));
-//            //top-bounds reached
-//        } else if (center.y < 0) {
-//            setCenter(new Point(center.x, Game.DIM.height - 1));
-//            //in-bounds
-//        } else {
 
+        // here is the part for AA-BB collision detection to make sure
+        // all movable characters stand on the platform and not running
+        // into walls. Firstly check the y-axis collisions and then check
+        // the x-axis collisions and if there are collisions, reset the x,y values
 
-            // Here is the part of collision detection
-
-            double newYPos = center.y + getDeltaY();
-            setCenterY((int) newYPos);
-            Block blockCollision = findCollisionWall();
-            if (blockCollision != null) {
-                if (getDeltaY() > 0) {
-                    setCenterY(blockCollision.boundingBox.y - boundingBox.height / 2);
-                    setYVelocity(0);
-                    Sound.playSound("Zero/player_land.wav");
-                } else if (getDeltaY() < 0) {
-                    setCenterY(blockCollision.boundingBox.y + blockCollision.boundingBox.height + boundingBox.height / 2);
-                    setYVelocity(0);
-                }
-                setDeltaY(0);
+        // y-axis collision check
+        double newYPos = center.y + getDeltaY();
+        setCenterY((int) newYPos);
+        Block blockCollision = findCollisionWall();
+        if (blockCollision != null) {
+            if (getDeltaY() > 0) {
+                setCenterY(blockCollision.boundingBox.y - boundingBox.height / 2);
+                setYVelocity(0);
+                Sound.playSound("Zero/player_land.wav");
+            } else if (getDeltaY() < 0) {
+                setCenterY(blockCollision.boundingBox.y + blockCollision.boundingBox.height + boundingBox.height / 2);
+                setYVelocity(0);
             }
+            setDeltaY(0);
+        }
 
-            double newXPos = center.x + getDeltaX();
-            setCenterX((int) newXPos);
-            blockCollision = findCollisionWall();
-            if (blockCollision != null) {
-                if (getDeltaX() > 0) {
-                    setCenterX(blockCollision.boundingBox.x - boundingBox.width / 2);
-                    setXVelocity(0);
-                } else if (getDeltaX() < 0) {
-                    setCenterX(blockCollision.boundingBox.x + blockCollision.boundingBox.width + boundingBox.width / 2);
-                    setXVelocity(0);
-                }
-                setDeltaX(0);
+        // x-axis collision check
+        double newXPos = center.x + getDeltaX();
+        setCenterX((int) newXPos);
+        blockCollision = findCollisionWall();
+        if (blockCollision != null) {
+            if (getDeltaX() > 0) {
+                setCenterX(blockCollision.boundingBox.x - boundingBox.width / 2);
+                setXVelocity(0);
+            } else if (getDeltaX() < 0) {
+                setCenterX(blockCollision.boundingBox.x + blockCollision.boundingBox.width + boundingBox.width / 2);
+                setXVelocity(0);
             }
-            if (boundingBox != null) {
-                boundingBox.x = center.x - boundingBox.width / 2;
-                boundingBox.y = center.y - boundingBox.height / 2;
-            }
-//            setCenter(new Point((int) newXPos, (int) newYPos));
-//        }
+            setDeltaX(0);
+        }
+
+        // set the bounding box if exists. only blocks, characters have bounding box
+        if (boundingBox != null) {
+            boundingBox.x = center.x - boundingBox.width / 2;
+            boundingBox.y = center.y - boundingBox.height / 2;
+        }
     }
 }

@@ -15,12 +15,14 @@ import java.util.TimerTask;
 
 @Data
 public class StartMenuPanelListener implements KeyListener {
-    private int runSoundIdx = 1;
 
+    // singleton
     private static StartMenuPanelListener instance = null;
 
-    public StartMenuPanelListener() {
+    // used to play sound
+    private int runSoundIdx = 1;
 
+    public StartMenuPanelListener() {
     }
 
     public static StartMenuPanelListener getInstance() {
@@ -32,26 +34,15 @@ public class StartMenuPanelListener implements KeyListener {
 
     private static final int
         ENTER = 10,
-        UP_ARROW = 30,
-        DOWN_ARROW = 40,
-        LEFT_ARROW = 37,
-        RIGHT_ARROW = 39,
-        PAUSE = 80, // p key
-        QUIT = 81, // q key
-        LEFT = 65, //  A
-        RIGHT = 68, // D
-        UP = 87, //  W
-        DOWN = 83, //s
-        SHIFT = 16, // shift
-        START = 83; // s key
-
-
+        QUIT = 81; // Q key
 
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
         switch (keyCode) {
-            case ENTER:
+
+            // enter the level switch panel
+             case ENTER:
                 Game.gameState = Game.GameState.LEVEL_SWITCH;
                 Sound.playSound("Menu/sound_transition_begin.wav");
                 break;

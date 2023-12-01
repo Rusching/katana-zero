@@ -17,22 +17,22 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Data
 public class CommandCenter {
 
-	private int numFalcons;
-	private int level;
 	private long score;
-
-
 	public static int currentLevel;
-	public static int totalLevels = 9;
 
-	public boolean levelInited = false;
-	public int enemyNums;
-	public boolean levelCleared = false;
+	// the enemy numbers in one level
+	private int enemyNums;
 
+	// flags indicating the level status
+	private boolean levelInited = false;
+	private boolean levelCleared = false;
+
+	// flags indicating the game playing state
 	private boolean paused;
 	private boolean muted;
 	private boolean isSlowMotion = false;
 	private boolean isGameOver = true;
+
 	//this value is used to count the number of frames (full animation cycles) in the game
 	private long frame;
 
@@ -45,11 +45,13 @@ public class CommandCenter {
 	private int leftMargin = 300;
 	private int rightMargin = 300;
 
-	//the falcon is located in the movFriends list, but since we use this reference a lot, we keep track of it in a
-	//separate reference. Use final to ensure that the falcon ref always points to the single falcon object on heap.
-	//Lombok will not provide setter methods on final members
+	// zero is our player.
 	private final Zero zero = new Zero(new Point(300, 240));
-	//lists containing our movables subdivided by team
+
+	// lists containing our movables subdivided by team, used
+	// to:
+	// 		1. move and draw them by each queue
+	//		2. detect collisions
 	private final List<Movable> movDebris = new LinkedList<>();
 	private final List<Movable> movBloods = new LinkedList<>();
 	private final List<Movable> movFriends = new LinkedList<>();
@@ -62,6 +64,7 @@ public class CommandCenter {
 	private final List<Movable> movBullets = new LinkedList<>();
 	private final List<Movable> movBackground = new LinkedList<>();
 
+	// levelLoader is to load new level bricks and enemies
 	private Level levelLoader = new Level();
 
 	private final GameOpsQueue opsQueue = new GameOpsQueue();
@@ -77,14 +80,12 @@ public class CommandCenter {
 		movFriends.add(zero);
 	}
 
-    //this class maintains game state - make this a singleton.
 	public static CommandCenter getInstance(){
 		if (instance == null){
 			instance = new CommandCenter();
 		}
 		return instance;
 	}
-
 
 	public void initGame(){
 		clearAll();
@@ -101,6 +102,9 @@ public class CommandCenter {
 		frame = frame < Long.MAX_VALUE ? frame + 1 : 0;
 	}
 
+	/**
+	 * clear all the movable lists at the beginning of each level
+	 */
 	private void clearAll(){
 		movDebris.clear();
 		movFriends.clear();

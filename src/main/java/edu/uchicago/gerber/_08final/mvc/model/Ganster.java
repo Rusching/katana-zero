@@ -29,7 +29,7 @@ public class Ganster extends Character {
     }
 
     private enemyActions action = enemyActions.IDLE;
-    protected static Map<?, ArrayList<BufferedImage>> rasterPicMaps;
+    private static Map<?, ArrayList<BufferedImage>> rasterPicMaps;
 
     static {
         Map<enemyActions, ArrayList<BufferedImage>> rasterMaps = new HashMap<>();
@@ -88,8 +88,10 @@ public class Ganster extends Character {
     @Override
     public void draw(Graphics g) {
         ArrayList<BufferedImage> pics = new ArrayList<>();
-        int offsetX = 0, offsetY = 0;
 
+        // offsetX and offsetY are used to adjust the display as the
+        // textures might be not very appropriate sometimes
+        int offsetX = 0, offsetY = 0;
 
         switch (action) {
             case IDLE:
@@ -113,6 +115,8 @@ public class Ganster extends Character {
 
         int currentPicIdx = (int) ((CommandCenter.getInstance().getFrame() / 2) % pics.size());
 
+        // the following part is because the animation is not a loop type,
+        // so the picture sequence number that should be presented is recalculated.
         if (isHurtGround) {
             if (currentHurtGroundIdx < hurtGroundFrames) {
                 currentPicIdx = currentHurtGroundIdx;
@@ -120,6 +124,7 @@ public class Ganster extends Character {
                     currentHurtGroundIdx += 1;
                 }
             } else {
+
                 // currentAttachIdx == 16
                 currentPicIdx = hurtGroundFrames - 1;
             }
@@ -130,6 +135,7 @@ public class Ganster extends Character {
                     currentAttackIdx += 1;
                 }
             } else {
+
                 // currentAttachIdx == 7
                 currentAttackIdx = 0;
                 isAttack = false;
@@ -140,14 +146,9 @@ public class Ganster extends Character {
         } else {
             renderRasterFromRect((Graphics2D) g, pics.get(currentPicIdx), offsetX, offsetY);
         }
-//        g.setColor(Color.RED);
-//        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getRadius() - CommandCenter.getInstance().getViewY(), getRadius() *2, getRadius() *2);
-//        g.drawOval(getCenter().x - getViewRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getViewRadius() - CommandCenter.getInstance().getViewY(), getViewRadius() *2, getViewRadius() *2);
-//        g.setColor(Color.GREEN);
-//        g.drawOval(getCenter().x - getAttackRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getAttackRadius() - CommandCenter.getInstance().getViewY(), getAttackRadius() *2, getAttackRadius() *2);
-    }
-    @Override
+   }
 
+    @Override
     public void getHurt(Sprite obj) {
         setDeltaX((getCenter().x - obj.getCenter().x) * 2);
         setDeltaY(getCenter().y - obj.getCenter().y);
@@ -162,12 +163,18 @@ public class Ganster extends Character {
         CommandCenter.getInstance().getOpsQueue().enqueue(bloodDebris, GameOp.Action.ADD);
     }
 
+    /**
+     * Gangster's attack is to emit a bullet one time
+     */
     @Override
     public void attack() {
         if (canAttack) {
             if (currentPreAttackFrame < totalPreAttackFrames) {
+
+                // make some preparation before attack otherwise it is too difficult
                 if (CommandCenter.getInstance().getFrame() % 2 == 0) { currentPreAttackFrame += 1;}
             } else {
+
                 // finish preparation
                 if (currentAttackIntervalFrame == 0) {
                     currentPreAttackFrame = 0;
@@ -191,8 +198,8 @@ public class Ganster extends Character {
         // compute the x change
         if (!isAttack) {
             if (isChasing) {
-                // bound the maximum speed
 
+                // bound the maximum speed
                 if (abs(xVelocity) < maxXVelocity) {
                     if (atLeft) {
                         xVelocity -= xAccelerate;
@@ -200,7 +207,6 @@ public class Ganster extends Character {
                         xVelocity += xAccelerate;
                     }
                 }
-
                 if (atLeft && xVelocity > 0) {
                     xVelocity = -xVelocity;
                 }
@@ -209,6 +215,7 @@ public class Ganster extends Character {
                 }
 
             } else {
+
                 // slow down
                 if (xVelocity != 0) {
                     if (xVelocity > 0) {

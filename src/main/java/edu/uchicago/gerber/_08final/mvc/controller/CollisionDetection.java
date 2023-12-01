@@ -12,13 +12,6 @@ public class CollisionDetection {
     3. attack circle: used to determine whether it can hit the character
      */
 
-
-    /**
-     * check if character's attack hit some enemies.
-     * only valid if:
-     *      1. character is attacking,
-     *      2. katana's circle overlap with some enemies' body circle
-     */
     public static int runSoundIdx = 1;
 
     public static void checkAllCollisions() {
@@ -26,17 +19,31 @@ public class CollisionDetection {
         checkEnemyAttackResult();
         checkEnemyViewRange();
     }
+
+    /**
+     * check if character's attack hit some enemies.
+     * only valid if:
+     *      1. character is attacking, and katana's circle overlap with some enemies' body circle
+     *      2. character is attacking, and katana's circle overlap with some bullets' cycle
+     */
     public static void checkPlayerAttackResult() {
         Zero zero = CommandCenter.getInstance().getZero();
         if (zero.isAttack()) {
-            // only in attack action we check the collision between
-            // katana and enemies
+
+            // only in attack action we check the collision
+            // between katana and enemies
             Katana currentKatana = zero.getKatana();
             int katanaRadius = currentKatana.getRadius();
             int enemyRadius = Character.MIN_RADIUS;
             for (Movable enemy: CommandCenter.getInstance().getMovEnemies()) {
                 if (currentKatana.getCenter().distance(enemy.getCenter()) < (katanaRadius + enemyRadius)) {
+
+                    // only detect enemies that are not protected,
+                    // in other words they are alive
                     if (!enemy.isProtected()) {
+
+                        // if there are no hit debris then create one. To ensure at the same time there
+                        // is at most one hit debris even multiple enemies get hurt at the same time
                         if (currentKatana.getHitSlashDebris() == null) {
                             HitSlashDebris hitSlashDebris = new HitSlashDebris(currentKatana.getCenter(), enemy.getCenter());
                             currentKatana.setHitSlashDebris(hitSlashDebris);
@@ -45,10 +52,12 @@ public class CollisionDetection {
                                     GameOp.Action.ADD
                             );
                         }
+
+                        // perform enemy hurt by katana's action
                         ((Character) enemy).getHurt(currentKatana);
                         Sound.playSound(String.format("Enemy/sound_enemy_death_sword_0%d.wav", Game.R.nextInt(2) + 1));
                         Sound.playSound("Enemy/sound_enemy_death_generic.wav");
-                        CommandCenter.getInstance().enemyNums -= 1;
+                        CommandCenter.getInstance().setEnemyNums(CommandCenter.getInstance().getEnemyNums() - 1);
                         CommandCenter.getInstance().setScore(CommandCenter.getInstance().getScore() + 100);
                     }
                 }
@@ -59,8 +68,12 @@ public class CollisionDetection {
                 Bullet bulletObj = (Bullet) bullet;
                 if (!bulletObj.isReflected()) {
                     if (currentKatana.getCenter().distance(bullet.getCenter()) < (katanaRadius + bullet.getRadius())) {
+
                         // detect a collision
                         if (currentKatana.getBulletReflectionDebris() == null) {
+
+                            // if there are no reflection debris, then create one. Ensure there are
+                            // not multiple ones at the same time
                             BulletReflectionDebris bulletReflectionDebris = new BulletReflectionDebris(currentKatana.getCenter());
                             currentKatana.setBulletReflectionDebris(bulletReflectionDebris);
                             CommandCenter.getInstance().getOpsQueue().enqueue(
@@ -68,6 +81,9 @@ public class CollisionDetection {
                                     GameOp.Action.ADD
                             );
                         }
+
+                        // perform corresponding action, and set reflected bullet
+                        // a higher speed
                         Sound.playSound("Bullet/slash_bullet.wav");
                         bulletObj.setReflected(true);
                         bulletObj.setYVelocity(-bulletObj.getYVelocity());
@@ -78,6 +94,11 @@ public class CollisionDetection {
         }
     }
 
+
+    /**
+     * This method check the collision between enemies' punch / bullet with
+     * our player, and the collision result between bullet with enemies and bricks
+     */
     public static void checkEnemyAttackResult() {
         Zero zero = CommandCenter.getInstance().getZero();
 
@@ -101,15 +122,18 @@ public class CollisionDetection {
                     }
                 }
             } else {
+
                 // it is a reflected bullet that should check collision with enemies
                 for (Movable enemy: CommandCenter.getInstance().getMovEnemies()) {
                     if (bulletObj.getCenter().distance(enemy.getCenter()) < (enemy.getRadius() + bulletObj.getRadius())) {
                         if (!enemy.isProtected()) {
+
+                            // perform enemy hurt by bullet's action
                             CommandCenter.getInstance().getOpsQueue().enqueue(bullet, GameOp.Action.REMOVE);
                             ((Character) enemy).getHurt(bulletObj);
                             Sound.playSound("Bullet/sound_enemy_death_bullet.wav");
                             Sound.playSound("Enemy/sound_enemy_death_generic.wav");
-                            CommandCenter.getInstance().enemyNums -= 1;
+                            CommandCenter.getInstance().setEnemyNums(CommandCenter.getInstance().getEnemyNums() - 1);
                             CommandCenter.getInstance().setScore(CommandCenter.getInstance().getScore() + 100);
                         }
                     }
@@ -117,7 +141,8 @@ public class CollisionDetection {
             }
         }
 
-        // check if bullet is hit on brick
+        // check if bullet is hit on brick, and bullet
+        // would vanish after hitting the bricks
         for (Movable bullet: CommandCenter.getInstance().getMovBullets()) {
             for (Movable block: CommandCenter.getInstance().getMovFloors()) {
                 if (bullet.getCenter().distance(block.getCenter()) < (bullet.getRadius() + block.getRadius())) {
@@ -127,16 +152,31 @@ public class CollisionDetection {
         }
     }
 
+    /**
+     * This method checks if our player enters the enemies' view cycle. If the player
+     * enter the view cycle but not in the attack cycle, the enemy enter the 'chasing'
+     * mode and would run towards the player's direction. If the player enter the enemy's
+     * attack cycle, then they would perform attack action. For Grunt and Pomp this would
+     * be a hit by punch, for Gangster and ShieldCop this attack would be shooting
+     */
     public static void checkEnemyViewRange() {
         Zero zero = CommandCenter.getInstance().getZero();
         for (Movable enemy: CommandCenter.getInstance().getMovEnemies()) {
             Character charEnemy = (Character) enemy;
+
+            // only both enemy and player are alive we perform this check
             if (!enemy.isProtected() && !zero.isProtected()) {
+
+                // player enter the view cycle of enemies
                 if (zero.getCenter().distance(charEnemy.getCenter()) < (zero.getRadius() + charEnemy.getViewRadius())) {
                     if (zero.getCenter().distance(charEnemy.getCenter()) < (zero.getRadius() + charEnemy.getAttackRadius())) {
+
+                        // on the basis of entering the field of view
                         // if body circle overlap, enter attack mode
                         charEnemy.setChasing(false);
                         charEnemy.setCanAttack(true);
+
+                        // set facing direction
                         if (zero.getCenter().x < charEnemy.getCenter().x) {
                             charEnemy.setAtLeft(true);
                         } else {
@@ -145,7 +185,8 @@ public class CollisionDetection {
                         charEnemy.attack();
 
                     } else {
-                        // chase
+
+                        // otherwise start chasing
                         charEnemy.setCanAttack(false);
                         charEnemy.setChasing(true);
                         charEnemy.setNoticed(true);
@@ -156,15 +197,18 @@ public class CollisionDetection {
                                 runSoundIdx = 0;
                             }
                         }
+
+                        // set facing direction
                         if (zero.getCenter().x < charEnemy.getCenter().x) {
                             charEnemy.setAtLeft(true);
                         } else {
                             charEnemy.setAtLeft(false);
                         }
                     }
-
-
                 } else {
+
+                    // not in view range or leave the view range,
+                    // stop chasing
                     charEnemy.setChasing(false);
                 }
             }

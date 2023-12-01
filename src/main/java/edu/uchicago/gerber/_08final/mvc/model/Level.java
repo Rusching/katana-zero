@@ -15,23 +15,19 @@ public class Level {
 
     private String levelMapFileName = "/maps/level_%d.csv";
 
-    public void buildFloors(int level) {
-
-
-        final int ROWS = 5, COLS = 20, X_OFFSET = BLOCK_SIZE * 5, Y_OFFSET = 300;
-
-        for (int nCol = 0; nCol < COLS; nCol++) {
-            for (int nRow = 0; nRow < ROWS; nRow++) {
-                if (!(nRow == 0 && nCol != 0 && nCol != COLS - 1 && nCol != 10 && nCol != 11 && nCol != 12 && nCol != 13 && nCol != 14 && nCol != 15) && !(nRow == 1) && !(nRow == 2 && nCol != 0 && nCol != COLS - 1)) {
-
-                    CommandCenter.getInstance().getOpsQueue().enqueue(
-                            new Block(new Point(nCol * BLOCK_SIZE + X_OFFSET, nRow * BLOCK_SIZE + Y_OFFSET), BLOCK_SIZE),
-                            GameOp.Action.ADD);
-                }
-            }
-        }
-    }
-
+    /**
+     * load levels from level csv files under "/resources/map/". Each csv
+     * file contains corresponding map info. For each value in the grid,
+     *      0: zero, player's position
+     *      1: enemy type Grunt's position
+     *      2: enemy type Pomp's position
+     *      3: enemy type Gangster's position
+     *      4: enemy type ShieldCop's position
+     *      5: wall
+     *      6: door with finite enemies
+     *      7: door with infinite enemies
+     * @param level level number to load
+     */
     public void loadLevelAndCreateFloors(int level) {
         String path = String.format(levelMapFileName, level);
         String line;
@@ -47,12 +43,9 @@ public class Level {
                 for (String value: values) {
                     if (!value.isEmpty()) {
                         switch (Integer.parseInt(value)) {
-                            case -1:
-                                // air
-                                break;
                             case 0:
-//                            // zero, our player
-//
+
+                                // zero, our player
                                 CommandCenter.getInstance().getZero().setCenter(new Point(
                                         colN * BLOCK_SIZE + BLOCK_SIZE / 2,
                                         rowN * BLOCK_SIZE + BLOCK_SIZE / 2
@@ -62,8 +55,8 @@ public class Level {
                                 System.out.println("Zero position set");
                                 break;
                             case 1:
-                                // grunt, enemy
 
+                                // grunt, enemy
                                 CommandCenter.getInstance().getOpsQueue().enqueue(
                                         new Grunt(new Point(
                                                 colN * BLOCK_SIZE + BLOCK_SIZE / 2,
@@ -74,8 +67,8 @@ public class Level {
                                 CommandCenter.getInstance().setEnemyNums(CommandCenter.getInstance().getEnemyNums() + 1);
                                 break;
                             case 2:
-                                // pomp, enemy
 
+                                // pomp, enemy
                                 CommandCenter.getInstance().getOpsQueue().enqueue(
                                         new Pomp(new Point(
                                                 colN * BLOCK_SIZE + BLOCK_SIZE / 2,
@@ -86,8 +79,8 @@ public class Level {
                                 CommandCenter.getInstance().setEnemyNums(CommandCenter.getInstance().getEnemyNums() + 1);
                                 break;
                             case 3:
-                                // gangster, enemy
 
+                                // gangster, enemy
                                 CommandCenter.getInstance().getOpsQueue().enqueue(
                                         new Ganster(new Point(
                                                 colN * BLOCK_SIZE + BLOCK_SIZE / 2,
@@ -98,8 +91,8 @@ public class Level {
                                 CommandCenter.getInstance().setEnemyNums(CommandCenter.getInstance().getEnemyNums() + 1);
                                 break;
                             case 4:
-                                // shield cop, enemy
 
+                                // shield cop, enemy
                                 CommandCenter.getInstance().getOpsQueue().enqueue(
                                         new ShieldCop(new Point(
                                                 colN * BLOCK_SIZE + BLOCK_SIZE / 2,
@@ -110,6 +103,8 @@ public class Level {
                                 CommandCenter.getInstance().setEnemyNums(CommandCenter.getInstance().getEnemyNums() + 1);
                                 break;
                             case 5:
+
+                                // wall
                                 CommandCenter.getInstance().getOpsQueue().enqueue(
                                         new Block(new Point(
                                                 colN * BLOCK_SIZE,
@@ -120,6 +115,7 @@ public class Level {
                                 );
                                 break;
                             case 6:
+
                                 // door with limited enemy
                                 CommandCenter.getInstance().getOpsQueue().enqueue(
                                         new Door(
@@ -132,6 +128,7 @@ public class Level {
                                 );
                                 break;
                             case 7:
+
                                 // door with infinite enemy
                                 CommandCenter.getInstance().getOpsQueue().enqueue(
                                         new Door(

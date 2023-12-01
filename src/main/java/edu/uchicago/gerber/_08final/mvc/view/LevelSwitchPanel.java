@@ -2,6 +2,7 @@ package edu.uchicago.gerber._08final.mvc.view;
 
 import edu.uchicago.gerber._08final.mvc.controller.CommandCenter;
 import edu.uchicago.gerber._08final.mvc.controller.Game;
+import edu.uchicago.gerber._08final.mvc.controller.Utils;
 import edu.uchicago.gerber._08final.mvc.model.Movable;
 import edu.uchicago.gerber._08final.mvc.model.Sprite;
 import lombok.Data;
@@ -18,10 +19,6 @@ import java.util.function.BiConsumer;
 
 @Data
 public class LevelSwitchPanel extends Panel {
-
-    // ==============================================================
-    // FIELDS
-    // ==============================================================
     private final Font fontNormal = new Font("Visitor TT1 BRK", Font.BOLD, 25);
     private final Font fontBig = new Font("SansSerif", Font.BOLD + Font.ITALIC, 36);
     private FontMetrics fontMetrics;
@@ -32,23 +29,20 @@ public class LevelSwitchPanel extends Panel {
     private Image imgOff;
     private Graphics grpOff;
 
-    BufferedImage levelIcon0 = loadGraphic("/imgs/Levels/covers/0.png");
-    BufferedImage levelIcon1 = loadGraphic("/imgs/Levels/covers/1.png");
-    BufferedImage levelIcon2 = loadGraphic("/imgs/Levels/covers/2.png");
-    BufferedImage levelIcon3 = loadGraphic("/imgs/Levels/covers/3.png");
-    BufferedImage levelIcon4 = loadGraphic("/imgs/Levels/covers/4.png");
-    BufferedImage levelIcon5 = loadGraphic("/imgs/Levels/covers/5.png");
-    BufferedImage levelIcon6 = loadGraphic("/imgs/Levels/covers/6.png");
-    BufferedImage levelIcon7 = loadGraphic("/imgs/Levels/covers/7.png");
-    BufferedImage levelIcon8 = loadGraphic("/imgs/Levels/covers/8.png");
+    // cover images of levels
+    BufferedImage levelIcon0 = Utils.loadGraphic("/imgs/Levels/covers/0.png");
+    BufferedImage levelIcon1 = Utils.loadGraphic("/imgs/Levels/covers/1.png");
+    BufferedImage levelIcon2 = Utils.loadGraphic("/imgs/Levels/covers/2.png");
+    BufferedImage levelIcon3 = Utils.loadGraphic("/imgs/Levels/covers/3.png");
+    BufferedImage levelIcon4 = Utils.loadGraphic("/imgs/Levels/covers/4.png");
+    BufferedImage levelIcon5 = Utils.loadGraphic("/imgs/Levels/covers/5.png");
+    BufferedImage levelIcon6 = Utils.loadGraphic("/imgs/Levels/covers/6.png");
+    BufferedImage levelIcon7 = Utils.loadGraphic("/imgs/Levels/covers/7.png");
+    BufferedImage levelIcon8 = Utils.loadGraphic("/imgs/Levels/covers/8.png");
 
     ArrayList<String> levelNames = new ArrayList<>();
-    // ==============================================================
-    // CONSTRUCTOR
-    // ==============================================================
 
     public static int currentSelection = 0;
-
     private static final List<JButton> levelButtons = new ArrayList<>();
 
     public LevelSwitchPanel() {
@@ -94,6 +88,7 @@ public class LevelSwitchPanel extends Panel {
         JButton button = new JButton();
         button.setPreferredSize(new Dimension(200, 150));
 
+        // add level icon
         ImageIcon icon = null;
         switch (level) {
             case 0:
@@ -133,8 +128,11 @@ public class LevelSwitchPanel extends Panel {
         label.setFont(fontNormal); // Set label font
         label.setBounds(0, 0, 200, 150);  // Same bounds as button
 
+        // set border and fill
         button.setBorder(BorderFactory.createEmptyBorder());
         button.setContentAreaFilled(false);
+
+        // add button to panel
         buttonPanel.add(button);
         buttonPanel.add(label);
         panel.add(buttonPanel);
@@ -157,11 +155,12 @@ public class LevelSwitchPanel extends Panel {
     }
 
     public static void selectLevel() {
-        // Logic to start the game at the selected level
+
+        // logic to start the game at the selected level
+        // change game state to GAME_PLAY and load the selected level
         System.out.println("Selected Level: " + (currentSelection + 1));
         Game.gameState = Game.GameState.GAME_PLAY;
         CommandCenter.getInstance().currentLevel = currentSelection;
-        // Change game state to GAME_PLAY and load the selected level
     }
 
 
@@ -175,68 +174,20 @@ public class LevelSwitchPanel extends Panel {
         //Fill the off-screen image background with black.
         grpOff.setColor(Color.BLACK);
         grpOff.fillRect(0, 0, Game.DIM.width, Game.DIM.height);
+        if (fontMetrics == null) {
+            initFontInfo();
+            grpOff.setColor(Color.white);
+            grpOff.setFont(fontNormal);
+        }
 
-
-        //after drawing all the movables or text on the offscreen-image, copy it in one fell-swoop to graphics context
-        // of the game panel, and show it for ~40ms. If you attempt to draw sprites directly on the gamePanel, e.g.
-        // without the use of a double-buffered off-screen image, you will see flickering.
         updateButtonSelection();
     }
 
-
-    //this method causes all sprites to move and draw themselves
-    @SafeVarargs
-    private final void moveDrawMovables(final Graphics g, List<Movable>... teams) {
-
-        BiConsumer<Movable, Graphics> moveDraw = (mov, grp) -> {
-            mov.move();
-            mov.draw(grp);
-        };
-
-
-        Arrays.stream(teams) //Stream<List<Movable>>
-                //we use flatMap to flatten the teams (List<Movable>[]) passed-in above into a single stream of Movables
-                .flatMap(Collection::stream) //Stream<Movable>
-                .forEach(m -> moveDraw.accept(m, g));
-
-
-    }
-
-    protected BufferedImage loadGraphic(String imagePath) {
-        BufferedImage bufferedImage;
-        try {
-            bufferedImage = ImageIO.read(Objects.requireNonNull(Sprite.class.getResourceAsStream(imagePath)));
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-            bufferedImage = null;
-        }
-        return bufferedImage;
-    }
     private void initFontInfo() {
-        Graphics g = getGraphics();            // get the graphics context for the panel
-        g.setFont(fontNormal);                        // take care of some simple font stuff
+        Graphics g = getGraphics();
+        g.setFont(fontNormal);
         fontMetrics = g.getFontMetrics();
         fontWidth = fontMetrics.getMaxAdvance();
         fontHeight = fontMetrics.getHeight();
-        g.setFont(fontBig);                    // set font info
     }
-
-
-    // This method draws some text to the middle of the screen
-    private void displayTextOnScreen(final Graphics graphics, String... lines) {
-
-        //AtomicInteger is safe to pass into a stream
-        final AtomicInteger spacer = new AtomicInteger(0);
-        Arrays.stream(lines)
-                .forEach(str ->
-                            graphics.drawString(str, (Game.DIM.width - fontMetrics.stringWidth(str)) / 2,
-                                    Game.DIM.height / 4 + fontHeight + spacer.getAndAdd(40))
-
-                );
-
-
-    }
-
-
 }

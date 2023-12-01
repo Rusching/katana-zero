@@ -32,7 +32,7 @@ public class Grunt extends Character {
     }
 
     private enemyActions action = enemyActions.IDLE;
-    protected static Map<?, ArrayList<BufferedImage>> rasterPicMaps;
+    private static Map<?, ArrayList<BufferedImage>> rasterPicMaps;
 
     static {
         Map<enemyActions, ArrayList<BufferedImage>> rasterMaps = new HashMap<>();
@@ -126,6 +126,8 @@ public class Grunt extends Character {
 
         int currentPicIdx = (int) ((CommandCenter.getInstance().getFrame() / 2) % pics.size());
 
+        // the following part is because the animation is not a loop type,
+        // so the picture sequence number that should be presented is recalculated.
         if (isHurtGround) {
             if (currentHurtGroundIdx < hurtGroundFrames) {
                 currentPicIdx = currentHurtGroundIdx;

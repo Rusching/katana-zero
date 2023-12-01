@@ -10,6 +10,10 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * when the player's attack hits some enemies then there would be
+ * a purple hit slash effect
+ */
 @Data
 public class HitSlashDebris extends Sprite{
 
@@ -38,9 +42,6 @@ public class HitSlashDebris extends Sprite{
         int diffY = enemyCenter.y - katanaCenter.y;
         double angle = Math.toDegrees(Math.atan2(diffY, diffX));
         setOrientation((int) angle);
-
-        System.out.println(String.format("Slash angle: %.2f", angle));
-//        setCenter(charCenter);
     }
 
     @Override

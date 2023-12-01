@@ -15,12 +15,14 @@ import java.util.TimerTask;
 
 @Data
 public class GamePanelListener implements KeyListener, MouseListener {
-    private int runSoundIdx = 1;
 
+    // singleton
     private static GamePanelListener instance = null;
 
-    public GamePanelListener() {
+    // index to play run sound of the player
+    private int runSoundIdx = 1;
 
+    public GamePanelListener() {
     }
 
     public static GamePanelListener getInstance() {
@@ -41,49 +43,46 @@ public class GamePanelListener implements KeyListener, MouseListener {
             LEFT = 65, //  A
             RIGHT = 68, // D
             UP = 87, //  W
-            DOWN = 83, //s
-            LEVEL_SWITCH = 76,
-            SHIFT = 16, // shift
-            START = 83, // s key
-            FIRE = 32, // space key
-            MUTE = 77, // m-key mute
-
-    NUKE = 78; // n-key mute
-
+            DOWN = 83, //S
+            LEVEL_SWITCH = 76, // L
+            SHIFT = 16; // shift
 
     @Override
     public void keyPressed(KeyEvent e) {
-//        Falcon falcon = CommandCenter.getInstance().getFalcon();
         Zero zero = CommandCenter.getInstance().getZero();
         int keyCode = e.getKeyCode();
-
-        if (keyCode == START && !CommandCenter.getInstance().levelInited) {
-            CommandCenter.getInstance().initGame();
-            CommandCenter.getInstance().setGameOver(false);
-            return;
-        }
-
-
         switch (keyCode) {
+
+            // set pause
             case PAUSE:
                 CommandCenter.getInstance().setPaused(!CommandCenter.getInstance().isPaused());
-//                if (CommandCenter.getInstance().isPaused()) stopLoopingSounds(soundBackground, soundThrust);
                 break;
+
+            // exit immediately
             case QUIT:
                 System.exit(0);
                 break;
+
+            // go to the level switch panel by "L" key
+            //      IF player is dead, or
+            //      IF current level is paused, or
+            //      IF current level is cleared
             case LEVEL_SWITCH:
                 if (CommandCenter.getInstance().getZero().isDeathSoundPlayed() || CommandCenter.getInstance().isPaused() || CommandCenter.getInstance().isLevelCleared()) {
+
+                    // clear all flags relate to game playing
                     CommandCenter.getInstance().getZero().setProtected(false);
                     CommandCenter.getInstance().getZero().setHurtGround(false);
                     CommandCenter.getInstance().getZero().setCurrentHurtGroundIdx(0);
                     CommandCenter.getInstance().getZero().setDeathSoundPlayed(false);
-                    CommandCenter.getInstance().levelInited = false;
-                    CommandCenter.getInstance().levelCleared = false;
+                    CommandCenter.getInstance().setLevelInited(false);
+                    CommandCenter.getInstance().setLevelCleared(false);
                     CommandCenter.getInstance().setGameOver(true);
                     Game.gameState = Game.GameState.LEVEL_SWITCH;
                 }
                 break;
+
+            // enter one level
             case ENTER:
                 if (CommandCenter.getInstance().isLevelCleared() && CommandCenter.getInstance().currentLevel < 8) {
                     CommandCenter.getInstance().currentLevel += 1;
@@ -91,24 +90,32 @@ public class GamePanelListener implements KeyListener, MouseListener {
                     CommandCenter.getInstance().getZero().setHurtGround(false);
                     CommandCenter.getInstance().getZero().setCurrentHurtGroundIdx(0);
                     CommandCenter.getInstance().getZero().setDeathSoundPlayed(false);
-                    CommandCenter.getInstance().levelInited = false;
-                    CommandCenter.getInstance().levelCleared = false;
+                    CommandCenter.getInstance().setLevelInited(false);
+                    CommandCenter.getInstance().setLevelCleared(false);
                     CommandCenter.getInstance().initGame();
                     CommandCenter.getInstance().setGameOver(false);
                 }
                 break;
+
+            // check for jumping and wall climbing
             case UP: case UP_ARROW:
                 if (zero.isOnPlatform() && !zero.isRolling()) {
                     if (zero.isRunning() && (zero.isOnLeftWall() || zero.isOnRightWall())) {
+
+                        // player is on a platform and against a wall, and add a small movement
                         Sound.playSound("Zero/player_jump.wav");
                         zero.setYVelocity(-zero.getMaxYVelocity() / 2);
                     } else {
+
+                        // player is on a platform and away from walls so simply jumps
                         Sound.playSound("Zero/player_jump.wav");
                         CommandCenter.getInstance().getOpsQueue().enqueue(new JumpDebris(zero.getCenter()), GameOp.Action.ADD);
                         zero.setYVelocity(zero.getInitialYVelocity());
                         zero.setFalling(false);
                     }
                 } else if (zero.isRunning()) {
+
+                    // wall jumping to flip
                     if (zero.isOnLeftWall()) {
                         zero.setFlipping(true);
                         zero.setFacingLeft(false);
@@ -124,18 +131,28 @@ public class GamePanelListener implements KeyListener, MouseListener {
                     }
                 }
                 break;
+
+            // restart a level by "S" key
+            //      IF player is dead, or
+            //      IF current level is paused, or
+            //      IF current level is cleared
+            //
+            // otherwise, if player is on platform then perform rolling.
+            // during rolling player is protected
             case DOWN: case DOWN_ARROW:
                 if (CommandCenter.getInstance().getZero().isDeathSoundPlayed() || CommandCenter.getInstance().isPaused() || CommandCenter.getInstance().isLevelCleared()) {
                     CommandCenter.getInstance().getZero().setProtected(false);
                     CommandCenter.getInstance().getZero().setHurtGround(false);
                     CommandCenter.getInstance().getZero().setCurrentHurtGroundIdx(0);
                     CommandCenter.getInstance().getZero().setDeathSoundPlayed(false);
-                    CommandCenter.getInstance().levelInited = false;
-                    CommandCenter.getInstance().levelCleared = false;
+                    CommandCenter.getInstance().setLevelInited(false);
+                    CommandCenter.getInstance().setLevelCleared(false);
                     CommandCenter.getInstance().initGame();
                     CommandCenter.getInstance().setGameOver(false);
                 } else if (zero.isOnPlatform()) {
                     if (!zero.isRolling()) {
+
+                        // player is ready to roll, set action and x-axis velocity
                         zero.setRolling(true);
                         Sound.playSound("Zero/player_roll.wav");
                         if (zero.isFacingLeft()) {
@@ -145,11 +162,14 @@ public class GamePanelListener implements KeyListener, MouseListener {
                         }
                     }
                 } else {
+
+                    // player is in the air, then adds the speed to fall
                     zero.setYVelocity(zero.getYVelocity() + 10);
                     zero.setDeltaY(zero.getDeltaY() + 14);
                 }
-
                 break;
+
+            // movement towards left or right
             case LEFT: case LEFT_ARROW:
                 if (!zero.isAttack() && !zero.isRolling()) {
                     zero.setFacingLeft(true);
@@ -176,83 +196,45 @@ public class GamePanelListener implements KeyListener, MouseListener {
                     }
                 }
                 break;
+
+            // if in game playing without player dead, paused, level cleared
+            // we can start the slow motion by "SHIFT" key
             case SHIFT:
-                if (!(CommandCenter.getInstance().isPaused() || CommandCenter.getInstance().getZero().isDeathSoundPlayed() || CommandCenter.getInstance().levelCleared)) {
+                if (!(CommandCenter.getInstance().isPaused() || CommandCenter.getInstance().getZero().isDeathSoundPlayed() || CommandCenter.getInstance().isLevelCleared())) {
                     startSlowMotion();
                 }
                 break;
-            // possible future use
-            // case KILL:
-            // case SHIELD:
-            // case NUM_ENTER:
-
             default:
                 break;
         }
 
     }
 
-    //key events are triggered by the main (Swing) thread which is listening for keystrokes. Notice that some of the
-    // cases below touch the GameOpsQueue such as fire bullet and nuke.
-    //The animation-thread also has access to the GameOpsQueue via the processGameOpsQueue() method.
-    // Therefore, to avoid mutating the GameOpsQueue on the main thread, while we are iterating it on the
-    // animation-thread, we synchronize on the same intrinsic lock. processGameOpsQueue() is also synchronized.
     @Override
     public void keyReleased(KeyEvent e) {
-//        Falcon falcon = CommandCenter.getInstance().getFalcon();
         Zero zero = CommandCenter.getInstance().getZero();
         int keyCode = e.getKeyCode();
-        //show the key-code in the console
-        System.out.println(keyCode);
 
         switch (keyCode) {
-            case FIRE:
-//                synchronized (this){
-//                    CommandCenter.getInstance().getOpsQueue().enqueue(new Bullet(falcon), GameOp.Action.ADD);
-//                }
-//                Sound.playSound("thump.wav");
-                break;
-            case NUKE:
-//                if (CommandCenter.getInstance().getFalcon().getNukeMeter() > 0){
-//                    synchronized (this) {
-//                        CommandCenter.getInstance().getOpsQueue().enqueue(new Nuke(falcon), GameOp.Action.ADD);
-//                    }
-//                    Sound.playSound("nuke.wav");
-//                    CommandCenter.getInstance().getFalcon().setNukeMeter(0);
-//                }
-                break;
-            //releasing either the LEFT or RIGHT arrow key will set the TurnState to IDLE
             case LEFT:
             case RIGHT:
-//                falcon.setTurnState(Falcon.TurnState.IDLE);
                 zero.setRunning(false);
                 zero.setRun2IdleFlag(4);
                 break;
-
-            case UP:
-                break;
             case SHIFT:
-//                if (!(CommandCenter.getInstance().isPaused() || CommandCenter.getInstance().getZero().isDeathSoundPlayed() || CommandCenter.getInstance().levelCleared)) {
                 endSlowMotion();
-//                }
                 break;
-
-            case MUTE:
-                CommandCenter.getInstance().setMuted(!CommandCenter.getInstance().isMuted());
-
-//                if (!CommandCenter.getInstance().isMuted()) {
-//                    stopLoopingSounds(soundBackground);
-//                } else {
-//                    soundBackground.loop(Clip.LOOP_CONTINUOUSLY);
-//                }
-                break;
-
             default:
                 break;
         }
 
     }
 
+    /**
+     * this method starts the slow motion. Our slow motion is
+     * implemented by modifying the animation delay to change
+     * the frame rate to make everything looks like "slow"
+     */
     public void startSlowMotion() {
         Zero zero = CommandCenter.getInstance().getZero();
         if (!CommandCenter.getInstance().isSlowMotion()) {
@@ -260,15 +242,18 @@ public class GamePanelListener implements KeyListener, MouseListener {
             Game.animationDelay = 150;
             CommandCenter.getInstance().setSlowMotion(true);
             zero.getSlowMotionTimer().schedule(new TimerTask() {
-                                                   @Override
-                                                   public void run() {
-                                                       endSlowMotion();
-                                                   }
-                                               }, zero.getMaxSlowMotionDuration()
-            );
+               @Override
+               public void run() {
+                   endSlowMotion();
+               }
+           }, zero.getMaxSlowMotionDuration());
         }
     }
 
+    /**
+     * end slow motion. this method is safe as it firstly
+     * check if is in slow motion then stop it
+     */
     public void endSlowMotion() {
         if (CommandCenter.getInstance().isSlowMotion()) {
             CommandCenter.getInstance().setSlowMotion(false);
@@ -287,6 +272,13 @@ public class GamePanelListener implements KeyListener, MouseListener {
     public void keyTyped(KeyEvent e) {
     }
 
+    /**
+     * This method is used to perform attack of the player. If player is not
+     * attacking, then it would enter attack action and create an invisible
+     * katana object used to determine collision between enemies. After attack
+     * this katana object is destroyed
+     * @param e the event to be processed
+     */
     @Override
     public void mouseClicked(MouseEvent e) {
         Zero zero = CommandCenter.getInstance().getZero();
@@ -297,7 +289,7 @@ public class GamePanelListener implements KeyListener, MouseListener {
 
             // add attack slash
             CommandCenter.getInstance().getOpsQueue().enqueue(new NormalSlashDebris(
-                            attackX, attackY, zero.getCenter(), zero.getBoundingBox()),
+                            attackX, attackY, zero.getCenter()),
                     GameOp.Action.ADD
             );
 

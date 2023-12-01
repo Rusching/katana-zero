@@ -26,33 +26,17 @@ public class Zero extends Character {
     private boolean deathSoundPlayed = false;
     enum Actions {
         ATTACK,
-        BIG_SLASH,
-        BLOOD,
-        CROUCH,
-        DRAW_SWORD,
         FALL,
-        FIRE_SLASH,
         HURT,
-        IDLE,
         JUMP,
         WALL_SLIDE,
         FLIP,
-        KICK,
-        LOOK_AROUND,
-        NORMAL_SLASH,
-        OLD_SLASH,
-        PHONE,
-        PLAY_SONG,
-        RAINBOW_SLASH,
         ROLL,
         RUN,
         RUN2IDLE,
-        STAND,
-        THREAT,
-        THROW_SWORD,
-        WALK
+        STAND
     }
-    protected static Map<?, ArrayList<BufferedImage>> rasterPicMaps;
+    private static Map<?, ArrayList<BufferedImage>> rasterPicMaps;
 
     static {
         Map<Actions, ArrayList<BufferedImage>> rasterMaps = new HashMap<>();
@@ -187,12 +171,15 @@ public class Zero extends Character {
 
         int currentPicIdx = (int) ((CommandCenter.getInstance().getFrame() / 2) % pics.size());
 
+        // the following part is because the animation is not a loop type,
+        // so the picture sequence number that should be presented is recalculated.
         if (isHurtGround) {
             offsetY = 13;
             if (currentHurtGroundIdx < hurtGroundFrames) {
                 currentPicIdx = currentHurtGroundIdx;
                 currentHurtGroundIdx += 1;
             } else {
+
                 // currentAttachIdx == 6
                 currentPicIdx = hurtGroundFrames - 1;
             }
@@ -216,6 +203,7 @@ public class Zero extends Character {
                     setProtected(true);
                 }
             } else {
+
                 // currentRollIdx == 7
                 currentRollIdx = 0;
                 isRolling = false;
@@ -227,6 +215,7 @@ public class Zero extends Character {
                     currentPicIdx = currentFlipIdx;
                     currentFlipIdx += 1;
                 } else {
+
                     // currentFlipIdx == 11
                     currentFlipIdx = 0;
                     isFlipping = false;
@@ -237,17 +226,21 @@ public class Zero extends Character {
             }
 
         }
-
         if (isFacingLeft) {
             renderRasterFlipFromRect((Graphics2D) g, pics.get(currentPicIdx), offsetX, offsetY);
         } else {
             renderRasterFromRect((Graphics2D) g, pics.get(currentPicIdx), offsetX, offsetY);
         }
-//        g.setColor(Color.RED);
-//        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getRadius() - CommandCenter.getInstance().getViewY(), getRadius() *2, getRadius() *2);
-
     }
 
+    /**
+     * this method is the key to making the map
+     * perspective move as the player character
+     * moves. keep track of variables viewX and viewY
+     * in CommandCenter and everytime player moves
+     * perform the calculation, and when drawing apply
+     * the offset of viewX and viewY
+     */
     public void scrollMap() {
         int leftBoundary = CommandCenter.getInstance().getViewX() + CommandCenter.getInstance().getLeftMargin();
         if (boundingBox.x < leftBoundary) {
@@ -277,6 +270,7 @@ public class Zero extends Character {
         // compute the x change
         if (!isFlipping) {
             if (isRunning) {
+
                 // bound the maximum speed
                 if (isFacingLeft) {
                     if (xVelocity < -maxXVelocity) {
@@ -293,12 +287,13 @@ public class Zero extends Character {
                 if (!isFacingLeft && xVelocity < 0) {
                     xVelocity = -xVelocity;
                 }
+
                 // wall sliding
                 if (!isOnPlatform() && (isOnLeftWall() || isOnRightWall())) {
                     yVelocity = 3;
                     xVelocity = 0;
 
-                    // accelerate
+                // accelerate
                 } else if (abs(xVelocity) < maxXVelocity) {
                     if (isFacingLeft) {
                         xVelocity -= xAccelerate;
@@ -307,6 +302,7 @@ public class Zero extends Character {
                     }
                 }
             } else {
+
                 // slow down
                 if (xVelocity != 0) {
                     if (xVelocity > 0) {
@@ -317,6 +313,7 @@ public class Zero extends Character {
                 }
             }
         }
+
         // compute y change
         if (!isOnPlatform()) {
             if (abs(yVelocity) <= maxYVelocity) {
@@ -330,12 +327,5 @@ public class Zero extends Character {
 
         // modify the viewX and viewY so that the map move
         scrollMap();
-
-//        if (!isOnPlatform()) {
-//            setDeltaY(y_velocity);
-//            if (abs(y_velocity) < max_y_velocity) {
-//                y_velocity -= gravityG;
-//            }
-//        }
     }
 }

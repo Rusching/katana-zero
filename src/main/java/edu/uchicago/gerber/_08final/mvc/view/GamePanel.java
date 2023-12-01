@@ -20,7 +20,6 @@ import java.util.function.Function;
 
 public class GamePanel extends Panel {
     private final Font fontNormal = new Font("Visitor TT1 BRK", Font.BOLD, 25);
-    private final Font fontBig = new Font("SansSerif", Font.BOLD + Font.ITALIC, 36);
     private FontMetrics fontMetrics;
     private int fontWidth;
     private int fontHeight;
@@ -30,41 +29,17 @@ public class GamePanel extends Panel {
     private Graphics grpOff;
     private static ArrayList<BufferedImage> bgImageList;
 
+    // background images for different levels
     static {
         bgImageList = new ArrayList<>();
         for (int i = 0; i < 9; i++) {
-            bgImageList.add(loadGraphic(String.format("/imgs/Levels/bgs/%d.jpg", i)));
+            bgImageList.add(Utils.loadGraphic(String.format("/imgs/Levels/bgs/%d.jpg", i)));
         }
     }
 
     public GamePanel() {
     }
 
-
-//    private void drawFalconStatus(final Graphics graphics){
-//
-//        graphics.setColor(Color.white);
-//        graphics.setFont(fontNormal);
-//
-//        //draw score always
-//        graphics.drawString("Score :  " + CommandCenter.getInstance().getScore(), fontWidth, fontHeight);
-//
-//        //draw the level upper-left corner always
-//        String levelText = "Level: " + CommandCenter.getInstance().getLevel();
-//        graphics.drawString(levelText, 20, 30); //upper-left corner
-//
-//        //build the status string array with possible messages in middle of screen
-//        List<String> statusArray = new ArrayList<>();
-//        if (CommandCenter.getInstance().getFalcon().getShowLevel() > 0) statusArray.add(levelText);
-//        if (CommandCenter.getInstance().getFalcon().isMaxSpeedAttained()) statusArray.add("WARNING - SLOW DOWN");
-//        if (CommandCenter.getInstance().getFalcon().getNukeMeter() > 0) statusArray.add("PRESS N for NUKE");
-//
-//        //draw the statusArray strings to middle of screen
-//        if (statusArray.size() > 0)
-//            displayTextOnScreen(graphics, statusArray.toArray(new String[0]));
-//    }
-
-    //this is used for development, you can remove it from your final game
     private void drawNumFrame(Graphics g) {
         g.setColor(Color.white);
         g.setFont(fontNormal);
@@ -73,52 +48,28 @@ public class GamePanel extends Panel {
 
     }
 
-//    private void drawMeters(Graphics g){
-//
-//        //will be a number between 0-100 inclusive
-//        int shieldValue =   CommandCenter.getInstance().getFalcon().getShield() / 2;
-//        int nukeValue = CommandCenter.getInstance().getFalcon().getNukeMeter() /6;
-//
-//        drawOneMeter(g, Color.CYAN, 1, shieldValue);
-//        drawOneMeter(g, Color.YELLOW, 2, nukeValue);
-//
-//
-//    }
-
-    private void drawOneMeter(Graphics g, Color color, int offSet, int percent) {
-
-        int xVal = Game.DIM.width - (100 + 120 * offSet);
-        int yVal = Game.DIM.height - 45;
-
-        //draw meter
-        g.setColor(color);
-        g.fillRect(xVal, yVal, percent, 10);
-
-        //draw gray box
-        g.setColor(Color.DARK_GRAY);
-        g.drawRect(xVal, yVal, 100, 10);
-    }
-
-
     public void update(Graphics g) {
-
-
-        // The following "off" vars are used for the off-screen double-buffered image.
         imgOff = createImage(Game.DIM.width, Game.DIM.height);
-        //get its graphics context
+
+        // get its graphics context
         grpOff = imgOff.getGraphics();
 
-        //Fill the off-screen image background with black.
+        // fill the off-screen image background with black.
         grpOff.setColor(Color.BLACK);
         grpOff.fillRect(0, 0, Game.DIM.width, Game.DIM.height);
         if (fontMetrics == null) {
             initFontInfo();
         }
-        //this is used for development, you may remove drawNumFrame() in your final game.
         drawNumFrame(grpOff);
+
+
         if (CommandCenter.getInstance().getZero().isDeathSoundPlayed()
                 && CommandCenter.getInstance().getZero().getCurrentHurtGroundIdx() == CommandCenter.getInstance().getZero().getHurtGroundFrames() - 1) {
+
+            // if player dead
             if (CommandCenter.getInstance().currentLevel == 8) {
+
+                // if in level 8
                 displayTextOnScreen(grpOff,
                         "No... That won't work",
                         "",
@@ -129,6 +80,8 @@ public class GamePanel extends Panel {
                         "'Q' to Quit game"
                 );
             } else {
+
+                // levels other than level 8
                 displayTextOnScreen(grpOff,
                         "No... That won't work",
                         "",
@@ -139,6 +92,8 @@ public class GamePanel extends Panel {
                         "'Q' to Quit game");
             }
         } else if (CommandCenter.getInstance().isLevelCleared()) {
+
+            // level cleared
             displayTextOnScreen(grpOff,
                     "Yes, that should work.",
                     "",
@@ -151,6 +106,7 @@ public class GamePanel extends Panel {
             );
         } else if (CommandCenter.getInstance().isPaused()) {
 
+            // level paused
             displayTextOnScreen(grpOff,
                 "Game Paused",
                         "",
@@ -166,6 +122,8 @@ public class GamePanel extends Panel {
                     );
 
         } else {
+
+            // move all movable lists
             grpOff.drawImage(bgImageList.get(CommandCenter.getInstance().currentLevel), 0, 0, this);
             moveDrawMovables(grpOff,
                 CommandCenter.getInstance().getMovBackground(),
@@ -186,7 +144,6 @@ public class GamePanel extends Panel {
         g.drawImage(imgOff, 0, 0, this);
     }
 
-
     //this method causes all sprites to move and draw themselves
     @SafeVarargs
     private final void moveDrawMovables(final Graphics g, List<Movable>... teams) {
@@ -195,7 +152,6 @@ public class GamePanel extends Panel {
             mov.move();
             mov.draw(grp);
         };
-
 
         Arrays.stream(teams) //Stream<List<Movable>>
                 //we use flatMap to flatten the teams (List<Movable>[]) passed-in above into a single stream of Movables
@@ -211,9 +167,7 @@ public class GamePanel extends Panel {
         fontMetrics = g.getFontMetrics();
         fontWidth = fontMetrics.getMaxAdvance();
         fontHeight = fontMetrics.getHeight();
-        g.setFont(fontBig);                    // set font info
     }
-
 
     // This method draws some text to the middle of the screen
     private void displayTextOnScreen(final Graphics graphics, String... lines) {
@@ -227,19 +181,5 @@ public class GamePanel extends Panel {
                                     Game.DIM.height / 4 + fontHeight + spacer.getAndAdd(40))
 
                 );
-
-
-    }
-
-    protected static BufferedImage loadGraphic(String imagePath) {
-        BufferedImage bufferedImage;
-        try {
-            bufferedImage = ImageIO.read(Objects.requireNonNull(Sprite.class.getResourceAsStream(imagePath)));
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-            bufferedImage = null;
-        }
-        return bufferedImage;
     }
 }

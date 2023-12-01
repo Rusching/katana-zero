@@ -8,14 +8,17 @@ import java.awt.event.KeyListener;
 
 @Data
 public class LevelSwitchPanelListener implements KeyListener {
+
+    // singleton
+    private static LevelSwitchPanelListener instance = null;
+
+    // used to play sound
     private int runSoundIdx = 1;
 
-    private static LevelSwitchPanelListener instance = null;
 
     public LevelSwitchPanelListener() {
 
     }
-
     public static LevelSwitchPanelListener getInstance() {
         if (instance == null) {
             instance = new LevelSwitchPanelListener();
@@ -29,18 +32,11 @@ public class LevelSwitchPanelListener implements KeyListener {
             DOWN_ARROW = 40,
             LEFT_ARROW = 37,
             RIGHT_ARROW = 39,
-            PAUSE = 80, // p key
-            QUIT = 81, // q key
+            QUIT = 81, // Q
             LEFT = 65, //  A
             RIGHT = 68, // D
             UP = 87, //  W
-            DOWN = 83, //s
-            SHIFT = 16, // shift
-            START = 83, // s key
-            FIRE = 32, // space key
-            MUTE = 77, // m-key mute
-
-    NUKE = 78; // n-key mute
+            DOWN = 83; //S
 
 
     @Override
@@ -56,6 +52,9 @@ public class LevelSwitchPanelListener implements KeyListener {
                 LevelSwitchPanel.moveSelection(1);
                 Sound.playSound("Menu/pause.wav");
                 break;
+
+            // update the level selection due to our panel is not a regular shape,
+            // so we need to perform extra calculations
             case UP: case UP_ARROW:
                 if (LevelSwitchPanel.currentSelection > 3 && LevelSwitchPanel.currentSelection < 8) {
                     LevelSwitchPanel.moveSelection(-4);
@@ -68,6 +67,9 @@ public class LevelSwitchPanelListener implements KeyListener {
                 }
                 Sound.playSound("Menu/pause.wav");
                 break;
+
+            // update the level selection due to our panel is not a regular shape,
+            // so we need to perform extra calculations
             case DOWN: case DOWN_ARROW:
                 if (LevelSwitchPanel.currentSelection >= 0 && LevelSwitchPanel.currentSelection < 5) {
                     LevelSwitchPanel.moveSelection(4);
@@ -80,6 +82,8 @@ public class LevelSwitchPanelListener implements KeyListener {
                 }
                 Sound.playSound("Menu/pause.wav");
                 break;
+
+            // select current level and enter the game play panel
             case ENTER:
                 LevelSwitchPanel.selectLevel();
                 Sound.playSound("Menu/rewind.wav");

@@ -20,7 +20,7 @@ public class Bullet extends Sprite {
     private int yVelocity = 0;
 
     private boolean isReflected = false;
-    protected static Map<?, BufferedImage> rasterPicMap;
+    private static Map<?, BufferedImage> rasterPicMap;
     static {
         HashMap<Integer, BufferedImage> rasterMap = new HashMap<>();
         rasterMap.put(0, loadGraphic(imgPathPrefix + "bullet.png"));
@@ -30,19 +30,14 @@ public class Bullet extends Sprite {
         return true;
     }
     public Bullet(Point center, boolean atLeft) {
-
         setTeam(Team.BULLET);
-
-
         setRadius(bulletRadius);
-
         if (atLeft) {
             setXVelocity(-xVelocity);
         } else {
             setXVelocity(xVelocity);
         }
         setYVelocity(Game.R.nextInt(7) - 3);
-
         setCenter(center);
     }
 
@@ -57,8 +52,5 @@ public class Bullet extends Sprite {
     @Override
     public void draw(Graphics g) {
         renderRaster((Graphics2D) g, rasterPicMap.get(0));
-//        g.setColor(Color.ORANGE);
-//        g.drawOval(getCenter().x - getRadius() - CommandCenter.getInstance().getViewX(), getCenter().y - getRadius() - CommandCenter.getInstance().getViewY(), getRadius() *2, getRadius() *2);
-
     }
 }

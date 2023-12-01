@@ -19,54 +19,44 @@ import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.util.*;
 
-
-// ===============================================
-// == This Game class is the CONTROLLER
-// ===============================================
-
 public class Game implements Runnable {
 
-    // ===============================================
-    // FIELDS
-    // ===============================================
 
-    // Each block is 72 * 72, so 1080 is 15 blocks, 684 = 9.5 blocks as the bar count 36 height.
+    // each block is 72 * 72, so 1080 is 15 blocks, 684 = 9.5 blocks as the bar count 36 height.
     // This way the canvas is 15 * 9 blocks.
     public static int dimensionWidth = 1080;
     public static int dimensionHeight = 684;
     public static final Dimension DIM = new Dimension(dimensionWidth, dimensionHeight); //the dimension of the game.
+
+    // three display panels would be used
     private final GamePanel gamePanel;
     private final StartMenuPanel startMenuPanel;
     private final LevelSwitchPanel levelSwitchPanel;
 
-
-    //this is used throughout many classes.
+    // a public random number generator
     public static final Random R = new Random();
     public static int animationDelay = 30; // milliseconds between frames
-    public final static int FRAMES_PER_SECOND = 1000 / animationDelay;
 
+    // the animation thread used to display actions
     private final Thread animationThread;
 
+    // finite game state
     public enum GameState {
         GAME_PLAY,
         START_MENU,
-        LEVEL_SWITCH,
-        GAME_OVER,
-        LEVEL_CLEAR,
-        GAME_WIN
+        LEVEL_SWITCH
     }
 
+    // record previous game state to determine if there is a
+    // panel switch to change the background music and refresh
     public static GameState gameState = GameState.START_MENU;
     public static GameState preGameState = GameState.START_MENU;
-    // for possible future use
-    // HYPER = 68, 					// D key
-    //ALIEN = 65;                // A key
-    // SPECIAL = 70; 					// fire special weapon;  F key
 
-//    private final Clip soundThrust;
-    public GameFrame gameFrame;
+    // all panels are displayed on the single game frame
+    private GameFrame gameFrame;
 
-    public HashMap<Integer, String> songMap;
+    // map the songs to be played in different panels and levels
+    private HashMap<Integer, String> songMap;
     {
         songMap = new HashMap<>();
         songMap.put(0, "Song/song_sneaky_driver.wav");
@@ -77,12 +67,6 @@ public class Game implements Runnable {
         songMap.put(5, "Song/song_rainonbrick.wav");
     }
     private static Clip soundBackground = null;
-
-
-
-    // ===============================================
-    // ==CONSTRUCTOR
-    // ===============================================
 
     public Game() {
 
@@ -99,22 +83,18 @@ public class Game implements Runnable {
         levelSwitchPanel = new LevelSwitchPanel();
         levelSwitchPanel.addKeyListener(LevelSwitchPanelListener.getInstance());
 
-
+        // at the beginning we start with the start menu
         gameFrame = new GameFrame();
-
         gameFrame.getContentPane().add(startMenuPanel);
         startMenuPanel.setFocusable(true);
 
         gameFrame.pack();
-//        initFontInfo();
         gameFrame.setSize(DIM);
-        //change the name of the game-frame to your game name
         gameFrame.setTitle("Game Base");
         gameFrame.setResizable(false);
         gameFrame.setVisible(true);
-//        gameFram
-//        setFocusable(true);
 
+        // set custom cursor
         Cursor customCursor = null;
         BufferedImage cursorImage = Utils.loadGraphic("/imgs/Cursor/0.png");
         if (cursorImage != null) {
@@ -124,10 +104,11 @@ public class Game implements Runnable {
         }
         gameFrame.setCursor(customCursor);
 
+        // load all static resources of sprites to save latter loading time
         loadAllResources();
 
+        // load custom font so we can use it latter. The font name is "Visitor TT1 BRK"
         try {
-
             InputStream is = getClass().getResourceAsStream("/fonts/visitor1.ttf");
             Font visitorFont = Font.createFont(Font.TRUETYPE_FONT, is);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -137,28 +118,14 @@ public class Game implements Runnable {
             e.printStackTrace();
         }
 
-
-
-
-//        soundThrust = Sound.clipForLoopFactory("whitenoise.wav");
-//        soundBackground = Sound.clipForLoopFactory("music-background.wav");
-//        soundBackground = Sound.clipForLoopFactory("Song/song_sneaky_driver.wav");
-
+        // play background music
         soundBackground = Sound.clipForLoopFactory(songMap.get(5));
         soundBackground.loop(50);
 
-        // play background sound
-
-        //fire up the animation thread
-        animationThread = new Thread(this); // pass the animation thread a runnable object, the Game object
+        // start the animation thread
+        animationThread = new Thread(this);
         animationThread.start();
-
-
     }
-
-    // ===============================================
-    // ==METHODS
-    // ===============================================
 
     public static void main(String[] args) {
         //typical Swing application start; we pass EventQueue a Runnable object.
@@ -179,15 +146,17 @@ public class Game implements Runnable {
         // this thread animates the scene
         while (Thread.currentThread() == animationThread) {
 
-
+            // display different panels according to the game state
             switch (gameState) {
                 case START_MENU:
+
+                    // if current state is different to the previous state,
+                    // we need to repaint and set focus
                     if (gameState != preGameState) {
                         startMenuPanel.repaint();
                         startMenuPanel.setFocusable(true);
                     }
                     preGameState = gameState;
-
                     startMenuPanel.update(startMenuPanel.getGraphics());
                     CommandCenter.getInstance().incrementFrame();
                     try {
@@ -197,8 +166,8 @@ public class Game implements Runnable {
                     } catch (InterruptedException e) {}
                     break;
                 case GAME_PLAY:
-//                    System.out.println("Current state: " + gameState + " Pre state: " + preGameState);
 
+                    // repaint and set focus
                     if (gameState != preGameState) {
                         gamePanel.repaint();
                         gamePanel.setFocusable(true);
@@ -210,37 +179,34 @@ public class Game implements Runnable {
                         CommandCenter.getInstance().initGame();
                         CommandCenter.getInstance().setGameOver(false);
 
+                        // change background music
                         soundBackground.stop();
                         soundBackground = Sound.clipForLoopFactory(songMap.get(CommandCenter.getInstance().currentLevel / 2));
                         soundBackground.loop(50);
                     }
                     preGameState = gameState;
+
+                    // inside "update" we perform move and draw of each sprite
                     gamePanel.update(gamePanel.getGraphics());
+
+                    // perform collision detection, process gameOpsQueue,
+                    // check new levels and increment frames
                     if (!CommandCenter.getInstance().isPaused()) {
                         CollisionDetection.checkAllCollisions();
                         processGameOpsQueue();
                         checkNewLevel();
                         CommandCenter.getInstance().incrementFrame();
                     }
-                    //keep track of the frame for development purposes
-
-                    // surround the sleep() in a try/catch block
-                    // this simply controls delay time between
-                    // the frames of the animation
                     try {
-                        // The total amount of time is guaranteed to be at least ANIMATION_DELAY long.  If processing (update)
-                        // between frames takes longer than ANIMATION_DELAY, then the difference between startTime -
-                        // System.currentTimeMillis() will be negative, then zero will be the sleep time
                         startTime += animationDelay;
-
                         Thread.sleep(Math.max(0,
                                 startTime - System.currentTimeMillis()));
                     } catch (InterruptedException e) {
-                        // do nothing (bury the exception), and just continue, e.g. skip this frame -- no big deal
                     }
-
                     break;
                 case LEVEL_SWITCH:
+
+                    // repaint and set focus
                     if (gameState != preGameState) {
                         System.out.println("Enter repaint");
                         levelSwitchPanel.repaint();
@@ -250,6 +216,8 @@ public class Game implements Runnable {
                         levelSwitchPanel.requestFocusInWindow();
                         gameFrame.revalidate();
                         gameFrame.repaint();
+
+                        // change background music
                         if (preGameState != GameState.START_MENU) {
                             soundBackground.stop();
                             soundBackground = Sound.clipForLoopFactory(songMap.get(5));
@@ -257,7 +225,6 @@ public class Game implements Runnable {
                         }
                     }
                     preGameState = gameState;
-
                     levelSwitchPanel.update(levelSwitchPanel.getGraphics());
                     CommandCenter.getInstance().incrementFrame();
                     try {
@@ -266,18 +233,9 @@ public class Game implements Runnable {
                                 startTime - System.currentTimeMillis()));
                     } catch (InterruptedException e) {}
                     break;
-                case LEVEL_CLEAR:
-                    break;
-                case GAME_OVER:
-                    break;
-                case GAME_WIN:
-                    break;
-
             }
-            //this call will cause all movables to move() and draw() themselves every ~40ms
-            // see GamePanel class for details
-        } // end while
-    } // end run
+        }
+    }
 
     //This method adds and removes movables to/from their respective linked-lists.
     //This method is being called by the animationThread. The entire method is locked on the intrinsic lock of this
@@ -295,14 +253,6 @@ public class Game implements Runnable {
             GameOp.Action action = gameOp.getAction();
 
             switch (mov.getTeam()) {
-                case FOE:
-                    if (action == GameOp.Action.ADD) {
-                        CommandCenter.getInstance().getMovFoes().add(mov);
-                    } else { //GameOp.Operation.REMOVE
-                        CommandCenter.getInstance().getMovFoes().remove(mov);
-                    }
-
-                    break;
                 case FLOOR:
                     if (action == GameOp.Action.ADD) {
                         CommandCenter.getInstance().getMovFloors().add(mov);
@@ -313,7 +263,7 @@ public class Game implements Runnable {
                 case FRIEND:
                     if (action == GameOp.Action.ADD) {
                         CommandCenter.getInstance().getMovFriends().add(mov);
-                    } else { //GameOp.Operation.REMOVE
+                    } else {
                         CommandCenter.getInstance().getMovFriends().remove(mov);
                     }
                     break;
@@ -330,62 +280,65 @@ public class Game implements Runnable {
                     } else {
                         CommandCenter.getInstance().getMovBackground().remove(mov);
                     }
-                case FLOATER:
-                    if (action == GameOp.Action.ADD) {
-                        CommandCenter.getInstance().getMovFloaters().add(mov);
-                    } else { //GameOp.Operation.REMOVE
-                        CommandCenter.getInstance().getMovFloaters().remove(mov);
-                    }
-                    break;
                 case BLOOD:
                     if (action == GameOp.Action.ADD) {
                         CommandCenter.getInstance().getMovBloods().add(mov);
-                    } else { //GameOp.Operation.REMOVE
+                    } else {
                         CommandCenter.getInstance().getMovBloods().remove(mov);
                     }
                     break;
                 case KATANA:
                     if (action == GameOp.Action.ADD) {
                         CommandCenter.getInstance().getMovKatanas().add(mov);
-                    } else { //GameOp.Operation.REMOVE
+                    } else {
                         CommandCenter.getInstance().getMovKatanas().remove(mov);
                     }
                     break;
                 case PUNCH:
                     if (action == GameOp.Action.ADD) {
                         CommandCenter.getInstance().getMovPunches().add(mov);
-                    } else { //GameOp.Operation.REMOVE
+                    } else {
                         CommandCenter.getInstance().getMovPunches().remove(mov);
                     }
                     break;
                 case BULLET:
                     if (action == GameOp.Action.ADD) {
                         CommandCenter.getInstance().getMovBullets().add(mov);
-                    } else { //GameOp.Operation.REMOVE
+                    } else {
                         CommandCenter.getInstance().getMovBullets().remove(mov);
                     }
                     break;
                 case DEBRIS:
                     if (action == GameOp.Action.ADD) {
                         CommandCenter.getInstance().getMovDebris().add(mov);
-                    } else { //GameOp.Operation.REMOVE
+                    } else {
                         CommandCenter.getInstance().getMovDebris().remove(mov);
                     }
                     break;
             }
-
         }
     }
 
+    /**
+     * every 150 frames we perform a level clear check. If all enemies are finished
+     * and current level is not infinite, then we set levelClear flag to true
+     */
     private void checkNewLevel() {
         if (CommandCenter.getInstance().getFrame() % 150 == 0) {
-            if (CommandCenter.getInstance().levelInited && CommandCenter.getInstance().enemyNums == 0 && CommandCenter.getInstance().currentLevel != 8) {
+            if (CommandCenter.getInstance().isLevelInited()
+                    && CommandCenter.getInstance().getEnemyNums() == 0
+                    && CommandCenter.getInstance().currentLevel != 8) {
+
+                // level 8 is infinite, so we do not check if it is cleared
                 System.out.println("Cleared");
                 CommandCenter.getInstance().setLevelCleared(true);
             }
         }
     }
 
+    /**
+     * load all static raster images in each sprite to save loading time
+     */
     private static void loadAllResources() {
         BloodDebris.loadResources();
         Block.loadResources();
@@ -401,16 +354,6 @@ public class Game implements Runnable {
         ShieldCop.loadResources();
         Zero.loadResources();
     }
-
-    // Varargs for stopping looping-music-clips
-    private static void stopLoopingSounds(Clip... clpClips) {
-        Arrays.stream(clpClips).forEach(clip -> clip.stop());
-    }
-
-    // ===============================================
-    // KEYLISTENER METHODS
-    // ===============================================
-
 }
 
 

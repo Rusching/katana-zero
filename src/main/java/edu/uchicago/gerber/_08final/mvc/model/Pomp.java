@@ -18,7 +18,7 @@ public class Pomp extends Character {
 
 
     // image path
-    private static String gruntImgPathPrefix = "Pomp/";
+    private static String pompImgPathPrefix = "Pomp/";
 
     Punch punch = null;
     private enum enemyActions {
@@ -30,29 +30,29 @@ public class Pomp extends Character {
     }
 
     private enemyActions action = enemyActions.IDLE;
-    protected static Map<?, ArrayList<BufferedImage>> rasterPicMaps;
+    private static Map<?, ArrayList<BufferedImage>> rasterPicMaps;
 
     static {
         Map<enemyActions, ArrayList<BufferedImage>> rasterMaps = new HashMap<>();
 
         ArrayList<BufferedImage> rasterMapIdle = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {rasterMapIdle.add(loadGraphic(imgPathPrefix + gruntImgPathPrefix + String.format("spr_pomp_idle/%d.png", i)));}
+        for (int i = 0; i < 8; i++) {rasterMapIdle.add(loadGraphic(imgPathPrefix + pompImgPathPrefix + String.format("spr_pomp_idle/%d.png", i)));}
         rasterMaps.put(enemyActions.IDLE, rasterMapIdle);
 
         ArrayList<BufferedImage> rasterMapHurtGround = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {rasterMapHurtGround.add(loadGraphic(imgPathPrefix + gruntImgPathPrefix + String.format("spr_pomp_hurtground/%d.png", i)));}
+        for (int i = 0; i < 15; i++) {rasterMapHurtGround.add(loadGraphic(imgPathPrefix + pompImgPathPrefix + String.format("spr_pomp_hurtground/%d.png", i)));}
         rasterMaps.put(enemyActions.HURT_GROUND, rasterMapHurtGround);
 
         ArrayList<BufferedImage> rasterMapWalk = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {rasterMapWalk.add(loadGraphic(imgPathPrefix + gruntImgPathPrefix + String.format("spr_pomp_walk/%d.png", i)));}
+        for (int i = 0; i < 10; i++) {rasterMapWalk.add(loadGraphic(imgPathPrefix + pompImgPathPrefix + String.format("spr_pomp_walk/%d.png", i)));}
         rasterMaps.put(enemyActions.WALK, rasterMapWalk);
 
         ArrayList<BufferedImage> rasterMapRun = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {rasterMapRun.add(loadGraphic(imgPathPrefix + gruntImgPathPrefix + String.format("spr_pomp_run/%d.png", i)));}
+        for (int i = 0; i < 10; i++) {rasterMapRun.add(loadGraphic(imgPathPrefix + pompImgPathPrefix + String.format("spr_pomp_run/%d.png", i)));}
         rasterMaps.put(enemyActions.RUN, rasterMapRun);
 
         ArrayList<BufferedImage> rasterMapAttack = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {rasterMapAttack.add(loadGraphic(imgPathPrefix + gruntImgPathPrefix + String.format("spr_pomp_attack/%d.png", i)));}
+        for (int i = 0; i < 6; i++) {rasterMapAttack.add(loadGraphic(imgPathPrefix + pompImgPathPrefix + String.format("spr_pomp_attack/%d.png", i)));}
         rasterMaps.put(enemyActions.ATTACK, rasterMapAttack);
 
         attackFrames = rasterMapAttack.size();
@@ -117,6 +117,8 @@ public class Pomp extends Character {
 
         int currentPicIdx = (int) ((CommandCenter.getInstance().getFrame() / 2) % pics.size());
 
+        // the following part is because the animation is not a loop type,
+        // so the picture sequence number that should be presented is recalculated.
         if (isHurtGround) {
             if (currentHurtGroundIdx < hurtGroundFrames) {
                 currentPicIdx = currentHurtGroundIdx;

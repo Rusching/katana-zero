@@ -32,7 +32,7 @@ public class BloodDebris extends Sprite {
     private int splatterIdx3;
     private int splatterIdx4;
     private int splatterIdx5;
-    protected static Map<?, ArrayList<BufferedImage>> rasterPicMaps;
+    private static Map<?, ArrayList<BufferedImage>> rasterPicMaps;
     static {
         Map<Integer, ArrayList<BufferedImage>> rasterMaps = new HashMap<>();
 
@@ -80,6 +80,10 @@ public class BloodDebris extends Sprite {
 
     public void setSplatterIdx() {
         double degree = Math.toDegrees(theta);
+
+        // this part seems ugly, but it's not easy to change if-else
+        // because the degree change is not linear from 0-360, so we
+        // have to perform extra checks
         if (degree <= 0 && degree > -22.5) {
             splatterIdx0 = 0;
         } else if (degree <= -22.5 && degree > -45) {
@@ -122,6 +126,7 @@ public class BloodDebris extends Sprite {
     }
     @Override
     public void draw(Graphics g) {
+
         // display bg blood
         ArrayList<BufferedImage> bg_pics = rasterPicMaps.get(16);
         if (bgBloodLeft) {
@@ -131,7 +136,6 @@ public class BloodDebris extends Sprite {
         }
 
         // display blood splatters
-
         ArrayList<BufferedImage> splatter_pics_0 = rasterPicMaps.get(splatterIdx0);
         ArrayList<BufferedImage> splatter_pics_1 = rasterPicMaps.get(splatterIdx1);
         ArrayList<BufferedImage> splatter_pics_2 = rasterPicMaps.get(splatterIdx2);
@@ -157,7 +161,5 @@ public class BloodDebris extends Sprite {
                 isSplatter = false;
             }
         }
-
-
     }
 }
