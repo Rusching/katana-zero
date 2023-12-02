@@ -2,7 +2,7 @@
 
 ### Introduction
 
-Welcome to my game project - Katana Zero!
+Welcome to my game project - Katana Zero! 
 
 > Katana Zero is a 2019 platform game created by the indie developer Justin Stander. Set in a dystopian metropolis, the neo-noir storyline follows Subject Zero, a katana-wielding assassin with amnesia who can slow down time and predict the future. Zero unravels his past while completing assassination contracts. Katana Zero features side-scrolling hack-and-slash gameplay in which the player attempts to kill all enemies in a level without being hit, using Zero's abilities to manipulate time, dodge attacks, and take advantage of environmental hazards.
 
@@ -12,9 +12,9 @@ In this game, you will play a katana-wielding assassin with amnesia, constantly 
 
 Plan your route, quickly kill all enemies in constant rebirth, and enjoy the battle of one-hit kills!
 
-
-
 ### Play Instruction
+#### Start Menu
+Press **"ENTER"** to enter the level selection panel.
 
 #### Level Selection
 Inside level selection panel, 
@@ -46,3 +46,5 @@ Inside game play panel, Follow
 Levels 1-8 are normal difficulty levels. As the game progresses, the difficulty gradually increases. The number and types of enemies that appear will gradually increase, and the terrain will also become complex.
 
 The last level is a challenge level, where enemies will continue to appear until the player dies. Current score will be displayed upon death.
+
+Thank you for reading this and playing my game!
