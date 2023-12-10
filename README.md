@@ -1,8 +1,8 @@
 ## Katana Zero
 
-![pic0](.\pic0.png)
+![pic0](./pic0.png)
 
-![pic1](.\pic1.png)
+![pic1](./pic1.png)
 
 ### Introduction
 
