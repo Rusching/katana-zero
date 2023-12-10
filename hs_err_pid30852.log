@@ -18,7 +18,7 @@
 
 ---------------  S U M M A R Y ------------
 
-Command Line: -javaagent:X:\IntelliJIDEA\pack\IntelliJ IDEA Community Edition 2023.2.2\lib\idea_rt.jar=55238:X:\IntelliJIDEA\pack\IntelliJ IDEA Community Edition 2023.2.2\bin -Dfile.encoding=UTF-8 edu.uchicago.gerber._08final.mvc.controller.Game
+Command Line: -javaagent:X:\IntelliJIDEA\pack\IntelliJ IDEA Community Edition 2023.2.2\lib\idea_rt.jar=55238:X:\IntelliJIDEA\pack\IntelliJ IDEA Community Edition 2023.2.2\bin -Dfile.encoding=UTF-8 controller.mvc.game.Game
 
 Host: AMD Ryzen 9 5900HX with Radeon Graphics        , 16 cores, 31G,  Windows 10 , 64 bit Build 19041 (10.0.19041.3570)
 Time: Sat Nov 25 23:15:03 2023  Windows 10 , 64 bit Build 19041 (10.0.19041.3570) elapsed time: 5.369868 seconds (0d 0h 0m 5s)
@@ -50,8 +50,8 @@ j  sun.java2d.pipe.DrawImage.copyImage(Lsun/java2d/SunGraphics2D;Ljava/awt/Image
 j  sun.java2d.pipe.ValidatePipe.copyImage(Lsun/java2d/SunGraphics2D;Ljava/awt/Image;IILjava/awt/Color;Ljava/awt/image/ImageObserver;)Z+21 java.desktop@17.0.4.1
 j  sun.java2d.SunGraphics2D.drawImage(Ljava/awt/Image;IILjava/awt/Color;Ljava/awt/image/ImageObserver;)Z+71 java.desktop@17.0.4.1
 j  sun.java2d.SunGraphics2D.drawImage(Ljava/awt/Image;IILjava/awt/image/ImageObserver;)Z+7 java.desktop@17.0.4.1
-j  edu.uchicago.gerber._08final.mvc.view.GamePanel.update(Ljava/awt/Graphics;)V+185
-j  edu.uchicago.gerber._08final.mvc.controller.Game.run()V+33
+j  view.mvc.game.GamePanel.update(Ljava/awt/Graphics;)V+185
+j  controller.mvc.game.Game.run()V+33
 j  java.lang.Thread.run()V+11 java.base@17.0.4.1
 v  ~StubRoutines::call_stub
 
@@ -756,7 +756,7 @@ symbol engine: initialized successfully - sym options: 0x614 - pdb path: .;X:\jd
 
 VM Arguments:
 jvm_args: -javaagent:X:\IntelliJIDEA\pack\IntelliJ IDEA Community Edition 2023.2.2\lib\idea_rt.jar=55238:X:\IntelliJIDEA\pack\IntelliJ IDEA Community Edition 2023.2.2\bin -Dfile.encoding=UTF-8 
-java_command: edu.uchicago.gerber._08final.mvc.controller.Game
+java_command: controller.mvc.game.Game
 java_class_path (initial): Y:\Research\Java\projava-Rusching\target\classes;C:\Users\86151\.m2\repository\junit\junit\4.11\junit-4.11.jar;C:\Users\86151\.m2\repository\org\hamcrest\hamcrest-core\1.1\hamcrest-core-1.1.jar
 Launcher Type: SUN_STANDARD
 
